@@ -16,11 +16,28 @@ class ListViewModel : ViewModel() {
 
     fun getLists(): LiveData<MutableMap<String, ArrayList<Media>>> = lists
 
-    suspend fun loadLists(anime: Boolean, userId: Int, sortOrder: String? = null) {
+    suspend fun loadLists(
+        anime: Boolean,
+        userId: Int,
+        sortOrder: String? = null,
+        genre: String = "All",
+        minScore: Int = 0
+    ) {
         tryWithSuspend {
             val result = Anilist.query.getMediaLists(anime, userId, sortOrder)
-            lists.postValue(result)
             unfilteredLists.postValue(result)
+            val filtered = if (genre == "All" && minScore <= 0) {
+                result
+            } else {
+                result.mapValues { (_, media) ->
+                    ArrayList(media.filter { item ->
+                        val score = if (item.userScore != 0) item.userScore else (item.meanScore ?: 0)
+                        (genre == "All" || genre in item.genres) &&
+                            (minScore <= 0 || score >= minScore * 10)
+                    })
+                }.toMutableMap()
+            }
+            lists.postValue(filtered)
         }
     }
 
