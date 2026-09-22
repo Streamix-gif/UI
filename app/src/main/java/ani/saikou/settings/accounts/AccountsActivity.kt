@@ -7,14 +7,9 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import ani.saikou.R
 import ani.saikou.connections.anilist.Anilist
-import ani.saikou.connections.discord.auth.DiscordRepository
-import ani.saikou.connections.discord.auth.DiscordViewModel
-import ani.saikou.connections.discord.rpc.RpcRepository
 import ani.saikou.connections.mal.MAL
 import ani.saikou.databinding.ActivityAccountsSettingsBinding
 
@@ -26,13 +21,10 @@ import ani.saikou.startMainActivity
 import ani.saikou.statusBarHeight
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
-import kotlinx.coroutines.launch
 
 class AccountsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAccountsSettingsBinding
-    private lateinit var viewModel: DiscordViewModel
-
     private val restartMainActivity = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             startMainActivity(this@AccountsActivity)
@@ -47,10 +39,6 @@ class AccountsActivity : AppCompatActivity() {
 
         initActivity(this)
 
-        val discord = DiscordRepository(this)
-        val rpc = RpcRepository(this)
-        viewModel = DiscordViewModel(discord, rpc)
-
         binding.accountsMainLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = statusBarHeight
             bottomMargin = navBarHeight
@@ -63,13 +51,11 @@ class AccountsActivity : AppCompatActivity() {
         }
 
         setupAccountHelp()
-        setupDiscordStateObserver()
     }
 
     override fun onResume() {
         super.onResume()
         reloadAccounts()
-        viewModel.loadDiscordUser()
     }
 
     private fun reloadAccounts() {
@@ -116,47 +102,6 @@ class AccountsActivity : AppCompatActivity() {
             binding.settingsMALLoginRequired.visibility = View.VISIBLE
             binding.settingsMALLogin.visibility = View.GONE
             binding.settingsMALUsername.visibility = View.GONE
-        }
-    }
-
-    private fun setupDiscordStateObserver() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    if (state.isLoggedIn) {
-                        binding.settingsDiscordUsername.visibility = View.VISIBLE
-                        binding.settingsDiscordUsername.text = state.username
-                        binding.settingsDiscordAvatar.loadImage(state.avatarUrl)
-
-                        binding.settingsDiscordLogin.text = getString(R.string.logout)
-                        binding.settingsDiscordLogin.setOnClickListener {
-                            viewModel.logout()
-                        }
-
-                        binding.settingsDiscordRPCSwitch.apply {
-                            isChecked = state.isRpcEnabled
-                            setOnCheckedChangeListener { _, isChecked ->
-                                viewModel.setRpcEnabled(isChecked)
-                            }
-                            visibility = View.VISIBLE
-                        }
-
-                        binding.settingsDiscordRPCText.visibility = View.VISIBLE
-                    } else {
-                        binding.settingsDiscordUsername.visibility = View.GONE
-                        binding.settingsDiscordAvatar.setImageResource(R.drawable.ic_round_person_24)
-                        binding.settingsDiscordLogin.text = getString(R.string.login)
-                        binding.settingsDiscordLogin.setOnClickListener {
-                            DiscordRepository(this@AccountsActivity)
-                                .warning(this@AccountsActivity)
-                                .show(supportFragmentManager, "discord_warning")
-                        }
-
-                        binding.settingsDiscordRPCSwitch.visibility = View.GONE
-                        binding.settingsDiscordRPCText.visibility = View.GONE
-                    }
-                }
-            }
         }
     }
 
