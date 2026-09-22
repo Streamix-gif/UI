@@ -530,7 +530,6 @@
     <string name="type_source">SOURCE</string>
     <string name="type_contains">CONTAINS</string>
 
-    <string name="read_on_streamix">Read on Streamix</string>
     <string name="watch_on_streamix">Watch on Streamix</string>
     <string name="continue_episode">"Continue : Episode "</string>
     <string name="continue_chapter">"Continue : Chapter "</string>
