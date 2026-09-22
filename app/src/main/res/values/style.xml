@@ -56,6 +56,14 @@
     <style name="BottomNavBar" parent="Widget.Material3.BottomNavigationView.ActiveIndicator"/>
 
     <!-- Streamix visual tokens adapted from Dantotsu; existing Saikou layouts remain the foundation. -->
+    <!-- Streamix status tabs: horizontally browsable like the Calendar pager. -->
+    <style name="StreamixStatusTabText">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
     <style name="StreamixCardOutline">
         <item name="android:background">@drawable/card_outline</item>
     </style>
