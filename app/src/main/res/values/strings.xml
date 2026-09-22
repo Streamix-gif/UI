@@ -1001,4 +1001,5 @@
     <string name="sync_helper_desc">Tap \'I Heard Dialogue Now\' when speech occurs, and \'I Saw Subtitle Now\' when the corresponding subtitle is shown. The offset will be calculated and applied automatically.</string>
     <string name="sync_hearing_audio_btn">I Heard Dialogue Now</string>
     <string name="sync_seen_subtitle_btn">I Saw Subtitle Now</string>
+    <string name="delete_subtitle">Delete</string>
 </resources>
