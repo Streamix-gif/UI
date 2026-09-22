@@ -103,7 +103,6 @@ class DantotsuPlayerManager(
         video: Video,
         subConfigs: List<MediaItem.SubtitleConfiguration>,
         mimeType: String?,
-        downloadedMediaItem: MediaItem?,
         mediaMetadata: MediaMetadata? = null,
         audioTracks: List<eu.kanade.tachiyomi.animesource.model.Track> = emptyList()
     ): Pair<MediaSource, MediaItem> {
@@ -230,17 +229,13 @@ class DantotsuPlayerManager(
             .setSubtitleParserFactory(assParserFactory)
             .setDrmSessionManagerProvider(drmProvider)
 
-        val mediaItem = downloadedMediaItem?.buildUpon()?.apply {
-            if (mediaMetadata != null) setMediaMetadata(mediaMetadata)
-        }?.build() ?: MediaItem.Builder()
+        val mediaItem = MediaItem.Builder()
             .setUri(video.file.url.toUri())
             .apply {
                 if (mimeType != null) setMimeType(mimeType)
                 if (subConfigs.isNotEmpty()) setSubtitleConfigurations(subConfigs)
                 if (mediaMetadata != null) setMediaMetadata(mediaMetadata)
                 video.drm?.let { drm ->
-                    // The device CDM does the decryption; this only says where the
-                    // license server is.
                     val uuid = when (drm.scheme.lowercase()) {
                         "playready" -> C.PLAYREADY_UUID
                         "clearkey" -> C.CLEARKEY_UUID
@@ -250,11 +245,10 @@ class DantotsuPlayerManager(
                         MediaItem.DrmConfiguration.Builder(uuid)
                             .setLicenseUri(drm.licenseUrl)
                             .setLicenseRequestHeaders(drm.licenseHeaders)
-                            // Video and audio can carry separate keys.
                             .setMultiSession(true)
                             .build()
                     )
-                    Logger.log("DRM: ${drm.scheme} license @ ${drm.licenseUrl}")
+                    Logger.log("DRM: " + drm.scheme + " license @ " + drm.licenseUrl)
                 }
             }
             .build()
@@ -264,19 +258,9 @@ class DantotsuPlayerManager(
         // the extension handed us, so the scheme has to come from the media item.
         val isContentUri =
             (mediaItem.localConfiguration?.uri?.scheme ?: video.file.url.substringBefore(":")) == "content"
-        val isLocalhostTorrent = runCatching {
-            val host = video.file.url.toUri().host
-            host == "127.0.0.1" || host == "localhost"
-        }.getOrDefault(false)
-
         val activeFactory = if (isContentUri) {
             val localDataSourceFactory = DefaultDataSource.Factory(activity)
             DefaultMediaSourceFactory(localDataSourceFactory, extractorsFactory)
-                .setSubtitleParserFactory(assParserFactory)
-                .setDrmSessionManagerProvider(drmProvider)
-        } else if (isLocalhostTorrent) {
-            // Direct upstream for localhost torrent streams - avoids double writing to flash via VideoCache
-            DefaultMediaSourceFactory(upstream, extractorsFactory)
                 .setSubtitleParserFactory(assParserFactory)
                 .setDrmSessionManagerProvider(drmProvider)
         } else {
