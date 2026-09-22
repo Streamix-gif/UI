@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    tools:context=".settings.player.PlayerSettingsActivity">
+
+    <LinearLayout
+        android:id="@+id/playerSettingsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
+
+        <!-- Header Section -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <ImageButton
+                android:id="@+id/playerSettingsBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                app:srcCompat="@drawable/ic_round_arrow_back_ios_new_24"
+                app:tint="@color/bg_opp"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_family"
+                    android:text="@string/player_settings"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="28sp" />
+
+                <ImageView
+                    android:id="@+id/settingsLogo"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="20dp"
+                    android:padding="16dp"
+                    app:srcCompat="@drawable/ic_round_video_settings_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <!-- ================= TIMESTAMPS ================= -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/timestamps"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+            <!-- Always Load Timestamps -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_art_track_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/always_load_time_stamps"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsTimeStamps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Timestamp Provider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_dns_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/timestamp_provider"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/timestamp_provider_desc"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsTimeStampsProvider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Show Skip Button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_fast_forward_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/show_skip_time_stamp_button"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsShowTimeStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- ================= AUTOMATION ================= -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/auto"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+            <!-- Auto Skip OP/ED -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_play_disabled_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/auto_skip_op_ed"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/requires_time_stamps_to_be_enabled"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAutoSkipOpEd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Auto Play Next Episode -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_skip_next_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/auto_play_next_episode"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/auto_play_next_episode_info"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAutoPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Auto Skip Fillers -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_play_disabled_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/auto_skip_fillers"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/auto_skip_fillers_info"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAutoSkip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- ================= UPDATE PROGRESS ================= -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/update_progress"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+            <!-- Ask Update Progress Anime -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_anilist"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/ask_update_progress_anime"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="@string/ask_update_progress_info_ep"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAskUpdateProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Ask Update Progress Hentai -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_auto_awesome_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/ask_update_progress_hentai"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAskUpdateHentai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Complete Percentage Slider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        app:srcCompat="@drawable/ic_round_sync_24"
+                        app:tint="?attr/colorPrimary"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/watch_complete_percentage"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/playerSettingsCompletePercentage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="1"
+                    android:value="20.0"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    app:labelBehavior="floating"
+                    app:labelStyle="@style/fontTooltip"
+                    app:thumbColor="?attr/colorSecondary"
+                    app:trackColorActive="?attr/colorSecondary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-4dp"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/poppins_family"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/watch_complete_percentage_info"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- ================= BEHAVIOUR ================= -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/behaviour"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+            <!-- Always Continue -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_play_circle_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/always_continue"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsAlwaysContinue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Loading Screen -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/rounded_animated_images_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Show Custom Loading Screen"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="Display logo and coverimages in  the player while loading"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsLoadingScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Pause Video Focus -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_pause_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/pause_video_focus"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsPauseVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Skip Time Control -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        app:srcCompat="@drawable/ic_round_fast_forward_24"
+                        app:tint="?attr/colorPrimary"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/skip_time"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/exo_skip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="+"
+                            android:textColor="?attr/colorSecondary"
+                            android:textSize="14sp"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/exo_skip_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:fontFamily="@font/poppins_bold"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:minWidth="32dp"
+                            android:text="85"
+                            android:textAlignment="center"
+                            android:textColor="?attr/colorSecondary"
+                            android:textSize="14sp"
+                            tools:ignore="HardcodedText,LabelFor" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:srcCompat="@drawable/ic_round_fast_forward_24"
+                            app:tint="?attr/colorSecondary"
+                            tools:ignore="ContentDescription" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/poppins_family"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/skip_time_info"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- ================= GESTURES ================= -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Player Gestures"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <!-- Vertical Swipe Gestures -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_swipe_vertical_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/gestures_vertical"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsPlayerVerticalSwipeGestures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Double Tap Gestures -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_touch_app_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/double_tap"
+                    android:textColor="@color/bg_opp"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsDoubleTapGestures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+            <!-- Seek Time Slider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        app:srcCompat="@drawable/rounded_forward_10_24"
+                        app:tint="?attr/colorPrimary"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/seek_time"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/playerSettingsSeekTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="5.0"
+                    android:value="15.0"
+                    android:valueFrom="5.0"
+                    android:valueTo="45.0"
+                    app:labelBehavior="floating"
+                    app:labelStyle="@style/fontTooltip"
+                    app:thumbColor="?attr/colorSecondary"
+                    app:tickColorInactive="?attr/colorSecondary"
+                    app:trackColorActive="?attr/colorSecondary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-4dp"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/poppins_family"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/seek_time_info"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Fast Forward Control -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_round_fast_forward_24"
+                    app:tint="?attr/colorPrimary"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Hold for 2x Speed"
+                        android:textColor="@color/bg_opp"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.6"
+                        android:fontFamily="@font/poppins_family"
+                        android:text="Temporarily play at double speed when pressing and holding the screen"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/playerSettingsPlayerLongPressForwardGestures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/button_switch_track" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

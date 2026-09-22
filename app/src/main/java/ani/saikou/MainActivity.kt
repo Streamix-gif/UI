@@ -1,0 +1,306 @@
+package ani.saikou
+
+import android.Manifest
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.drawable.Animatable
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnticipateInterpolator
+import android.widget.TextView
+import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
+import androidx.core.view.doOnAttach
+import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.activity.viewModels
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import ani.saikou.connections.anilist.Anilist
+import ani.saikou.connections.anilist.AnilistHomeViewModel
+import ani.saikou.databinding.ActivityMainBinding
+import ani.saikou.databinding.SplashScreenBinding
+import ani.saikou.home.AnimeFragment
+import ani.saikou.home.HomeFragment
+import ani.saikou.home.LoginFragment
+import ani.saikou.home.MangaFragment
+import ani.saikou.home.NoInternet
+import ani.saikou.media.MediaDetailsActivity
+import ani.saikou.media.CalendarFragment
+import ani.saikou.media.user.LibraryFragment
+import ani.saikou.profile.ProfileFragment
+import ani.saikou.profile.SocialFragment
+import ani.saikou.others.CustomBottomDialog
+import ani.saikou.settings.UserInterfaceSettings
+import ani.saikou.subcriptions.Subscription.Companion.startSubscription
+import ani.saikou.updater.AppUpdater
+import ani.saikou.updater.UpdateActivity
+import ani.saikou.updater.UpdateState
+import io.noties.markwon.Markwon
+import io.noties.markwon.SoftBreakAddsNewLinePlugin
+import java.io.Serializable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import nl.joery.animatedbottombar.AnimatedBottomBar
+import kotlin.time.Duration.Companion.milliseconds
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private var load = false
+    private var uiSettings = UserInterfaceSettings()
+    private var lastAppliedStartTab: Int? = null
+
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) startSubscription(force = true)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        var doubleBackToExitPressedOnce = false
+        onBackPressedDispatcher.addCallback(this) {
+            if (doubleBackToExitPressedOnce) finish()
+            doubleBackToExitPressedOnce = true
+            snackString(this@MainActivity.getString(R.string.back_to_exit))
+            Handler(Looper.getMainLooper()).postDelayed(
+                { doubleBackToExitPressedOnce = false }, 2000
+            )
+        }
+
+        binding.root.isMotionEventSplittingEnabled = false
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            val splash = SplashScreenBinding.inflate(layoutInflater)
+            binding.root.addView(splash.root)
+            (splash.splashImage.drawable as Animatable).start()
+            lifecycleScope.launch {
+                delay(2000.milliseconds)
+                ObjectAnimator.ofFloat(
+                    splash.root, View.TRANSLATION_Y, 0f, -splash.root.height.toFloat()
+                ).apply {
+                    interpolator = AnticipateInterpolator()
+                    duration = 200L
+                    doOnEnd { binding.root.removeView(splash.root) }
+                    start()
+                }
+            }
+        } else {
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                ObjectAnimator.ofFloat(
+                    splashScreenView, View.TRANSLATION_Y, 0f, -splashScreenView.height.toFloat()
+                ).apply {
+                    interpolator = AnticipateInterpolator()
+                    duration = 200L
+                    doOnEnd { splashScreenView.remove() }
+                    start()
+                }
+            }
+        }
+
+        uiSettings = loadData("ui_settings") ?: uiSettings
+        selectedOption = intent.getIntExtra("tab", uiSettings.defaultStartUpTab)
+        lastAppliedStartTab = selectedOption
+
+        binding.root.doOnAttach {
+            initActivity(this)
+            binding.navbarContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = navBarHeight
+            }
+        }
+
+        if (!isOnline(this)) {
+            snackString(this@MainActivity.getString(R.string.no_internet_connection))
+            startActivity(Intent(this, NoInternet::class.java))
+        } else {
+            val model: AnilistHomeViewModel by viewModels()
+            val navbar = binding.navbar
+            bottomBar = navbar
+            navbar.visibility = View.VISIBLE
+            binding.mainProgressBar.visibility = View.GONE
+
+            val mainViewPager = binding.viewpager
+            mainViewPager.isUserInputEnabled = false
+            mainViewPager.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+            mainViewPager.setPageTransformer(ZoomOutPageTransformer(uiSettings))
+
+            navbar.setOnTabSelectListener(object : AnimatedBottomBar.OnTabSelectListener {
+                override fun onTabSelected(
+                    lastIndex: Int,
+                    lastTab: AnimatedBottomBar.Tab?,
+                    newIndex: Int,
+                    newTab: AnimatedBottomBar.Tab
+                ) {
+                    navbar.animate().translationZ(12f).setDuration(200).start()
+                    selectedOption = newIndex
+                    if (mainViewPager.currentItem != newIndex) {
+                        mainViewPager.setCurrentItem(newIndex, false)
+                    }
+                }
+            })
+
+            navigateToTab(selectedOption)
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    AppUpdater.updateState.collect { state ->
+                        if (state is UpdateState.Available && AppUpdater.shouldLaunchUpdate(state.version)) {
+                            UpdateActivity.launch(this@MainActivity)
+                        }
+                    }
+                }
+            }
+
+            if (!load) {
+                load = true
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val intentTask = async {
+                        val id = intent.extras?.getInt("mediaId", 0) ?: 0
+                        val isMAL = intent.extras?.getBoolean("mal") ?: false
+                        val cont = intent.extras?.getBoolean("continue") ?: false
+                        if (id != 0) {
+                            val media = Anilist.query.getMedia(id, isMAL)
+                            if (media != null) {
+                                media.cameFromContinue = cont
+                                withContext(Dispatchers.Main) {
+                                    startActivity(
+                                        Intent(this@MainActivity, MediaDetailsActivity::class.java)
+                                            .putExtra("media", media as Serializable)
+                                    )
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    snackString(getString(R.string.anilist_not_found))
+                                }
+                            }
+                        }
+                    }
+
+                    try {
+                        model.loadMain(this@MainActivity)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                    intentTask.await()
+                    startSubscription()
+                }
+            }
+
+            checkNotificationPermission()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !isDialogDisabled(this)) {
+                val manager = getSystemService(android.content.pm.verify.domain.DomainVerificationManager::class.java)
+                val userState = manager.getDomainVerificationUserState(packageName)
+                val isLinkHandlingAllowed = userState?.isLinkHandlingAllowed ?: false
+                val domains = userState?.hostToStateMap?.values
+                val allSelected = domains?.isNotEmpty() == true && domains.all {
+                    it == android.content.pm.verify.domain.DomainVerificationUserState.DOMAIN_STATE_SELECTED ||
+                        it == android.content.pm.verify.domain.DomainVerificationUserState.DOMAIN_STATE_VERIFIED
+                }
+
+                if (!isLinkHandlingAllowed || !allSelected) {
+                    CustomBottomDialog.newInstance().apply {
+                        title = "Allow Saikou to automatically open Anilist & MAL Links?"
+                        val md = "Open settings & click **+Add Links** & select Anilist & Mal urls"
+                        addView(TextView(this@MainActivity).apply {
+                            Markwon.builder(this@MainActivity)
+                                .usePlugin(SoftBreakAddsNewLinePlugin.create())
+                                .build()
+                                .setMarkdown(this, md)
+                        })
+                        setNegativeButton(this@MainActivity.getString(R.string.no)) {
+                            disableLinkDialog(this@MainActivity)
+                            dismiss()
+                        }
+                        setPositiveButton(this@MainActivity.getString(R.string.yes)) {
+                            tryWith(true) {
+                                startActivity(
+                                    Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS)
+                                        .setData(Uri.parse("package:$packageName"))
+                                )
+                            }
+                            dismiss()
+                        }
+                    }.show(supportFragmentManager, "dialog")
+                }
+            }
+        }
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val isGranted = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!isGranted) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!::binding.isInitialized) return
+        val freshSettings = loadData<UserInterfaceSettings>("ui_settings") ?: return
+        uiSettings = freshSettings
+        if (freshSettings.defaultStartUpTab != lastAppliedStartTab) {
+            lastAppliedStartTab = freshSettings.defaultStartUpTab
+            navigateToTab(freshSettings.defaultStartUpTab)
+        }
+    }
+
+    fun navigateToTab(index: Int) {
+        selectedOption = index
+        if (binding.navbar.selectedIndex != index) binding.navbar.selectTabAt(index)
+        if (binding.viewpager.currentItem != index) binding.viewpager.setCurrentItem(index, false)
+    }
+
+    private class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+        FragmentStateAdapter(fragmentManager, lifecycle) {
+        override fun getItemCount(): Int = 5
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> AnimeFragment()
+                1 -> CalendarFragment()
+                2 -> SocialFragment()
+                3 -> LibraryFragment()
+                4 -> ProfileFragment()
+                else -> NavigationPlaceholderFragment.newInstance("Anime")
+            }
+        }
+    }
+
+    fun isDialogDisabled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences("saikou_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("disable_link_dialog", false)
+    }
+
+    fun disableLinkDialog(context: Context) {
+        val prefs = context.getSharedPreferences("saikou_prefs", Context.MODE_PRIVATE)
+        prefs.edit { putBoolean("disable_link_dialog", true) }
+    }
+}

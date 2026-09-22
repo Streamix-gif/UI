@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Required for exact Doze-piercing alarms on Android 12+ (API 31+) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <queries>
+        <package android:name="idm.internet.download.manager.plus" />
+        <package android:name="idm.internet.download.manager" />
+        <package android:name="idm.internet.download.manager.adm.lite" />
+        <package android:name="com.dv.adm" />
+    </queries>
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:extractNativeLibs="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Saikou"
+        android:usesCleartextTraffic="true"
+        tools:ignore="AllowBackup">
+
+        <activity
+            android:name="ani.saikou.media.novel.novelreader.NovelReaderActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/epub+zip" />
+                <data android:mimeType="application/x-mobipocket-ebook" />
+                <data android:mimeType="application/vnd.amazon.ebook" />
+                <data android:mimeType="application/fb2+zip" />
+                <data android:mimeType="application/vnd.comicbook+zip" />
+                <data android:pathPattern=".*\\.epub" />
+                <data android:pathPattern=".*\\.mobi" />
+                <data android:pathPattern=".*\\.kf8" />
+                <data android:pathPattern=".*\\.fb2" />
+                <data android:pathPattern=".*\\.cbz" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".settings.FAQActivity" />
+        <activity android:name=".settings.ReaderSettingsActivity" />
+        <activity android:name=".settings.UserInterfaceSettingsActivity" />
+        <activity android:name=".settings.player.PlayerSettingsActivity" />
+        <activity
+            android:name=".settings.SettingActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".others.imagesearch.ImageSearchActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".media.SearchActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".media.StudioActivity" />
+        <activity android:name=".media.AuthorActivity" />
+        <activity
+            android:name=".media.CalendarActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name="ani.saikou.media.user.ListActivity" />
+        <activity
+            android:name="ani.saikou.media.manga.mangareader.MangaReaderActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/manga"
+            android:launchMode="singleTask" />
+        <activity android:name=".media.GenreActivity" />
+        <activity
+            android:name=".media.MediaDetailsActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Saikou.NeverCutout" />
+        <activity android:name=".media.CharacterDetailsActivity" />
+        <activity android:name=".home.NoInternet" />
+        <activity android:name="ani.saikou.profile.EditProfileActivity" android:parentActivityName=".MainActivity" />
+        <activity android:name="ani.saikou.profile.WatchTogetherActivity" />
+        <activity android:name="ani.saikou.profile.RoomLobbyActivity" />
+        <activity android:name="ani.saikou.profile.WatchRoomActivity" />
+        <activity android:name="ani.saikou.profile.FriendsActivity" />
+        <activity android:name="ani.saikou.profile.MessagesActivity" />
+        <activity android:name="ani.saikou.profile.ChatDetailActivity" />
+        <activity android:name="ani.saikou.profile.NotificationsActivity" />
+        <activity android:name="ani.saikou.profile.SearchUsersActivity" />
+        <activity android:name="ani.saikou.profile.UserProfileActivity" />
+
+
+        <activity
+            android:name="ani.saikou.settings.accounts.AccountsActivity"
+            android:exported="false" />
+        <activity
+            android:name="ani.saikou.settings.about.AboutSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="ani.saikou.settings.anime.AnimeSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="ani.saikou.settings.manga.MangaSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="ani.saikou.settings.notifications.NotificationSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="ani.saikou.settings.common.CommonSettingsActivity"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".media.anime.ExoplayerView"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:screenOrientation="sensorLandscape"
+            android:exported="false" />
+
+        <service
+            android:name=".media.anime.AnimePlayerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <activity
+            android:name="ani.saikou.connections.mal.Login"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter android:label="Myanimelist Login for Streamix">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="mal"
+                    android:scheme="saikou" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ani.saikou.connections.discord.auth.Login"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter android:label="Discord Login for Streamix">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="saikou" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="discord.saikou.com" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ani.saikou.connections.anilist.UrlMedia"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+            <intent-filter
+                android:autoVerify="true"
+                android:label="@string/read_on_saikou">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="anilist.co" />
+                <data android:host="myanimelist.net" />
+                <data android:pathPrefix="/manga" />
+            </intent-filter>
+
+            <intent-filter
+                android:autoVerify="true"
+                android:label="@string/watch_on_saikou">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="anilist.co" />
+                <data android:host="myanimelist.net" />
+                <data android:pathPrefix="/anime" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:enabled="true"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

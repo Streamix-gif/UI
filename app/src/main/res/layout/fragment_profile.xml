@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="28dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="238dp">
+
+                <ImageView
+                    android:id="@+id/profileBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/linear_gradient_bg" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#88000000" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="26dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Account"
+                                android:textColor="@android:color/white"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:alpha=".78"
+                                android:text="Manage your account and preferences"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/profileSettingsButton"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Settings"
+                            android:src="@drawable/ic_round_settings_24"
+                            android:tint="@android:color/white" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:alpha=".85"
+                        android:text="Anime • Friends • Your library"
+                        android:textColor="@android:color/white"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="-18dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="18dp"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profileAvatar"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_round_settings_24"
+                         />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/profileName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/username"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/profileBio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:alpha=".62"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:background="?attr/colorControlHighlight"
+                            android:paddingStart="9dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="4dp"
+                            android:text="Free User"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/editProfileButton"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Edit profile"
+                        android:src="@drawable/ic_round_edit_note_24"
+                        android:tint="?attr/colorOnSurface" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="◆"
+                        android:textSize="27sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Upgrade to Premium"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:alpha=".62"
+                            android:text="Unlock more features for a better anime experience"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="30sp"
+                        android:alpha=".6" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                        <TextView android:id="@+id/profileAnimeWatched" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Anime Watched" android:textSize="10sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="7dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                        <TextView android:id="@+id/profileEpisodes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Episodes Watched" android:textSize="10sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="7dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                        <TextView android:id="@+id/profileFavoritesCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Favorites" android:textSize="10sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical">
+
+                <TextView android:id="@+id/profileMenuEdit" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="◉   Profile
+     View and edit your profile" android:textSize="14sp"/>
+                <TextView android:id="@+id/profileMenuPremium" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="◆   Premium &amp; Diamonds
+     Manage your subscription and diamonds" android:textSize="14sp"/>
+                <TextView android:id="@+id/profileMenuAppearance" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="●   Appearance
+     Theme, colors, and display settings" android:textSize="14sp"/>
+                <TextView android:id="@+id/profileMenuNotifications" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="●   Notifications
+     Episode updates and system notifications" android:textSize="14sp"/>
+                <TextView android:id="@+id/profileMenuSettings" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="⚙   Settings
+     App preferences and data" android:textSize="14sp"/>
+                <TextView android:id="@+id/profileMenuAbout" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="ⓘ   About
+     Version, credits, and more" android:textSize="14sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="18dp"
+                android:text="Favorite Anime"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="220dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/profileFavorites"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
+
+                <TextView
+                    android:id="@+id/profileEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/empty"
+                    android:alpha=".6" />
+            </FrameLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

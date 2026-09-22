@@ -1,0 +1,166 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.google.devtools.ksp'
+}
+
+def gitCommitHash = providers.exec {
+    commandLine("git", "rev-parse", "--verify", "--short", "HEAD")
+}.standardOutput.asText.getOrElse("").trim()
+
+android {
+    namespace 'ani.saikou'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "ani.saikou"
+        minSdk 26
+        targetSdk 34
+        versionCode((System.currentTimeMillis() / 60000).toInteger())
+        versionName "1.2.5"
+
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+        resources {
+            pickFirsts += ['**/*.so']
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".beta"
+            debuggable true
+            versionNameSuffix "." + gitCommitHash
+            buildConfigField "String", "SUPER_CLIPPING", "\"${project.findProperty('MUST_BE_THE_WATER') ?: ""}\""
+            buildConfigField "String", "MY_CUSTOM_API_KEY", "\"${project.findProperty('API_KEY') ?: ""}\""
+            buildConfigField "String", "SERVER_URL", "\"${project.findProperty('HOST_URL') ?: ""}\""
+            buildConfigField "long", "BUILD_TIME", "${System.currentTimeMillis()}L"
+
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+        compose true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    // Core
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.browser:browser:1.10.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.work:work-runtime-ktx:2.9.1'
+
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // Kotlin 2.3.0 BOM
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:2.3.0")
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    implementation 'com.github.Blatzar:NiceHttp:0.4.11'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
+
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
+
+    // Room
+    def roomVersion = "2.7.0"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    ksp "androidx.room:room-compiler:$roomVersion"
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    ksp 'com.github.bumptech.glide:ksp:4.16.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.16.0'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta08"
+
+    // Media3
+    def exoVersion = '1.11.1'
+    implementation "androidx.media3:media3-exoplayer:$exoVersion"
+    implementation "androidx.media3:media3-ui:$exoVersion"
+    implementation "androidx.media3:media3-exoplayer-hls:$exoVersion"
+    implementation "androidx.media3:media3-exoplayer-dash:$exoVersion"
+    implementation "androidx.media3:media3-datasource-okhttp:$exoVersion"
+    implementation "androidx.media3:media3-session:$exoVersion"
+    implementation "androidx.media3:media3-cast:$exoVersion"
+    implementation "androidx.media3:media3-effect:$exoVersion"
+    implementation "androidx.mediarouter:mediarouter:1.8.1"
+    implementation "com.github.anilbeesetti.nextlib:nextlib-media3ext:0.8.4"
+    implementation "io.github.peerless2012:ass-media:0.5.1"
+    implementation "io.github.peerless2012:ass-kt:0.5.1"
+
+    // UI
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    implementation 'com.alexvasilkov:gesture-views:2.8.3'
+    implementation 'com.github.VipulOG:ebook-reader:0.1.6'
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
+
+    // Compose BOM
+    def composeBom = platform('androidx.compose:compose-bom:2024.04.01')
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.runtime:runtime'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-core'
+    implementation 'androidx.compose.material:material-icons-extended'
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+    implementation "androidx.compose.animation:animation-graphics"
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation "com.github.abdallahmehiz:seeker:2.0.1"
+
+    // Kotlin Collections & Markdown
+    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
+    implementation 'com.mikepenz:multiplatform-markdown-renderer-m3:0.27.0'
+}
