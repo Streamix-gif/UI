@@ -150,23 +150,6 @@
         </activity>
 
         <activity
-            android:name="ani.saikou.connections.discord.auth.Login"
-            android:configChanges="orientation|screenSize|layoutDirection"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:launchMode="singleTask">
-            <intent-filter android:label="Discord Login for Streamix">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="saikou" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="discord.saikou.com" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="ani.saikou.connections.anilist.UrlMedia"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:excludeFromRecents="true"
