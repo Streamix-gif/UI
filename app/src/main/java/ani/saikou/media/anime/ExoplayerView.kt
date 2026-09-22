@@ -70,8 +70,6 @@ import ani.saikou.NoPaddingArrayAdapter
 import ani.saikou.R
 import ani.saikou.connections.anilist.Anilist
 import ani.saikou.connections.crashlytics.CrashlyticsInterface
-import ani.saikou.connections.discord.Discord
-import ani.saikou.connections.discord.RPCManager
 import ani.saikou.connections.subtitles.OpenSubRestItem
 import ani.saikou.connections.subtitles.OpenSubtitlesRestApi
 import ani.saikou.connections.subtitles.StremioSub
@@ -93,7 +91,6 @@ import ani.saikou.media.anime.player.CastScreenView
 import ani.saikou.media.anime.player.DantotsuPlayerManager
 import ani.saikou.media.anime.player.PlayerAniSkipManager
 import ani.saikou.media.anime.player.PlayerCastManager
-import ani.saikou.media.anime.player.PlayerDiscordManager
 import ani.saikou.media.anime.player.PlayerGestureManager
 import ani.saikou.media.anime.player.PlayerProgressManager
 import ani.saikou.media.anime.player.PlayerScreenshotManager
@@ -146,8 +143,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     lateinit var gestureManager: PlayerGestureManager
         private set
     lateinit var aniSkipManager: PlayerAniSkipManager
-        private set
-    lateinit var discordManager: PlayerDiscordManager
         private set
     lateinit var castManager: PlayerCastManager
         private set
@@ -374,7 +369,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             this, playerView, model, exoSkipOpEd, exoSkip, skipTimeButton, skipTimeText, timeStampText,
             { playerManager.exoPlayer }
         )
-        discordManager = PlayerDiscordManager(this)
         progressManager = PlayerProgressManager(
             this, model, { playerManager.exoPlayer }, { playerManager.isInitialized }
         )
@@ -404,7 +398,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
                     .into(exoPlay)
             }
             if (initialized && this::episode.isInitialized) {
-                discordManager.updatePresence(media, episode, playerManager.exoPlayer, isPlaying)
             }
         }
 
@@ -1302,7 +1295,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         exoSubtitleView.setCues(emptyList())
         progressManager.stopTracking()
         progressManager.updateWidgetState(isExiting = true)
-        discordManager.clear()
         playerManager.release()
     }
 
@@ -1486,7 +1478,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
                     .load(if (isPlaying) R.drawable.anim_play_to_pause else R.drawable.anim_pause_to_play)
                     .into(exoPlay)
             }
-            discordManager.updatePresence(media, episode, playerManager.exoPlayer, isPlaying)
             updatePipActions(isPlaying)
         }
     }
@@ -1498,7 +1489,6 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     ) {
         super.onPositionDiscontinuity(oldPosition, newPosition, reason)
         if (reason == Player.DISCONTINUITY_REASON_SEEK || reason == Player.DISCONTINUITY_REASON_SEEK_ADJUSTMENT) {
-            discordManager.updatePresence(media, episode, playerManager.exoPlayer, isPlayerPlaying)
             if (isPlayerPlaying) playerManager.exoPlayer?.play()
             // Re-apply subtitle track selection after seek. ExoPlayer may invalidate track
             // group overrides when seeking into unbuffered regions of HLS/DASH streams, causing
