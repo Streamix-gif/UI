@@ -77,12 +77,15 @@ class LibraryFragment : Fragment() {
 
             binding.listProgressBar.visibility = View.VISIBLE
             lifecycleScope.launch {
-                if (sort != null) {
-                    withContext(Dispatchers.IO) {
-                        model.loadLists(true, Anilist.userid ?: return@withContext, sort)
-                    }
+                withContext(Dispatchers.IO) {
+                    model.loadLists(
+                        true,
+                        Anilist.userid ?: return@withContext,
+                        sort,
+                        genre,
+                        score
+                    )
                 }
-                model.applyLibraryFilters(genre, score)
                 binding.listProgressBar.visibility = View.GONE
 
                 val lists = model.getLists().value ?: return@launch
