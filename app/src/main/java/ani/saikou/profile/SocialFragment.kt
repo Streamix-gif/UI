@@ -130,6 +130,40 @@ class SocialFragment : Fragment() {
                 isChecked = index == 0
                 setEnsureMinTouchTargetSize(false)
                 chipMinHeight = 38f * resources.displayMetrics.density
+                chipCornerRadius = 19f * resources.displayMetrics.density
+                chipStrokeWidth = 1f * resources.displayMetrics.density
+                chipStrokeColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf()
+                    ),
+                    intArrayOf(
+                        android.graphics.Color.rgb(105, 126, 255),
+                        android.graphics.Color.rgb(55, 62, 91)
+                    )
+                )
+                chipBackgroundColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf()
+                    ),
+                    intArrayOf(
+                        android.graphics.Color.rgb(37, 45, 82),
+                        android.graphics.Color.rgb(18, 24, 42)
+                    )
+                )
+                setTextColor(
+                    ColorStateList(
+                        arrayOf(
+                            intArrayOf(android.R.attr.state_checked),
+                            intArrayOf()
+                        ),
+                        intArrayOf(
+                            android.graphics.Color.WHITE,
+                            android.graphics.Color.rgb(190, 194, 211)
+                        )
+                    )
+                )
                 setOnClickListener {
                     ownOnly = index == 0
                     following = index == 1
