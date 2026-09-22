@@ -977,4 +977,28 @@
     <string name="filter_dubbed">Filter dubbed shows</string>
 
     <string name="random_selection">Random Selection</string>
+    <string name="tab_subtitles">Subtitles</string>
+    <string name="tab_online">Online</string>
+    <string name="tab_local">Local</string>
+    <string name="tab_sync">Sync</string>
+    <string name="no_server_subtitles">No server subtitles</string>
+    <string name="no_server_subtitles_desc">This server has no subtitles (hardsub / dub). Use the Online or Local tab to add subtitles.</string>
+    <string name="search_online_subtitles">Search Online</string>
+    <string name="search_online_hint">Search anime or episode…</string>
+    <string name="all_providers">All</string>
+    <string name="searching_subtitles">Searching subtitles…</string>
+    <string name="no_online_subtitles">No online subtitles found</string>
+    <string name="no_online_subtitles_desc">Try searching with a different keyword or provider</string>
+    <string name="add_local_subtitle">Import Subtitle</string>
+    <string name="add_local_subtitle_desc">Add .srt, .vtt, .ass file from device</string>
+    <string name="no_local_subtitles">No local subtitles</string>
+    <string name="no_local_subtitles_desc">Tap &apos;Import Subtitle&apos; above to load a subtitle file from your storage</string>
+    <string name="subtitle_delay_title">Subtitle Delay</string>
+    <string name="sync_in_sync">In sync</string>
+    <string name="sync_reset">Reset</string>
+    <string name="audio_delay_title">Audio Delay</string>
+    <string name="sync_helper_title">Hearing &amp; Seen Sync Helper</string>
+    <string name="sync_helper_desc">Tap &apos;I Heard Dialogue Now&apos; when speech occurs, and &apos;I Saw Subtitle Now&apos; when the corresponding subtitle is shown. The offset will be calculated and applied automatically.</string>
+    <string name="sync_hearing_audio_btn">I Heard Dialogue Now</string>
+    <string name="sync_seen_subtitle_btn">I Saw Subtitle Now</string>
 </resources>
