@@ -992,13 +992,13 @@
     <string name="add_local_subtitle">Import Subtitle</string>
     <string name="add_local_subtitle_desc">Add .srt, .vtt, .ass file from device</string>
     <string name="no_local_subtitles">No local subtitles</string>
-    <string name="no_local_subtitles_desc">Tap &apos;Import Subtitle&apos; above to load a subtitle file from your storage</string>
+    <string name="no_local_subtitles_desc">Tap \'Import Subtitle\' above to load a subtitle file from your storage</string>
     <string name="subtitle_delay_title">Subtitle Delay</string>
     <string name="sync_in_sync">In sync</string>
     <string name="sync_reset">Reset</string>
     <string name="audio_delay_title">Audio Delay</string>
     <string name="sync_helper_title">Hearing &amp; Seen Sync Helper</string>
-    <string name="sync_helper_desc">Tap &apos;I Heard Dialogue Now&apos; when speech occurs, and &apos;I Saw Subtitle Now&apos; when the corresponding subtitle is shown. The offset will be calculated and applied automatically.</string>
+    <string name="sync_helper_desc">Tap \'I Heard Dialogue Now\' when speech occurs, and \'I Saw Subtitle Now\' when the corresponding subtitle is shown. The offset will be calculated and applied automatically.</string>
     <string name="sync_hearing_audio_btn">I Heard Dialogue Now</string>
     <string name="sync_seen_subtitle_btn">I Saw Subtitle Now</string>
 </resources>
