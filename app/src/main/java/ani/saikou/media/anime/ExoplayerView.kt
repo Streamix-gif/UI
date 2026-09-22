@@ -1852,6 +1852,7 @@ class SaikouPrePlaybackView @JvmOverloads constructor(
     private var scaleAnimator: android.animation.ValueAnimator? = null
     private var pulseAnimator: android.animation.ValueAnimator? = null
     private var fadeAnimator: android.animation.ObjectAnimator? = null
+    private var simulationAnimator: android.animation.ValueAnimator? = null
 
     init {
         setBackgroundColor(android.graphics.Color.BLACK)
@@ -1892,6 +1893,20 @@ class SaikouPrePlaybackView @JvmOverloads constructor(
         }
         applyProgress(0f)
         startAnimations()
+        simulationAnimator?.cancel()
+        simulationAnimator = android.animation.ValueAnimator.ofFloat(0f, 0.92f).apply {
+            duration = 3500L
+            addUpdateListener { value ->
+                if (currentProgress < 0.92f) {
+                    val simulated = (value.animatedValue as Float).coerceAtMost(0.92f)
+                    if (simulated > currentProgress) {
+                        currentProgress = simulated
+                        applyProgress(simulated)
+                    }
+                }
+            }
+            start()
+        }
     }
 
     fun updateProgress(progress: Float) {
@@ -1926,6 +1941,7 @@ class SaikouPrePlaybackView @JvmOverloads constructor(
         scaleAnimator?.cancel()
         pulseAnimator?.cancel()
         fadeAnimator?.cancel()
+        simulationAnimator?.cancel()
         visibility = android.view.View.GONE
         alpha = 1f
     }
