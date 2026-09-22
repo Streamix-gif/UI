@@ -183,7 +183,7 @@
 
             <intent-filter
                 android:autoVerify="true"
-                android:label="@string/read_on_saikou">
+                android:label="@string/read_on_streamix">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -196,7 +196,7 @@
 
             <intent-filter
                 android:autoVerify="true"
-                android:label="@string/watch_on_saikou">
+                android:label="@string/watch_on_streamix">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
