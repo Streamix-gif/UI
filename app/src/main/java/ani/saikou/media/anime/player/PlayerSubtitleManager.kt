@@ -1,7 +1,4 @@
-package ani.saikou.media.anime.player
-
-import android.net.Uri
-import android.util.Log
+package ani.saikou.media.anime.player undefinedimport android.net.Uri import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -32,16 +29,9 @@ import androidx.media3.ui.CaptionStyleCompat.EDGE_TYPE_NONE
 import androidx.media3.ui.CaptionStyleCompat.EDGE_TYPE_OUTLINE
 import androidx.media3.ui.PlayerView
 import ani.saikou.R
-import ani.saikou.connections.subtitles.OpenSubRestItem
-import ani.saikou.connections.subtitles.OpenSubtitlesRestApi
-import ani.saikou.connections.subtitles.StremioSub
-import ani.saikou.connections.subtitles.SubSourceSub
-import ani.saikou.connections.subtitles.SubSourceSubtitles
-import ani.saikou.connections.subtitles.WyzieSub
 import ani.saikou.defaultHeaders
 import ani.saikou.media.Media
 import ani.saikou.media.MediaDetailsViewModel
-import ani.saikou.media.anime.EpisodeSubtitleStore
 import ani.saikou.media.anime.ExoplayerView
 import ani.saikou.others.LanguageMapper
 import ani.saikou.others.Xubtitle
@@ -636,13 +626,6 @@ class PlayerSubtitleManager(
         pendingSubtitleLabel = null
         serverSubJob?.cancel()
         if (mediaId != null) {
-            val savedLang: String? = PrefManager.getNullableCustomVal("subLang_$mediaId", null, String::class.java)
-            if (savedLang?.startsWith("Online:") == true) {
-                PrefManager.setCustomVal("subLang_$mediaId", null)
-            }
-            if (clearPersistedForEp != null) {
-                EpisodeSubtitleStore.clearSavedSubtitle(activity, mediaId, clearPersistedForEp)
-            }
         }
         try {
             activity.cacheDir.listFiles()?.forEach { file ->
@@ -866,21 +849,6 @@ class PlayerSubtitleManager(
 
         val exoActivity = activity as? ExoplayerView
         if (exoActivity != null) {
-            val epNum = runCatching { exoActivity.episode.number }.getOrNull()
-            if (epNum != null) {
-                EpisodeSubtitleStore.saveSubtitle(
-                    context = exoActivity,
-                    mediaId = ExoplayerView.media.id,
-                    episodeNumber = epNum,
-                    sub = EpisodeSubtitleStore.SavedEpisodeSubtitle(
-                        id = id,
-                        displayName = displayName,
-                        provider = provider,
-                        language = lang
-                    ),
-                    sourceFile = file
-                )
-            }
             exoActivity.playerManager.applyUpdatedSubtitles(existingSubtitles, currentPos)
         } else {
             val newMediaItem = currentMediaItem.buildUpon()
