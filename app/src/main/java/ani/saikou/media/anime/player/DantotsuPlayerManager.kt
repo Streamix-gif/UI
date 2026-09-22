@@ -330,13 +330,8 @@ class DantotsuPlayerManager(
     ): ExoPlayer {
         releaseExoPlayer()
 
-        val uri = currentMediaItem?.localConfiguration?.uri
-        val isTorrentStream = uri != null && (uri.host == "127.0.0.1" || uri.host == "localhost") &&
-            (uri.path?.contains("torrent", ignoreCase = true) == true ||
-             uri.query?.contains("torrent", ignoreCase = true) == true ||
-             uri.query?.contains("infohash", ignoreCase = true) == true)
-        val targetBufferBytes = if (isTorrentStream) 48 * 1024 * 1024 else androidx.media3.common.C.LENGTH_UNSET
-        val maxBufferMs = if (isTorrentStream) 60_000 else DEFAULT_MAX_BUFFER_MS
+        val targetBufferBytes = androidx.media3.common.C.LENGTH_UNSET
+        val maxBufferMs = DEFAULT_MAX_BUFFER_MS
         val loadControl = DefaultLoadControl.Builder()
             .setBackBuffer(BACK_BUFFER_DURATION_MS, false)
             .setBufferDurationsMs(
