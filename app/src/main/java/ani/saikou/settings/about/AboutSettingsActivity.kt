@@ -144,9 +144,6 @@ class AboutSettingsActivity : AppCompatActivity() {
         }
 
         // Social Media / Community Icons
-        binding.loginDiscord.setOnClickListener {
-            openLinkInBrowser(getString(R.string.discord))
-        }
         binding.loginTelegram.setOnClickListener {
             openLinkInBrowser(getString(R.string.telegram))
         }
