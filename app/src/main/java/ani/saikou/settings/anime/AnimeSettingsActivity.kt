@@ -17,7 +17,6 @@ import ani.saikou.saveData
 import ani.saikou.settings.player.PlayerSettingsActivity
 import ani.saikou.settings.UserInterfaceSettings
 import ani.saikou.statusBarHeight
-import ani.saikou.torrserver.TorrServerActivity
 
 class AnimeSettingsActivity : AppCompatActivity() {
 
@@ -131,8 +130,5 @@ class AnimeSettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, PlayerSettingsActivity::class.java))
         }
 
-        binding.settingsTorrent.setOnClickListener {
-            startActivity(Intent(this, TorrServerActivity::class.java))
-        }
     }
 }
