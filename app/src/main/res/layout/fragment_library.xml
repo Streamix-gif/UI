@@ -116,12 +116,19 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/listTabLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:tabContentStart="16dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            app:tabContentStart="12dp"
+            app:tabIndicatorColor="@color/streamix_primary"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
             app:tabMode="scrollable"
-            app:tabPaddingEnd="16dp"
-            app:tabPaddingStart="16dp"
-            app:tabTextAppearance="@style/NavBarText" />
+            app:tabPaddingEnd="12dp"
+            app:tabPaddingStart="12dp"
+            app:tabMinWidth="88dp"
+            app:tabTextAppearance="@style/StreamixStatusTabText"
+            app:tabTextColor="@color/streamix_status_tab_text" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
