@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -56,49 +55,47 @@ class LibraryFragment : Fragment() {
             false
         }
 
-        binding.filter.setOnClickListener {
-            val popup = PopupMenu(requireContext(), binding.filter)
-            popup.menu.add(0, 0, 0, "All")
-            model.getAllGenres().forEachIndexed { index, genre ->
-                popup.menu.add(1, index + 1, index + 1, genre)
-            }
-            model.getAllTags().forEachIndexed { index, tag ->
-                popup.menu.add(2, index + 10000, index + 10000, tag)
-            }
-            popup.setOnMenuItemClickListener { item ->
-                when (item.groupId) {
-                    0 -> model.unfilterLists()
-                    1 -> model.filterLists(item.title.toString())
-                    2 -> model.filterListsByTag(item.title.toString())
-                }
-                true
-            }
-            popup.show()
+        val openLibraryFilters = View.OnClickListener {
+            LibraryFilterDialogFragment
+                .newInstance(model.getAllGenres())
+                .show(parentFragmentManager, "library_filters")
         }
 
-        binding.listSort.setOnClickListener {
-            val popup = PopupMenu(requireContext(), binding.listSort)
-            popup.menu.add(0, 0, 0, "Score")
-            popup.menu.add(0, 1, 1, "Title")
-            popup.menu.add(0, 2, 2, "Updated")
-            popup.menu.add(0, 3, 3, "Release")
-            popup.setOnMenuItemClickListener { item ->
-                val sort = when (item.itemId) {
-                    0 -> "score"
-                    1 -> "title"
-                    2 -> "updatedAt"
-                    3 -> "release"
-                    else -> null
-                }
-                binding.listProgressBar.visibility = View.VISIBLE
-                lifecycleScope.launch {
+        binding.filter.setOnClickListener(openLibraryFilters)
+        binding.listSort.setOnClickListener(openLibraryFilters)
+
+        parentFragmentManager.setFragmentResultListener(
+            LibraryFilterDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, result ->
+            val sort = result.getString(LibraryFilterDialogFragment.KEY_SORT)
+            val status = result.getString(LibraryFilterDialogFragment.KEY_STATUS, "All")
+            val genre = result.getString(LibraryFilterDialogFragment.KEY_GENRE, "All")
+            val score = result.getString(LibraryFilterDialogFragment.KEY_SCORE, "All")
+                .removeSuffix("+")
+                .toIntOrNull() ?: 0
+
+            binding.listProgressBar.visibility = View.VISIBLE
+            lifecycleScope.launch {
+                if (sort != null) {
                     withContext(Dispatchers.IO) {
                         model.loadLists(true, Anilist.userid ?: return@withContext, sort)
                     }
                 }
-                true
+                model.applyLibraryFilters(genre, score)
+                binding.listProgressBar.visibility = View.GONE
+
+                val lists = model.getLists().value ?: return@launch
+                if (status != "All") {
+                    val index = lists.keys.indexOfFirst { key ->
+                        key.replace("-", "").replace(" ", "")
+                            .equals(status.replace("-", "").replace(" ", ""), ignoreCase = true)
+                    }
+                    if (index >= 0) binding.listViewPager.setCurrentItem(index, true)
+                } else {
+                    binding.listViewPager.setCurrentItem(0, true)
+                }
             }
-            popup.show()
         }
 
         binding.random.setOnClickListener {
