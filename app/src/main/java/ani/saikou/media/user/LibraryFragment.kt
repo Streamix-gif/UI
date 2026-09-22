@@ -23,6 +23,7 @@ class LibraryFragment : Fragment() {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
     private val model: ListViewModel by viewModels()
+    private var pendingStatus = "All"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
@@ -75,6 +76,7 @@ class LibraryFragment : Fragment() {
                 .removeSuffix("+")
                 .toIntOrNull() ?: 0
 
+            pendingStatus = status
             binding.listProgressBar.visibility = View.VISIBLE
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
@@ -85,18 +87,6 @@ class LibraryFragment : Fragment() {
                         genre,
                         score
                     )
-                }
-                binding.listProgressBar.visibility = View.GONE
-
-                val lists = model.getLists().value ?: return@launch
-                if (status != "All") {
-                    val index = lists.keys.indexOfFirst { key ->
-                        key.replace("-", "").replace(" ", "")
-                            .equals(status.replace("-", "").replace(" ", ""), ignoreCase = true)
-                    }
-                    if (index >= 0) binding.listViewPager.setCurrentItem(index, true)
-                } else {
-                    binding.listViewPager.setCurrentItem(0, true)
                 }
             }
         }
@@ -118,6 +108,18 @@ class LibraryFragment : Fragment() {
             TabLayoutMediator(binding.listTabLayout, binding.listViewPager) { tab, position ->
                 tab.text = keys[position] + " (" + values[position].size + ")"
             }.attach()
+            binding.listViewPager.post {
+                if (pendingStatus == "All") {
+                    binding.listViewPager.setCurrentItem(0, true)
+                } else {
+                    val index = keys.indexOfFirst { key ->
+                        key.replace("-", "").replace(" ", "")
+                            .equals(pendingStatus.replace("-", "").replace(" ", ""), ignoreCase = true)
+                    }
+                    if (index >= 0) binding.listViewPager.setCurrentItem(index, true)
+                }
+                binding.listProgressBar.visibility = View.GONE
+            }
         }
 
         lifecycleScope.launch {
