@@ -66,7 +66,6 @@
     <string name="add_fav">Add to Favourites</string>
     <string name="notifications">Notifications</string>
     <string name="read_on_streamix">Read on Streamix</string>
-    <string name="watch_on_streamix">Watch on Streamix</string>
     <string-array name="keys">
         <item>Reading</item>
         <item>Watching</item>
