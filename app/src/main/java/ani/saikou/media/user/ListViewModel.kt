@@ -57,6 +57,21 @@ class ListViewModel : ViewModel() {
         }.toMutableMap())
     }
 
+    fun applyLibraryFilters(genre: String = "All", minScore: Int = 0) {
+        val current = unfilteredLists.value ?: return
+        if (genre == "All" && minScore <= 0) {
+            lists.postValue(current)
+            return
+        }
+        lists.postValue(current.mapValues { (_, media) ->
+            ArrayList(media.filter { item ->
+                val score = if (item.userScore != 0) item.userScore else (item.meanScore ?: 0)
+                (genre == "All" || genre in item.genres) &&
+                    (minScore <= 0 || score >= minScore * 10)
+            })
+        }.toMutableMap())
+    }
+
     fun getAllTags(): List<String> =
         unfilteredLists.value?.values?.flatten()?.flatMap { it.tags }?.distinct()?.sorted().orEmpty()
 
