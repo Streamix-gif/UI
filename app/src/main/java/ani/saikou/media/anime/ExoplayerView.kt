@@ -177,6 +177,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     private lateinit var customSubtitleView: Xubtitle
     private lateinit var customCastButton: CustomCastButton
     private lateinit var castScreenView: CastScreenView
+    private lateinit var prePlaybackView: SaikouPrePlaybackView
 
     private var orientationListener: OrientationEventListener? = null
     private var hasExtSubtitles = false
@@ -318,6 +319,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         setContentView(binding.root)
 
         playerView = binding.playerView
+        prePlaybackView = binding.prePlaybackView
         hideSystemBarsExtendView()
 
         // Bind Views
@@ -904,6 +906,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     }
 
     private fun initPlayer() {
+        prePlaybackView.start(episode.thumb?.url ?: media.banner ?: media.cover, media.cover)
         gestureManager.checkNotch()
         aniSkipManager.resetForNewEpisode()
         val selEp = media.anime?.selectedEpisode ?: episodeArr.firstOrNull() ?: return
@@ -1286,6 +1289,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     override fun onPlaybackStateChanged(playbackState: Int) {
         val player = playerManager.exoPlayer ?: return
         if (playbackState == ExoPlayer.STATE_READY) {
+            prePlaybackView.complete()
             player.play()
             if (progressManager.episodeLength <= 0f && player.duration > 0) {
                 progressManager.episodeLength = player.duration.toFloat()
@@ -1293,6 +1297,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             isBuffering = false
             checkAndLoadTimestamps()
         } else if (playbackState == ExoPlayer.STATE_BUFFERING) {
+            prePlaybackView.updateProgress(player.bufferedPercentage / 100f)
             isBuffering = true
         } else if (playbackState == ExoPlayer.STATE_ENDED) {
             progressManager.updateAniProgress(forceComplete = true)
@@ -1766,6 +1771,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
 
     override fun onDestroy() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        if (this::prePlaybackView.isInitialized) prePlaybackView.reset()
         orientationListener?.disable()
         orientationListener = null
         lifecycleScope.launch(Dispatchers.IO) {
@@ -1804,5 +1810,159 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             pipReceiver = null
         }
         super.onDestroy()
+    }
+}
+
+
+/**
+ * Saikou-style pre-playback artwork layer adapted to the ExoPlayer/Dantotsu player.
+ * Keeps the visual behavior from Saikou without introducing a second player/loading engine.
+ */
+class SaikouPrePlaybackView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : android.widget.FrameLayout(context, attrs) {
+    private val backdrop = android.widget.ImageView(context).apply {
+        scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+    }
+    private val overlay = android.view.View(context).apply {
+        setBackgroundColor(android.graphics.Color.argb(153, 0, 0, 0))
+    }
+    private val logoBase = android.widget.ImageView(context).apply {
+        scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+        alpha = 0.20f
+    }
+    private val logoFill = android.widget.ImageView(context).apply {
+        scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+    }
+    private val progressText = android.widget.TextView(context).apply {
+        setTextColor(android.graphics.Color.WHITE)
+        textSize = 52f
+        typeface = android.graphics.Typeface.DEFAULT_BOLD
+        gravity = android.view.Gravity.CENTER
+    }
+    private val loadingText = android.widget.TextView(context).apply {
+        setTextColor(android.graphics.Color.argb(179, 255, 255, 255))
+        textSize = 14f
+        gravity = android.view.Gravity.CENTER
+        text = "Loading"
+    }
+
+    private var currentProgress = 0f
+    private var scaleAnimator: android.animation.ValueAnimator? = null
+    private var pulseAnimator: android.animation.ValueAnimator? = null
+    private var fadeAnimator: android.animation.ObjectAnimator? = null
+
+    init {
+        setBackgroundColor(android.graphics.Color.BLACK)
+        addView(backdrop, android.widget.FrameLayout.LayoutParams(-1, -1))
+        addView(overlay, android.widget.FrameLayout.LayoutParams(-1, -1))
+
+        val logoContainer = android.widget.FrameLayout(context)
+        logoContainer.addView(logoBase, android.widget.FrameLayout.LayoutParams(-1, 180))
+        logoContainer.addView(logoFill, android.widget.FrameLayout.LayoutParams(-1, 180))
+        logoContainer.addView(progressText, android.widget.FrameLayout.LayoutParams(-1, 180))
+        logoContainer.addView(loadingText, android.widget.FrameLayout.LayoutParams(-1, 180).apply {
+            gravity = android.view.Gravity.CENTER
+            topMargin = 70
+        })
+
+        val center = android.widget.FrameLayout.LayoutParams(
+            (context.resources.displayMetrics.widthPixels * 0.5f).toInt(),
+            180,
+            android.view.Gravity.CENTER
+        )
+        addView(logoContainer, center)
+        visibility = android.view.View.GONE
+    }
+
+    fun start(backdropUrl: String?, logoUrl: String?) {
+        visibility = android.view.View.VISIBLE
+        alpha = 1f
+        currentProgress = 0f
+        progressText.text = "0%"
+        loadingText.visibility = if (logoUrl.isNullOrBlank()) android.view.View.VISIBLE else android.view.View.GONE
+        logoBase.visibility = if (logoUrl.isNullOrBlank()) android.view.View.GONE else android.view.View.VISIBLE
+        logoFill.visibility = if (logoUrl.isNullOrBlank()) android.view.View.GONE else android.view.View.VISIBLE
+
+        com.bumptech.glide.Glide.with(context).load(backdropUrl).into(backdrop)
+        if (!logoUrl.isNullOrBlank()) {
+            com.bumptech.glide.Glide.with(context).load(logoUrl).into(logoBase)
+            com.bumptech.glide.Glide.with(context).load(logoUrl).into(logoFill)
+        }
+        applyProgress(0f)
+        startAnimations()
+    }
+
+    fun updateProgress(progress: Float) {
+        if (visibility != android.view.View.VISIBLE) return
+        val target = progress.coerceIn(0f, 0.92f)
+        if (target <= currentProgress) return
+        val from = currentProgress
+        currentProgress = target
+        android.animation.ValueAnimator.ofFloat(from, target).apply {
+            duration = 400L
+            addUpdateListener { applyProgress(it.animatedValue as Float) }
+            start()
+        }
+    }
+
+    fun complete() {
+        if (visibility != android.view.View.VISIBLE) return
+        applyProgress(1f)
+        fadeAnimator?.cancel()
+        fadeAnimator = android.animation.ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
+            duration = 200L
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    reset()
+                }
+            })
+            start()
+        }
+    }
+
+    fun reset() {
+        scaleAnimator?.cancel()
+        pulseAnimator?.cancel()
+        fadeAnimator?.cancel()
+        visibility = android.view.View.GONE
+        alpha = 1f
+    }
+
+    private fun applyProgress(progress: Float) {
+        val p = progress.coerceIn(0f, 1f)
+        progressText.text = (p * 100).toInt().toString() + "%"
+        logoFill.clipBounds = android.graphics.Rect(
+            0,
+            0,
+            (logoFill.width * p).toInt().coerceAtLeast(0),
+            logoFill.height
+        )
+    }
+
+    private fun startAnimations() {
+        scaleAnimator?.cancel()
+        pulseAnimator?.cancel()
+
+        scaleAnimator = android.animation.ValueAnimator.ofFloat(1f, 1.08f).apply {
+            duration = 10000L
+            repeatCount = android.animation.ValueAnimator.INFINITE
+            repeatMode = android.animation.ValueAnimator.REVERSE
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                backdrop.scaleX = value
+                backdrop.scaleY = value
+            }
+            start()
+        }
+
+        pulseAnimator = android.animation.ValueAnimator.ofFloat(0.20f, 0.35f).apply {
+            duration = 1500L
+            repeatCount = android.animation.ValueAnimator.INFINITE
+            repeatMode = android.animation.ValueAnimator.REVERSE
+            addUpdateListener { logoBase.alpha = it.animatedValue as Float }
+            start()
+        }
     }
 }
