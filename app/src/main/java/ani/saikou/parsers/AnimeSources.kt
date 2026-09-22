@@ -2,7 +2,6 @@ package ani.saikou.parsers
 
 import ani.saikou.Lazier
 import ani.saikou.lazyList
-import ani.saikou.loadData
 import ani.saikou.parsers.anime.Haho
 import ani.saikou.parsers.anime.HentaiFF
 import ani.saikou.parsers.anime.HentaiMama
@@ -11,16 +10,9 @@ import ani.saikou.parsers.anime.Anizone
 import ani.saikou.parsers.anime.AnimeHeaven
 import ani.saikou.parsers.anime.AniBD
 import ani.saikou.parsers.anime.Anikoto
-import ani.saikou.parsers.anime.Torrentio
-import ani.saikou.torrserver.utils.TorrentSettings
 
 
 object AnimeSources : WatchSources() {
-
-    private val torrentOnlyList: List<Lazier<BaseParser>> = lazyList(
-        "Torrentio" to ::Torrentio,
-
-    )
 
     private val fullList: List<Lazier<BaseParser>> = lazyList(
 
@@ -31,10 +23,7 @@ object AnimeSources : WatchSources() {
         )
 
     override val list: List<Lazier<BaseParser>>
-        get() {
-            val settings = loadData<TorrentSettings>("torrent_settings") ?: TorrentSettings()
-            return if (settings.enableTorrentServer) torrentOnlyList else fullList
-        }
+        get() = fullList
 }
 
 object HAnimeSources : WatchSources() {
