@@ -1052,7 +1052,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         } ?: ext.audioTracks
 
         playerManager.buildMediaSource(
-            video!!, subConfigs, mimeType, null, mediaMetadata, playbackAudioTracks
+            video!!, subConfigs, mimeType, mediaMetadata, playbackAudioTracks
         )
 
         castManager.setupCastButton(
