@@ -148,6 +148,10 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
 
     private lateinit var binding: ActivityExoplayerBinding
     private lateinit var playerView: PlayerView
+    private lateinit var playerLoadingOverlay: View
+    private lateinit var playerLoadingBackdrop: ImageView
+    private lateinit var playerLoadingTitle: TextView
+    private lateinit var playerLoadingEpisode: TextView
     private lateinit var exoPlay: ImageButton
     private lateinit var exoSource: ImageButton
     private lateinit var exoSettings: ImageButton
@@ -318,6 +322,10 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         setContentView(binding.root)
 
         playerView = binding.playerView
+        playerLoadingOverlay = binding.playerLoadingOverlay
+        playerLoadingBackdrop = binding.playerLoadingBackdrop
+        playerLoadingTitle = binding.playerLoadingTitle
+        playerLoadingEpisode = binding.playerLoadingEpisode
         hideSystemBarsExtendView()
 
         // Bind Views
@@ -1068,6 +1076,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     }
 
     private fun buildExoplayer() {
+        showPlayerLoadingOverlay()
         customSubtitleView.text = ""
         customSubtitleView.visibility = View.GONE
         exoSubtitleView.visibility = View.GONE
@@ -1146,6 +1155,42 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             .setPreferredTextRoleFlags(C.ROLE_FLAG_SUBTITLE)
             .setTrackTypeDisabled(TRACK_TYPE_TEXT, isDisabled)
             .build()
+    }
+
+    private fun showPlayerLoadingOverlay() {
+        if (!this::playerLoadingOverlay.isInitialized) return
+
+        playerLoadingTitle.text = media.userPreferredName.ifBlank { media.mainName() }
+        playerLoadingEpisode.text = episodeTitleArr.getOrNull(currentEpisodeIndex)
+            ?: "Episode " + episode.number
+
+        val backdrop = episode.thumb?.url ?: media.cover
+        if (!backdrop.isNullOrBlank()) {
+            Glide.with(this)
+                .load(backdrop)
+                .centerCrop()
+                .into(playerLoadingBackdrop)
+        } else {
+            playerLoadingBackdrop.setImageDrawable(null)
+        }
+
+        playerLoadingOverlay.alpha = 1f
+        playerLoadingOverlay.visibility = View.VISIBLE
+    }
+
+    private fun hidePlayerLoadingOverlay() {
+        if (!this::playerLoadingOverlay.isInitialized ||
+            playerLoadingOverlay.visibility != View.VISIBLE
+        ) return
+
+        playerLoadingOverlay.animate()
+            .alpha(0f)
+            .setDuration(220L)
+            .withEndAction {
+                playerLoadingOverlay.visibility = View.GONE
+                playerLoadingOverlay.alpha = 1f
+            }
+            .start()
     }
 
     private fun releasePlayer() {
@@ -1372,6 +1417,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
 
     override fun onRenderedFirstFrame() {
         super.onRenderedFirstFrame()
+        hidePlayerLoadingOverlay()
         val player = playerManager.exoPlayer ?: return
 
         val selEp = media.anime?.selectedEpisode
