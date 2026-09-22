@@ -181,6 +181,7 @@ class SocialFragment : Fragment() {
         override fun onBindViewHolder(holder: SocialHolder, position: Int) {
             val activity = items[position]
             holder.title.text = activity.author.displayName
+            holder.avatar.text = activity.author.displayName.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "?"
             holder.body.text = activity.text?.ifBlank { activity.type } ?: activity.type
             holder.meta.text = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
                 .format(Date(activity.createdAt * 1000))
@@ -191,6 +192,7 @@ class SocialFragment : Fragment() {
 
     private class SocialHolder(v: View) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+        val avatar: android.widget.TextView = v.findViewById(R.id.socialItemAvatar)
         val title: android.widget.TextView = v.findViewById(R.id.socialItemTitle)
         val body: android.widget.TextView = v.findViewById(R.id.socialItemBody)
         val meta: android.widget.TextView = v.findViewById(R.id.socialItemMeta)
