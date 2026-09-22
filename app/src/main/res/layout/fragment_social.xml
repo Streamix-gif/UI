@@ -510,10 +510,12 @@
             <TextView
                 android:id="@+id/socialEmpty"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="96dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center"
-                android:text="@string/empty"
-                android:alpha=".6"
+                android:text="No friend activity yet"
+                android:textSize="12sp"
+                android:alpha=".55"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -541,7 +543,7 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="104dp"
+                android:layout_height="112dp"
                 android:layout_marginTop="8dp"
                 android:scrollbars="none">
 
