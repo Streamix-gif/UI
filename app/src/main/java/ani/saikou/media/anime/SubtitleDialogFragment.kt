@@ -1,233 +1,3 @@
-package ani.saikou.media.anime
-
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import androidx.annotation.OptIn
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
-import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.media3.common.C
-import androidx.media3.common.Tracks
-import androidx.media3.common.util.UnstableApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import ani.saikou.BottomSheetDialogFragment
-import ani.saikou.R
-import ani.saikou.connections.subtitles.OpenSubRestItem
-import ani.saikou.connections.subtitles.OpenSubtitlesRestApi
-import ani.saikou.connections.subtitles.StremioSub
-import ani.saikou.connections.subtitles.StremioSubtitles
-import ani.saikou.connections.subtitles.SubSourceSub
-import ani.saikou.connections.subtitles.SubSourceSubtitles
-import ani.saikou.connections.subtitles.WyzieSub
-import ani.saikou.connections.subtitles.WyzieSubtitles
-import ani.saikou.databinding.BottomSheetSubtitlesBinding
-import ani.saikou.databinding.ItemSubtitleCardBinding
-import ani.saikou.getThemeColor
-import ani.saikou.media.EpisodeMapper
-import ani.saikou.media.MediaDetailsViewModel
-import ani.saikou.media.MediaNameAdapter
-import ani.saikou.others.IdMappers
-import ani.saikou.parsers.Subtitle
-import ani.saikou.parsers.SubtitleType
-import ani.saikou.settings.saving.PrefManager
-import ani.saikou.settings.saving.PrefName
-import ani.saikou.toast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Locale
-
-@OptIn(UnstableApi::class)
-class SubtitleDialogFragment : BottomSheetDialogFragment() {
-
-    // Models for subtitle list items
-    object NoneSubtitleOption
-    data class ActiveOnlineSubtitle(val title: String, val provider: String, val idOrUrl: String, val format: String? = null)
-    data class OtherServerSubtitle(val serverName: String, val subtitle: Subtitle)
-    data class EmbeddedSubtitleTrack(val group: Tracks.Group, val trackIndex: Int, val language: String?, val label: String?)
-    enum class TabType { SERVER, ONLINE, LOCAL }
-
-    private var _binding: BottomSheetSubtitlesBinding? = null
-    private val binding get() = _binding!!
-    val model: MediaDetailsViewModel by activityViewModels()
-
-    private lateinit var episode: Episode
-    private var currentSeasonEpisode: EpisodeMapper.SeasonEpisode? = null
-    private var searchJob: Job? = null
-
-    // Tab state: 0 = Subtitles, 1 = Online, 2 = Local, 3 = Sync
-    private var currentTab = 0
-
-    // Filter states for online tab
-    private var selectedProviderFilter = "All"
-    private var selectedLanguageFilter = "All"
-    private var currentOnlineResults: List<Any> = emptyList()
-
-    private fun mapLanguageCode(isoCode: String): String = when (isoCode.lowercase(Locale.ROOT)) {
-        "eng", "en", "en-us", "en-gb" -> "English"
-        "spa", "es", "es-es", "es-419", "es-la" -> "Spanish"
-        "fra", "fr", "fr-fr" -> "French"
-        "deu", "de", "de-de" -> "German"
-        "ita", "it", "it-it" -> "Italian"
-        "por", "pt", "pt-br", "pt-pt" -> "Portuguese"
-        "rus", "ru", "ru-ru" -> "Russian"
-        "jpn", "ja", "ja-jp" -> "Japanese"
-        "zho", "chi", "zh", "zh-cn", "zh-tw" -> "Chinese"
-        "ara", "ar", "ar-me", "ar-sa" -> "Arabic"
-        "hin", "hi" -> "Hindi"
-        "kor", "ko", "ko-kr" -> "Korean"
-        "pol", "pl", "pl-pl" -> "Polish"
-        "tur", "tr", "tr-tr" -> "Turkish"
-        "hun", "hu" -> "Hungarian"
-        "ron", "ro", "ro-ro" -> "Romanian"
-        "ell", "el", "el-gr" -> "Greek"
-        "cze", "cs" -> "Czech"
-        "swe", "sv", "sv-se" -> "Swedish"
-        "dan", "da" -> "Danish"
-        "fin", "fi" -> "Finnish"
-        "nor", "no" -> "Norwegian"
-        "nld", "nl" -> "Dutch"
-        "tha", "th" -> "Thai"
-        "vie", "vi" -> "Vietnamese"
-        "ind", "id" -> "Indonesian"
-        "ukr", "uk", "uk-uk" -> "Ukrainian"
-        "heb", "he", "he-il" -> "Hebrew"
-        "bul", "bg" -> "Bulgarian"
-        "hrv", "hr" -> "Croatian"
-        "slk", "sk" -> "Slovak"
-        "slv", "sl" -> "Slovenian"
-        "mon", "mn" -> "Mongolian"
-        "srp", "sr" -> "Serbian"
-        else -> isoCode
-    }
-
-    private fun matchesLanguage(langText: String, filterLanguage: String): Boolean {
-        if (filterLanguage.equals("All", ignoreCase = true)) return true
-        val mapped = mapLanguageCode(langText)
-        if (mapped.contains(filterLanguage, ignoreCase = true)) return true
-        if (langText.contains(filterLanguage, ignoreCase = true)) return true
-
-        val matchCodes = when (filterLanguage.lowercase(Locale.ROOT)) {
-            "english" -> listOf("eng", "en", "en-us", "en-gb")
-            "spanish" -> listOf("spa", "es", "es-es", "es-419", "es-la")
-            "french" -> listOf("fra", "fre", "fr", "fr-fr")
-            "german" -> listOf("deu", "ger", "de", "de-de")
-            "portuguese" -> listOf("por", "pt", "pt-br", "pt-pt")
-            "arabic" -> listOf("ara", "ar", "ar-me", "ar-sa")
-            "russian" -> listOf("rus", "ru", "ru-ru")
-            "japanese" -> listOf("jpn", "ja", "ja-jp")
-            "chinese" -> listOf("zho", "chi", "zh", "zh-cn", "zh-tw")
-            "hindi" -> listOf("hin", "hi")
-            "korean" -> listOf("kor", "ko", "ko-kr")
-            "polish" -> listOf("pol", "pl")
-            "turkish" -> listOf("tur", "tr")
-            "indonesian" -> listOf("ind", "id")
-            "vietnamese" -> listOf("vie", "vi")
-            "thai" -> listOf("tha", "th")
-            "italian" -> listOf("ita", "it")
-            else -> listOf(filterLanguage.lowercase(Locale.ROOT))
-        }
-        val lower = langText.lowercase(Locale.ROOT)
-        return matchCodes.any { lower.contains(it) }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = BottomSheetSubtitlesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.let { dlg ->
-            val bottomSheet = dlg.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            if (bottomSheet != null) {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
-            }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerViews()
-        setupTabNavigation()
-        setupOnlineSearchControls()
-        setupLocalControls()
-        setupSyncControls()
-
-        binding.closeSubtitlesSheet.setOnClickListener {
-            dismiss()
-        }
-
-        binding.quickSearchOnlineBtn.setOnClickListener {
-            switchTab(1)
-        }
-
-        model.getMedia().observe(viewLifecycleOwner) { media ->
-            val anime = media?.anime ?: return@observe
-            val eps = anime.episodes ?: return@observe
-            val selectedEpisode = anime.selectedEpisode ?: "1"
-            val ep = eps.getEpisode(selectedEpisode) ?: return@observe
-            episode = ep
-
-            val actualEpisodeNum = MediaNameAdapter.findEpisodeNumber(ep.number)?.toInt()
-                ?: ep.number.filter { it.isDigit() }.toIntOrNull()
-                ?: selectedEpisode.toIntOrNull()
-                ?: 1
-            val episodeId = "${media.id}-${episode.number}"
-
-            // Pre-fill search input
-            val animeTitleText = media.userPreferredName
-            if (binding.onlineSearchEditText.text.isNullOrBlank()) {
-                binding.onlineSearchEditText.setText("$animeTitleText Episode $actualEpisodeNum")
-            }
-
-            updateActiveSubtitleBadge()
-            loadSubtitlesTab(episodeId)
-            loadLocalTab(episodeId)
-
-            // Online cached results check
-            val cachedOnline = model.getFetchedSubtitles(episodeId)
-            if (cachedOnline != null && cachedOnline.isNotEmpty()) {
-                currentOnlineResults = cachedOnline
-                filterAndDisplayOnlineResults()
-            }
-
-            // Background metadata & IMDB mapping
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                if (media.idIMDB == null) {
-                    try {
-                        val imdb = IdMappers.getImdbId(media.id)
-                        if (imdb != null) {
-                            media.idIMDB = imdb
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-                try {
-                    currentSeasonEpisode = EpisodeMapper.mapEpisode(media, actualEpisodeNum, ep)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
         }
     }
 
@@ -314,87 +84,6 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun setupOnlineSearchControls() {
-        binding.onlineSearchActionBtn.setOnClickListener {
-            performOnlineSearch()
-        }
-
-        binding.onlineRefreshBtn.setOnClickListener {
-            val media = model.getMedia().value
-            if (media != null && ::episode.isInitialized) {
-                val episodeId = "${media.id}-${episode.number}"
-                model.clearFetchedSubtitles(episodeId)
-                val selectedEpisode = media.anime?.selectedEpisode ?: "1"
-                val episodeNum = selectedEpisode.toIntOrNull() ?: 1
-                model.clearFetchedSubtitles("${media.id}-$episodeNum")
-                currentOnlineResults = emptyList()
-                performOnlineSearch()
-            }
-        }
-
-        binding.onlineSearchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performOnlineSearch()
-                true
-            } else false
-        }
-
-        // Provider chips
-        binding.chipProviderAll.setOnClickListener {
-            selectedProviderFilter = "All"
-            uncheckOtherProviderChips(binding.chipProviderAll.id)
-            filterAndDisplayOnlineResults()
-        }
-        binding.chipProviderWyzie.setOnClickListener {
-            selectedProviderFilter = "Wyzie"
-            uncheckOtherProviderChips(binding.chipProviderWyzie.id)
-            filterAndDisplayOnlineResults()
-        }
-        binding.chipProviderStremio.setOnClickListener {
-            selectedProviderFilter = "OpenSubtitles"
-            uncheckOtherProviderChips(binding.chipProviderStremio.id)
-            filterAndDisplayOnlineResults()
-        }
-        binding.chipProviderSubSource.setOnClickListener {
-            selectedProviderFilter = "SubSource"
-            uncheckOtherProviderChips(binding.chipProviderSubSource.id)
-            filterAndDisplayOnlineResults()
-        }
-
-        // Language filter chips
-        setupLanguageChips()
-    }
-
-    private fun uncheckOtherProviderChips(selectedId: Int) {
-        binding.chipProviderAll.isChecked = selectedId == binding.chipProviderAll.id
-        binding.chipProviderWyzie.isChecked = selectedId == binding.chipProviderWyzie.id
-        binding.chipProviderStremio.isChecked = selectedId == binding.chipProviderStremio.id
-        binding.chipProviderSubSource.isChecked = selectedId == binding.chipProviderSubSource.id
-    }
-
-    private fun setupLanguageChips() {
-        val langChips = listOf(
-            Pair(binding.chipLangEng, "English"),
-            Pair(binding.chipLangSpa, "Spanish"),
-            Pair(binding.chipLangFre, "French"),
-            Pair(binding.chipLangGer, "German"),
-            Pair(binding.chipLangPor, "Portuguese"),
-            Pair(binding.chipLangAra, "Arabic")
-        )
-
-        for ((chip, lang) in langChips) {
-            chip.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    langChips.filter { it.first.id != chip.id }.forEach { it.first.isChecked = false }
-                    selectedLanguageFilter = lang
-                } else {
-                    selectedLanguageFilter = "All"
-                }
-                filterAndDisplayOnlineResults()
-            }
-        }
-    }
-
     private fun setupLocalControls() {
         binding.importLocalSubCard.setOnClickListener {
             (requireActivity() as? ExoplayerView)?.requestLocalSubtitle()
@@ -405,22 +94,9 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
     private fun updateActiveSubtitleBadge() {
         val exoActivity = activity as? ExoplayerView
         val subManager = exoActivity?.subtitleManager
-        val activeOnlineName = if (subManager?.activeSubtitleId != null &&
-            subManager.activeSubtitleDisplayName?.contains("[Server]") != true &&
-            subManager.activeSubtitleDisplayName?.startsWith("[Local]") != true
-        ) {
-            subManager.activeSubtitleDisplayName
-        } else null
-
-        val media = model.getMedia().value ?: return
-        val savedEpSub = EpisodeSubtitleStore.getSavedSubtitle(media.id, episode.number)
-        val onlineName = activeOnlineName ?: savedEpSub?.let { "${it.displayName} (${it.provider})" }
         val savedLang: String? = PrefManager.getNullableCustomVal("subLang_${media.id}", null, String::class.java)
 
         val badgeText = when {
-            onlineName != null -> {
-                getString(R.string.active_sub_prefix, onlineName)
-            }
             savedLang == null || savedLang == "None" -> getString(R.string.status_sub_off)
             savedLang.startsWith("[Local]") -> {
                 val clean = savedLang.removePrefix("[Local]").trim()
@@ -508,152 +184,6 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
         val localSubs = model.getLocalSubtitles(episodeId)
         binding.noLocalSubsBanner.isVisible = localSubs.isEmpty()
         binding.localSubtitlesRecycler.adapter = SubtitleAdapter(localSubs, TabType.LOCAL)
-    }
-
-    private fun performOnlineSearch() {
-        searchJob?.cancel()
-        val media = model.getMedia().value ?: return
-
-        binding.onlineLoadingLayout.isVisible = true
-        binding.noOnlineSubsBanner.isVisible = false
-        binding.onlineSubtitlesRecycler.isVisible = false
-
-        val queryText = binding.onlineSearchEditText.text?.toString()?.trim() ?: ""
-
-        searchJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val imdbId = media.idIMDB ?: IdMappers.getImdbId(media.id)
-                if (imdbId != null) {
-                    media.idIMDB = imdbId
-                }
-
-                val actualEpNum = if (this@SubtitleDialogFragment::episode.isInitialized) {
-                    MediaNameAdapter.findEpisodeNumber(episode.number)?.toInt()
-                        ?: episode.number.filter { it.isDigit() }.toIntOrNull()
-                        ?: 1
-                } else 1
-
-                val parsedEpFromQuery = if (queryText.isNotBlank()) {
-                    MediaNameAdapter.findEpisodeNumber(queryText)?.toInt()
-                } else null
-                val targetEpisodeNum = parsedEpFromQuery ?: actualEpNum
-
-                val seasonEpisode = EpisodeMapper.mapEpisode(
-                    media,
-                    targetEpisodeNum,
-                    if (this@SubtitleDialogFragment::episode.isInitialized) episode else null
-                )
-                currentSeasonEpisode = seasonEpisode
-
-                val onlineSubs = mutableListOf<Any>()
-                if (imdbId != null) {
-                    // 1. Fetch Wyzie Subtitles
-                    try {
-                        val wyzieSubs = WyzieSubtitles.getWyzieSubtitles(imdbId, seasonEpisode.season, seasonEpisode.episode)
-                        onlineSubs.addAll(wyzieSubs)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                    // 2. Fetch SubSource Subtitles (from AnymeX / CloudStream)
-                    try {
-                        val subSourceSubs = SubSourceSubtitles.getSubtitles(imdbId, targetEpisodeNum, seasonEpisode.season)
-                        onlineSubs.addAll(subSourceSubs)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                    // 3. Fetch OpenSubtitles REST API (from CloudStream)
-                    try {
-                        val openSubRest = OpenSubtitlesRestApi.search(imdbId, targetEpisodeNum, seasonEpisode.season, queryText)
-                        onlineSubs.addAll(openSubRest)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                    // 4. Fetch Stremio / OpenSubtitles (filter out mismatched S1E1 files)
-                    try {
-                        val fetchedStremio = StremioSubtitles.getSubtitles(media, seasonEpisode.season, seasonEpisode.episode)
-                        val existingUrls = onlineSubs.mapNotNull {
-                            when (it) {
-                                is WyzieSub -> it.url
-                                is StremioSub -> it.url
-                                else -> null
-                            }
-                        }.toSet()
-                        val uniqueStremio = fetchedStremio.filter { sub ->
-                            sub.url !in existingUrls && (!sub.id.contains(":1:1") || targetEpisodeNum == 1)
-                        }
-                        onlineSubs.addAll(uniqueStremio)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    binding.onlineLoadingLayout.isVisible = false
-                    currentOnlineResults = onlineSubs
-                    model.saveFetchedSubtitles("${media.id}-${targetEpisodeNum}", onlineSubs)
-                    filterAndDisplayOnlineResults()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    binding.onlineLoadingLayout.isVisible = false
-                    filterAndDisplayOnlineResults()
-                }
-            }
-        }
-    }
-
-    private fun filterAndDisplayOnlineResults() {
-        var filtered = currentOnlineResults
-
-        // Provider Filter
-        if (selectedProviderFilter == "Wyzie") {
-            filtered = filtered.filterIsInstance<WyzieSub>()
-        } else if (selectedProviderFilter == "OpenSubtitles" || selectedProviderFilter == "Stremio") {
-            filtered = filtered.filter { it is StremioSub || it is OpenSubRestItem }
-        } else if (selectedProviderFilter == "SubSource") {
-            filtered = filtered.filterIsInstance<SubSourceSub>()
-        }
-
-        // Language Filter
-        if (selectedLanguageFilter != "All") {
-            filtered = filtered.filter { item ->
-                when (item) {
-                    is WyzieSub -> matchesLanguage(item.language, selectedLanguageFilter) ||
-                            matchesLanguage(item.displayLabel, selectedLanguageFilter)
-                    is StremioSub -> matchesLanguage(item.lang, selectedLanguageFilter)
-                    is SubSourceSub -> matchesLanguage(item.lang, selectedLanguageFilter)
-                    is OpenSubRestItem -> matchesLanguage(item.language, selectedLanguageFilter)
-                    else -> true
-                }
-            }
-        }
-
-        // Text Search Filter if user entered custom text
-        val queryText = binding.onlineSearchEditText.text?.toString()?.trim() ?: ""
-        if (queryText.isNotEmpty() && !queryText.startsWith(model.getMedia().value?.userPreferredName ?: "", ignoreCase = true)) {
-            filtered = filtered.filter { item ->
-                when (item) {
-                    is WyzieSub -> item.displayLabel.contains(queryText, ignoreCase = true) ||
-                            item.language.contains(queryText, ignoreCase = true) ||
-                            item.format.contains(queryText, ignoreCase = true)
-                    is StremioSub -> item.lang.contains(queryText, ignoreCase = true) ||
-                            mapLanguageCode(item.lang).contains(queryText, ignoreCase = true)
-                    is SubSourceSub -> item.releaseName.contains(queryText, ignoreCase = true) ||
-                            item.lang.contains(queryText, ignoreCase = true)
-                    is OpenSubRestItem -> item.fileName.contains(queryText, ignoreCase = true) ||
-                            item.language.contains(queryText, ignoreCase = true)
-                    else -> true
-                }
-            }
-        }
-
-        binding.noOnlineSubsBanner.isVisible = filtered.isEmpty()
-        binding.onlineSubtitlesRecycler.isVisible = filtered.isNotEmpty()
-        binding.onlineSubtitlesRecycler.adapter = SubtitleAdapter(filtered, TabType.ONLINE)
     }
 
     // ==========================================
@@ -837,10 +367,6 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
             }
             val exoActivity = activity as? ExoplayerView
             val subManager = exoActivity?.subtitleManager
-            val isOnlineActive = subManager?.activeSubtitleId != null &&
-                subManager.activeSubtitleDisplayName?.contains("[Server]") != true &&
-                subManager.activeSubtitleDisplayName?.startsWith("[Local]") != true
-            val activeOnlineId = if (isOnlineActive) subManager?.activeSubtitleId else null
 
             val media = model.getMedia().value
             val mediaId = media?.id ?: 0
@@ -863,7 +389,7 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
                     itemBinding.subtitleTitle.text = getString(R.string.subtitles_off)
                     itemBinding.subtitleDetails.text = getString(R.string.subtitles_off_desc)
 
-                    val isSelected = activeOnlineId == null && savedEpSub == null && (savedLang == null || savedLang == "None")
+                    val isSelected = savedLang == null || savedLang == "None"
                     if (isSelected) {
                         itemBinding.subtitleCardRoot.setCardBackgroundColor(highlightColor)
                         itemBinding.subtitleCardRoot.strokeColor = borderSelectedColor
@@ -962,7 +488,7 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
                             itemBinding.formatBadge.isVisible = true
                         }
 
-                        val isSelected = activeOnlineId == null && savedEpSub == null && savedLang == item.language
+                        val isSelected = savedLang == item.language
                         if (isSelected) {
                             itemBinding.subtitleCardRoot.setCardBackgroundColor(highlightColor)
                             itemBinding.subtitleCardRoot.strokeColor = borderSelectedColor
@@ -990,7 +516,7 @@ class SubtitleDialogFragment : BottomSheetDialogFragment() {
                     itemBinding.subtitleDetails.text = "${item.serverName} • ${item.subtitle.language}"
 
                     val uniqueKey = "${item.subtitle.language} [${item.serverName}]"
-                    val isSelected = activeOnlineId == null && savedEpSub == null && savedLang == uniqueKey
+                    val isSelected = savedLang == uniqueKey
                     if (isSelected) {
                         itemBinding.subtitleCardRoot.setCardBackgroundColor(highlightColor)
                         itemBinding.subtitleCardRoot.strokeColor = borderSelectedColor
