@@ -21,10 +21,9 @@ class ThemeManager(private val context: Activity) {
         val customColor = PrefManager.getVal(PrefName.CustomThemeInt)
         val useMaterial = PrefManager.getVal(PrefName.UseMaterialYou)
 
-        if (useMaterial || useCustom || fromImage != null) {
+        if (useMaterial || fromImage != null) {
             val options = DynamicColorsOptions.Builder().apply {
                 if (fromImage != null) setContentBasedSource(fromImage)
-                else if (useCustom) setContentBasedSource(customColor)
                 if (useOLED) setThemeOverlay(R.style.AppTheme_Streamix_Amoled)
                 if (PrefManager.getVal(PrefName.UseSystemFont)) {
                     setThemeOverlay(R.style.ThemeOverlay_Streamix_SystemFont)
@@ -69,8 +68,7 @@ class ThemeManager(private val context: Activity) {
         (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
             Configuration.UI_MODE_NIGHT_YES
 
-    companion object {
-        enum class Theme(val theme: String) {
+    enum class Theme(val theme: String) {
             BLUE("BLUE"),
             GREEN("GREEN"),
             PURPLE("PURPLE"),
@@ -82,10 +80,9 @@ class ThemeManager(private val context: Activity) {
             OCEAN("OCEAN"),
             MONOCHROME("MONOCHROME (BETA)");
 
-            companion object {
-                fun fromString(value: String): Theme =
-                    entries.find { it.theme == value } ?: PURPLE
-            }
+        companion object {
+            fun fromString(value: String): Theme =
+                entries.find { it.theme == value } ?: PURPLE
         }
     }
 }
