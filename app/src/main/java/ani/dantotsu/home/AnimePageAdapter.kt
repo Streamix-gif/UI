@@ -35,6 +35,9 @@ import ani.dantotsu.media.MediaListViewActivity
 import ani.dantotsu.media.SearchActivity
 import ani.dantotsu.openLinkInCustomTab
 import ani.dantotsu.profile.ProfileActivity
+import ani.dantotsu.profile.SocialBlueprintActivity
+import ani.dantotsu.settings.SettingsActivity
+import ani.dantotsu.settings.SettingsNotificationActivity
 import ani.dantotsu.px
 import ani.dantotsu.setSafeOnClickListener
 import ani.dantotsu.setSlideIn
@@ -125,6 +128,39 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
 
         trendingBinding.searchBar.setEndIconOnClickListener {
             trendingBinding.searchBar.performClick()
+        }
+
+        trendingBinding.notificationButton.setOnClickListener {
+            ContextCompat.startActivity(
+                it.context,
+                Intent(it.context, SettingsNotificationActivity::class.java),
+                null
+            )
+        }
+
+        trendingBinding.keyShortcut.setOnClickListener {
+            ContextCompat.startActivity(
+                it.context,
+                Intent(it.context, SettingsActivity::class.java),
+                null
+            )
+        }
+
+        trendingBinding.premiumShortcut.setOnClickListener {
+            ContextCompat.startActivity(
+                it.context,
+                Intent(it.context, SettingsActivity::class.java),
+                null
+            )
+        }
+
+        trendingBinding.watchTogetherShortcut.setOnClickListener {
+            ContextCompat.startActivity(
+                it.context,
+                Intent(it.context, SocialBlueprintActivity::class.java)
+                    .putExtra(SocialBlueprintActivity.EXTRA_SCREEN, 2),
+                null
+            )
         }
 
         val isRescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
