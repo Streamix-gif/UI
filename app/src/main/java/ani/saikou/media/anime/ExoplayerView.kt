@@ -302,6 +302,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PrefManager.init(this)
 
         if (!initialized) {
             startMainActivity(this)
