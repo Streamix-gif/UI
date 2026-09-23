@@ -32,11 +32,15 @@ class SocialFragment : Fragment() {
         showFeed(ActivityType.USER)
         binding.socialRefresh.setOnRefreshListener { showFeed(ActivityType.USER) }
         updateFeatureCarousel()
+        binding.socialLeaderboardPager.adapter = SocialLeaderboardAdapter(requireContext())
         viewLifecycleOwner.lifecycleScope.launch {
             while (isActive) {
                 delay(4_000L)
                 rotateFeatureCards()
                 updateFeatureCarousel()
+                val pager = binding.socialLeaderboardPager
+                val count = pager.adapter?.itemCount ?: 0
+                if (count > 1) pager.currentItem = (pager.currentItem + 1) % count
             }
         }
         binding.socialGlobalChatCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
