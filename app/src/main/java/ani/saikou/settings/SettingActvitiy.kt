@@ -24,7 +24,7 @@ import ani.saikou.settings.common.CommonSettingsActivity
 import ani.saikou.settings.manga.MangaSettingsActivity
 import ani.saikou.settings.saving.PrefManager
 import ani.saikou.settings.saving.PrefName
-import ani.saikou.settings.themes.ThemeManager
+import ani.saikou.themes.ThemeManager
 import ani.saikou.snackString
 import ani.saikou.startMainActivity
 import ani.saikou.statusBarHeight
