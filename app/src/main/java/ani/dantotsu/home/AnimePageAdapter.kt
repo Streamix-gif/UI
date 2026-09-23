@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -72,14 +73,11 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
             holder.itemView.findViewById<MaterialCardView>(R.id.userAvatarContainer)
         materialCardView.setCardBackgroundColor(semiTransparentColor)
         val color = binding.root.context.getThemeColor(android.R.attr.windowBackground)
+        trendingBinding.userName.text = Anilist.username ?: getAppString(R.string.username)
         textInputLayout.boxBackgroundColor = (color and 0x00FFFFFF) or 0x28000000
         materialCardView.setCardBackgroundColor((color and 0x00FFFFFF) or 0x28000000)
 
         trendingBinding.titleContainer.updatePadding(top = statusBarHeight)
-
-        if (PrefManager.getVal(PrefName.SmallView)) trendingBinding.trendingContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            bottomMargin = (-108f).px
-        }
 
         updateAvatar()
 
@@ -182,7 +180,7 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     override fun getItemCount(): Int = 1
 
     fun updateHeight() {
-        trendingViewPager!!.updateLayoutParams { height += statusBarHeight }
+        // Header is now laid out above the carousel on the Dantotsu foundation.
     }
 
     fun updateTrending(adaptor: MediaAdaptor) {
@@ -295,14 +293,18 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
         progress.visibility = View.GONE
         recyclerView.setRecycledViewPool(sharedMediaPool)
         recyclerView.setHasFixedSize(true)
-        val llm = LinearLayoutManager(
-            recyclerView.context,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        ).apply {
-            initialPrefetchItemCount = 4
+        if (recyclerView.id == R.id.animeUpdatedRecyclerView) {
+            recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 3)
+        } else {
+            val llm = LinearLayoutManager(
+                recyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            ).apply {
+                initialPrefetchItemCount = 4
+            }
+            recyclerView.layoutManager = llm
         }
-        recyclerView.layoutManager = llm
         recyclerView.adapter = adaptor
 
         more.setOnClickListener {
