@@ -115,7 +115,7 @@ class SettingActivity : AppCompatActivity() {
 
         binding.settingsThemeRow.setOnClickListener {
             val themes = ThemeManager.Theme.entries
-            val current = PrefManager.getVal(PrefName.Theme)
+            val current = PrefManager.getVal<String>(PrefName.Theme)
             val checked = themes.indexOfFirst { it.theme == current }.coerceAtLeast(0)
 
             AlertDialog.Builder(this)
