@@ -179,6 +179,8 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     private lateinit var castScreenView: CastScreenView
     private lateinit var prePlaybackView: SaikouPrePlaybackView
     private lateinit var playerResolutionButton: TextView
+    private lateinit var playerAnimeTitle: TextView
+    private lateinit var playerEpisodeTitle: TextView
 
     private var orientationListener: OrientationEventListener? = null
     private var hasExtSubtitles = false
@@ -323,6 +325,8 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         playerView = binding.playerView
         prePlaybackView = binding.prePlaybackView
         playerResolutionButton = binding.playerResolutionButton
+        playerAnimeTitle = binding.playerAnimeTitle
+        playerEpisodeTitle = binding.playerEpisodeTitle
         hideSystemBarsExtendView()
 
         // Bind Views
@@ -355,6 +359,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         playerView.controllerShowTimeoutMs = 5000
         exoSource.setOnClickListener { sourceClick() }
         playerResolutionButton.setOnClickListener { showResolutionSelector() }
+        exoSource.visibility = if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) View.VISIBLE else View.GONE
 
         // Initialize Managers
         subtitleManager = PlayerSubtitleManager(this, playerView, customSubtitleView, model) {
@@ -485,7 +490,9 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         } else {
             exoRotate.visibility = View.GONE
         }
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (resources.configuration.orientation != android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
 
         if (savedInstanceState != null) {
             currentWindow = savedInstanceState.getInt(resumeWindow)
@@ -970,6 +977,10 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         }
 
         updateResolutionButton()
+        playerAnimeTitle.text = media.userPreferredName.ifBlank { media.mainName() }
+        playerEpisodeTitle.text = episode.title?.takeIf { it.isNotBlank() }
+            ?.let { "Episode ${episode.number} • $it" }
+            ?: "Episode ${episode.number}"
 
         if (isOnline(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
