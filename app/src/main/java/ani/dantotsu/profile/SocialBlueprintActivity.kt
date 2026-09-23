@@ -704,10 +704,10 @@ class SocialBlueprintActivity : AppCompatActivity() {
         }
         val edit = EditText(this@SocialBlueprintActivity).apply {
             this.hint = hint
-            hintTextColor = muted
+            setHintTextColor(muted)
             setTextColor(Color.WHITE)
             textSize = 11f
-            singleLine = true
+            setSingleLine(true)
             background = null
         }
         row.addView(edit, LinearLayout.LayoutParams(0, dp(44), 1f))
