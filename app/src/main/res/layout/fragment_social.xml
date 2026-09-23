@@ -277,7 +277,7 @@
                     android:alpha=".7" />
             </LinearLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/socialLeaderboardPager"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
