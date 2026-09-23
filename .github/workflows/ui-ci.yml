@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
+      CLOUDSTREAM3_JAR: ${{ github.workspace }}/cs3-classes.jar
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -42,8 +42,8 @@ jobs:
           set -euo pipefail
           curl -fL --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 \
             "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
-            -o "$RUNNER_TEMP/cs3-classes.jar"
-          test -s "$RUNNER_TEMP/cs3-classes.jar"
+            -o "$GITHUB_WORKSPACE/cs3-classes.jar"
+          test -s "$GITHUB_WORKSPACE/cs3-classes.jar"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
