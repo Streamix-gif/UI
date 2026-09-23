@@ -23,7 +23,6 @@ import ani.dantotsu.media.CharacterAdapter
 import ani.dantotsu.media.Media
 import ani.dantotsu.media.MediaAdaptor
 import ani.dantotsu.openOrCopyAnilistLink
-import ani.dantotsu.loadImage
 import ani.dantotsu.util.AniMarkdown.Companion.getFullAniHTML
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,7 +70,7 @@ class MainProfileFragment : Fragment() {
             }
 
             val anime = user.favourites?.anime?.nodes?.map {
-                Media(it, true)
+                Media(it)
             } ?: emptyList()
             if (anime.isNotEmpty()) {
                 binding.profileFavAnimeContainer.visibility = View.VISIBLE
@@ -81,7 +80,7 @@ class MainProfileFragment : Fragment() {
             } else binding.profileFavAnimeContainer.visibility = View.GONE
 
             val manga = user.favourites?.manga?.nodes?.map {
-                Media(it, false)
+                Media(it)
             } ?: emptyList()
             if (manga.isNotEmpty()) {
                 binding.profileFavMangaContainer.visibility = View.VISIBLE
