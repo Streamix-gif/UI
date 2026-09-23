@@ -1,5 +1,7 @@
 name: UI CI
 
+# CI probe: keep this workflow change behavior-neutral while validating Actions dispatch.
+
 on:
   push:
     branches:
