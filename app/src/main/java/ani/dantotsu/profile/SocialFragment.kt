@@ -10,6 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.fragment.app.commit
 import com.google.android.material.chip.Chip
 import ani.dantotsu.R
@@ -32,7 +34,13 @@ class SocialFragment : Fragment() {
         showFeed(ActivityType.USER)
         binding.socialRefresh.setOnRefreshListener { showFeed(ActivityType.USER) }
         updateFeatureCarousel()
-        binding.socialLeaderboardPager.adapter = SocialLeaderboardAdapter(requireContext())
+        binding.socialLeaderboardPager.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = SocialLeaderboardAdapter(requireContext())
+            PagerSnapHelper().attachToRecyclerView(this)
+            clipToPadding = false
+            setPadding(0, 0, 8, 0)
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             while (isActive) {
                 delay(4_000L)
@@ -40,7 +48,10 @@ class SocialFragment : Fragment() {
                 updateFeatureCarousel()
                 val pager = binding.socialLeaderboardPager
                 val count = pager.adapter?.itemCount ?: 0
-                if (count > 1) pager.currentItem = (pager.currentItem + 1) % count
+                if (count > 1) {
+                    val next = ((pager.layoutManager as? LinearLayoutManager)?.findFirstCompletelyVisibleItemPosition() ?: 0) + 1
+                    pager.smoothScrollToPosition(if (next >= count) 0 else next)
+                }
             }
         }
         binding.socialGlobalChatCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
