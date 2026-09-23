@@ -311,7 +311,7 @@ class MainActivity : AppCompatActivity() {
             }
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
             selectedOption = if (intent.getBooleanExtra("goToHome", false)) {
-                1
+                0
             } else if (fragment != null) {
                 when (fragment) {
                     AnimeFragment::class.java.name -> 0
@@ -322,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                     else -> 0
                 }
             } else {
-                PrefManager.getVal(PrefName.DefaultStartUpTab)
+                PrefManager.getVal(PrefName.DefaultStartUpTab).coerceIn(0, 4)
             }
             val navbar = binding.includedNavbar.navbar
             bottomBar = navbar
@@ -647,9 +647,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         if (intent.getBooleanExtra("goToHome", false)) {
-            selectedOption = 1
-            binding.includedNavbar.navbar.selectTabAt(1)
-            binding.viewpager.setCurrentItem(1, false)
+            selectedOption = 0
+            binding.includedNavbar.navbar.selectTabAt(0)
+            binding.viewpager.setCurrentItem(0, false)
         }
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewIntent(intent)
