@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
-import ani.dantotsu.databinding.FragmentMainProfileBinding
+import ani.dantotsu.databinding.FragmentProfileBinding
 import ani.dantotsu.loadImage
 import ani.dantotsu.media.Media
 import ani.dantotsu.media.MediaAdaptor
@@ -34,6 +34,9 @@ class MainProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileSettingsButton.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
+        binding.editProfileButton.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
+        binding.profileMenuEdit.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
+        binding.profileMenuPremium.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
         binding.profileMenuAppearance.setOnClickListener { startActivity(Intent(requireContext(), DantotsuAppearanceActivity::class.java)) }
         binding.profileMenuNotifications.setOnClickListener { startActivity(Intent(requireContext(), NotificationSettingsActivity::class.java)) }
         binding.profileMenuSettings.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
