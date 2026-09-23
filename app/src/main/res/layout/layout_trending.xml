@@ -1,33 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/trendingContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/trendingViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="464dp" />
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <LinearLayout
             android:id="@+id/titleContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <LinearLayout
+                android:id="@+id/profileHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="14dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:backgroundTint="@color/nav_bg_inv"
+                    app:cardCornerRadius="32dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/text_input_layout_stroke_color">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/userAvatar"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/ic_round_person_24"
+                        tools:ignore="ContentDescription,ImageContrastCheck" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/userName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:maxLines="1"
+                            android:text="@string/username"
+                            android:textSize="19sp"
+                            tools:text="Shin Tempest" />
+
+                        <TextView
+                            android:id="@+id/userBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/social_circle_bg"
+                            android:gravity="center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="✦ WDRG"
+                            android:textColor="@color/bg_white"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/userLevel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/social_circle_bg"
+                            android:gravity="center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="Lv. 649"
+                            android:textColor="@color/bg_white"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/userTagline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:alpha="0.72"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Watch more anime, a happier you."
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/notificationButton"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:backgroundTint="@android:color/transparent"
+                    app:cardCornerRadius="27dp"
+                    app:strokeColor="@color/text_input_layout_stroke_color"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_round_notifications_none_24"
+                        app:tint="@color/bg_white"
+                        tools:ignore="ContentDescription" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/homeShortcutRow"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/keyShortcut"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/colorSurface"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="@color/text_input_layout_stroke_color"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/vpn_key_24"
+                            app:tint="#F5C542"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_bold"
+                                android:text="Key"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.6"
+                                android:text="Premium access"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/arrow_mark"
+                            app:tint="@color/bg_white"
+                            tools:ignore="ContentDescription" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/premiumShortcut"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1.35"
+                    android:backgroundTint="#211D12"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="#80621C"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_crown"
+                            app:tint="#F5C542"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_bold"
+                                android:text="Premium"
+                                android:textColor="#F5C542"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.7"
+                                android:text="Premium features"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/arrow_mark"
+                            app:tint="@color/bg_white"
+                            tools:ignore="ContentDescription" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/watchTogetherShortcut"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1.35"
+                    android:backgroundTint="?attr/colorSurface"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="#4B3D96"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_social_people_lavender"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_bold"
+                                android:text="Watch Together"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.6"
+                                android:text="Nonton bareng anime"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/arrow_mark"
+                            app:tint="@color/bg_white"
+                            tools:ignore="ContentDescription" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchBar"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
                 android:textColorHint="@color/bg_opp"
                 android:transitionName="@string/search"
                 app:boxBackgroundColor="?attr/colorPrimaryContainer"
@@ -44,7 +321,6 @@
                     android:id="@+id/searchBarText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:focusable="false"
                     android:fontFamily="@font/poppins_bold"
                     android:inputType="none"
@@ -53,54 +329,22 @@
                     android:textSize="14sp"
                     tools:ignore="LabelFor,TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/userAvatarContainer"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="4dp"
-                    android:backgroundTint="@color/nav_bg_inv"
-                    app:cardCornerRadius="26dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/userAvatar"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:scaleType="center"
-                        app:srcCompat="@drawable/ic_round_settings_24"
-                        tools:ignore="ContentDescription,ImageContrastCheck" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/notificationCount"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="end|bottom"
-                    android:background="@drawable/notification_circle"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:gravity="center"
-                    android:textColor="#F3F3F3"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    tools:ignore="SmallSp"
-                    tools:text="1"
-                    tools:visibility="visible" />
-            </FrameLayout>
-
         </LinearLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/trendingViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="464dp"
+            android:clipToPadding="false" />
 
         <ProgressBar
             android:id="@+id/trendingProgressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginTop="64dp" />
+            android:layout_marginTop="-256dp"
+            android:layout_marginBottom="208dp" />
 
-    </FrameLayout>
+    </LinearLayout>
 </merge>
