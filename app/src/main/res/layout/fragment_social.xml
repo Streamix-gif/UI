@@ -35,16 +35,16 @@
                         android:id="@+id/socialAppTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Streamix"
-                        android:textSize="14sp"
+                        android:text="AniLab"
+                        android:textSize="26sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/socialAppSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Anime brings us together"
-                        android:textSize="11sp"
+                        android:text="Anime Brings Us Together"
+                        android:textSize="12sp"
                         android:alpha=".62" />
                 </LinearLayout>
 
@@ -99,12 +99,13 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="0dp"
                 android:scrollbars="none">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/socialFilters"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -179,6 +180,7 @@
 
             <!-- Existing 3-card carousel: auto-rotates in SocialFragment every 4 seconds. -->
             <LinearLayout
+                android:id="@+id/socialFeatureCarousel"
                 android:layout_width="match_parent"
                 android:layout_height="88dp"
                 android:layout_marginTop="12dp"
