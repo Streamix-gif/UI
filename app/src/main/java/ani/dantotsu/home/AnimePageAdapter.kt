@@ -263,7 +263,7 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     fun updateRecent(adaptor: MediaAdaptor, media: MutableList<Media>) {
         binding.apply {
             init(
-                MediaAdaptor(0, media.take(3).toMutableList(), requireActivity()),
+                MediaAdaptor(0, media.take(3).toMutableList(), binding.root.context),
                 animeUpdatedRecyclerView,
                 animeUpdatedProgressBar,
                 animeRecently,
