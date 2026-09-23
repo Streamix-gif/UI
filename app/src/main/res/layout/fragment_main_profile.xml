@@ -216,7 +216,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/round_chevron_right_24"
+                        android:src="@drawable/ic_round_arrow_forward_ios_24"
                         android:tint="?attr/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -375,7 +375,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="View and edit your profile" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_arrow_forward_ios_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -395,7 +395,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Appearance" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Theme, colors, and display settings" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_arrow_forward_ios_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -415,7 +415,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notifications" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Episode updates and system notifications" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_arrow_forward_ios_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -435,7 +435,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="App preferences and data" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_arrow_forward_ios_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -454,7 +454,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="About AniLab" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Version, credits, and more" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_arrow_forward_ios_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
