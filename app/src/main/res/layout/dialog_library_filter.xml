@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="Reset"
-                android:textColor="@color/streamix_primary"
+                android:textColor="@color/theme"
                 android:textSize="12sp" />
         </LinearLayout>
 
