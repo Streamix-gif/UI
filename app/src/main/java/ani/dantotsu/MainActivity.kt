@@ -48,6 +48,7 @@ import ani.dantotsu.media.MediaDetailsActivity
 import ani.dantotsu.media.CalendarFragment
 import ani.dantotsu.media.user.LibraryFragment
 import ani.dantotsu.profile.MainProfileFragment
+import ani.dantotsu.profile.SocialFragment
 import ani.dantotsu.profile.activity.ActivityFragment
 import ani.dantotsu.profile.activity.ActivityFragment.Companion.ActivityType
 import ani.dantotsu.notifications.TaskScheduler
@@ -629,21 +630,17 @@ class MainActivity : AppCompatActivity() {
     private class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         FragmentStateAdapter(fragmentManager, lifecycle) {
 
-        override fun getItemCount(): Int = 3
+        override fun getItemCount(): Int = 5
 
         override fun createFragment(position: Int): Fragment {
-            val rescueMode = PrefManager.getVal<Boolean>(PrefName.RescueMode)
-            when (position) {
-                0 -> return AnimeFragment()
-                1 -> return if (rescueMode) {
-                    val hasMalLogin = PrefManager.getVal(PrefName.MALUserName, null as String?).let { !it.isNullOrBlank() }
-                    if (hasMalLogin) HomeFragment() else LoginFragment()
-                } else {
-                    if (Anilist.token != null) HomeFragment() else LoginFragment()
-                }
-                2 -> return MangaFragment()
+            return when (position) {
+                0 -> AnimeFragment()
+                1 -> CalendarFragment()
+                2 -> SocialFragment()
+                3 -> LibraryFragment()
+                4 -> MainProfileFragment()
+                else -> AnimeFragment()
             }
-            return LoginFragment()
         }
     }
 
