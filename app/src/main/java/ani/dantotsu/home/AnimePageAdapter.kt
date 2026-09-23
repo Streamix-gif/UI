@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -263,7 +264,7 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     fun updateRecent(adaptor: MediaAdaptor, media: MutableList<Media>) {
         binding.apply {
             init(
-                MediaAdaptor(0, media.take(3).toMutableList(), binding.root.context),
+                MediaAdaptor(0, media.take(3).toMutableList(), binding.root.context as FragmentActivity),
                 animeUpdatedRecyclerView,
                 animeUpdatedProgressBar,
                 animeRecently,
