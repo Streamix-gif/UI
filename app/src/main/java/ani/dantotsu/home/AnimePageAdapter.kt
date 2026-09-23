@@ -263,14 +263,23 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     fun updateRecent(adaptor: MediaAdaptor, media: MutableList<Media>) {
         binding.apply {
             init(
-                adaptor,
+                MediaAdaptor(0, media.take(3).toMutableList(), requireActivity()),
                 animeUpdatedRecyclerView,
                 animeUpdatedProgressBar,
                 animeRecently,
                 animeRecentlyMore,
                 getAppString(R.string.updated),
-                media
+                media.take(3).toMutableList()
             )
+            animeRecentlyMore.setOnClickListener {
+                MediaListViewActivity.passedMedia = media.toCollection(ArrayList())
+                ContextCompat.startActivity(
+                    it.context,
+                    Intent(it.context, MediaListViewActivity::class.java)
+                        .putExtra("title", getAppString(R.string.updated)),
+                    null
+                )
+            }
             animePopular.visibility = View.VISIBLE
             animePopular.startAnimation(setSlideUp())
             if (adaptor.itemCount == 0) {
