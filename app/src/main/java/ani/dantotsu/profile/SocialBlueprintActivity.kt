@@ -685,10 +685,10 @@ class SocialBlueprintActivity : AppCompatActivity() {
     private fun searchField(hint: String): View {
         val edit = EditText(this).apply {
             this.hint = hint
-            hintTextColor = muted
+            setHintTextColor(muted)
             setTextColor(Color.WHITE)
             textSize = 12f
-            singleLine = true
+            setSingleLine(true)
             setPadding(dp(14), 0, dp(14), 0)
             background = ContextCompat.getDrawable(this@SocialBlueprintActivity, R.drawable.social_circle_bg)
         }
