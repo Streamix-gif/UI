@@ -55,7 +55,7 @@ class SocialLeaderboardAdapter(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
-            radius = dp(18f)
+            radius = dp(18f).toFloat()
             setCardBackgroundColor(Color.parseColor("#12182A"))
             strokeColor = Color.parseColor("#2D3350")
             strokeWidth = dp(1f)
