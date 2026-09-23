@@ -54,4 +54,24 @@
             android:layout_height="wrap_content" />
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Kept for ExoplayerView/ViewBinding compatibility; the visible portrait
+         controls live in PlayerPortraitDetailsView. -->
+    <TextView
+        android:id="@+id/player_anime_title"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/player_episode_title"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/player_resolution_button"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
