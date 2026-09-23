@@ -113,8 +113,7 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_round_person_profile"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+                        android:src="@drawable/ic_round_person_24" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -187,7 +186,7 @@
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_round_diamond_24" />
+                        android:src="@drawable/ic_round_favorite_24" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -216,7 +215,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_round_chevron_right_24"
+                        android:src="@drawable/round_chevron_right_24"
                         android:tint="?attr/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -285,7 +284,7 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/ic_round_list_24"
+                            android:src="@drawable/ic_round_playlist_play_24"
                             android:tint="?attr/colorPrimary" />
 
                         <TextView
@@ -370,12 +369,12 @@
                         android:gravity="center_vertical"
                         android:paddingStart="16dp"
                         android:paddingEnd="12dp">
-                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_person_profile" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_person_24" android:contentDescription="@null"/>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="View and edit your profile" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -390,12 +389,12 @@
                     app:cardCornerRadius="14dp"
                     app:strokeWidth="1dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
-                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_palette_24" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_color_24" android:contentDescription="@null"/>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Appearance" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Theme, colors, and display settings" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -410,12 +409,12 @@
                     app:cardCornerRadius="14dp"
                     app:strokeWidth="1dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
-                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_notifications_24" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_notifications_active_24" android:contentDescription="@null"/>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notifications" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Episode updates and system notifications" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -435,7 +434,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="App preferences and data" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -454,7 +453,7 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="About AniLab" android:textSize="14sp" android:textStyle="bold"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Version, credits, and more" android:textSize="11sp"/>
                         </LinearLayout>
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
