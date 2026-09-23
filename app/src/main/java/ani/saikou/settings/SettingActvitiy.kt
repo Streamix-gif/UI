@@ -1,9 +1,8 @@
 package ani.saikou.settings
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.AnimatedVectorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.updateLayoutParams
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import ani.saikou.R
 import ani.saikou.databinding.ActivitySettingBinding
 import ani.saikou.initActivity
@@ -25,7 +22,9 @@ import ani.saikou.settings.accounts.AccountsActivity
 import ani.saikou.settings.anime.AnimeSettingsActivity
 import ani.saikou.settings.common.CommonSettingsActivity
 import ani.saikou.settings.manga.MangaSettingsActivity
-import ani.saikou.settings.notifications.NotificationSettingsActivity
+import ani.saikou.settings.saving.PrefManager
+import ani.saikou.settings.saving.PrefName
+import ani.saikou.settings.themes.ThemeManager
 import ani.saikou.snackString
 import ani.saikou.startMainActivity
 import ani.saikou.statusBarHeight
@@ -61,7 +60,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun setupLogoBehavior() {
-
         (binding.settingsLogo.drawable as? Animatable)?.start()
 
         val tipsArray = resources.getStringArray(R.array.tips)
@@ -78,9 +76,9 @@ class SettingActivity : AppCompatActivity() {
             true
         }
     }
+
     private fun setupNavigation() {
         onBackPressedDispatcher.addCallback(this, restartMainActivity)
-
         binding.settingsBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -101,7 +99,6 @@ class SettingActivity : AppCompatActivity() {
             previous.alpha = 0.33f
             previous = current
             current.alpha = 1f
-
             uiSettings.darkMode = mode
             saveData("ui_settings", uiSettings)
 
@@ -115,6 +112,25 @@ class SettingActivity : AppCompatActivity() {
         binding.settingsUiAuto.setOnClickListener { updateThemeUI(null, it) }
         binding.settingsUiLight.setOnClickListener { updateThemeUI(false, it) }
         binding.settingsUiDark.setOnClickListener { updateThemeUI(true, it) }
+
+        binding.settingsThemeRow.setOnClickListener {
+            val themes = ThemeManager.Theme.entries
+            val current = PrefManager.getVal(PrefName.Theme)
+            val checked = themes.indexOfFirst { it.theme == current }.coerceAtLeast(0)
+
+            AlertDialog.Builder(this)
+                .setTitle(R.string.theme)
+                .setSingleChoiceItems(
+                    themes.map { it.theme.replaceFirstChar(Char::uppercase) }.toTypedArray(),
+                    checked
+                ) { dialog, which ->
+                    PrefManager.setVal(PrefName.Theme, themes[which].theme)
+                    dialog.dismiss()
+                    recreate()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
     }
 
     private fun setupRowClickListeners() {
@@ -122,37 +138,26 @@ class SettingActivity : AppCompatActivity() {
             startActivity(Intent(this, destination))
         }
 
-        // 1. Account Row & Chevron
         val openAccount = View.OnClickListener { navigateTo(AccountsActivity::class.java) }
         binding.settingsAccountRow.setOnClickListener(openAccount)
         binding.btnAccountChevron.setOnClickListener(openAccount)
 
-        // 2. Common Row & Chevron
         val openCommon = View.OnClickListener { navigateTo(CommonSettingsActivity::class.java) }
         binding.settingsCommonRow.setOnClickListener(openCommon)
         binding.btnCommonChevron.setOnClickListener(openCommon)
 
-        // 3. Anime Row & Chevron
         val openAnime = View.OnClickListener { navigateTo(AnimeSettingsActivity::class.java) }
         binding.settingsAnimeRow.setOnClickListener(openAnime)
         binding.btnAnimeChevron.setOnClickListener(openAnime)
 
-        // 4. Manga Row & Chevron
         val openManga = View.OnClickListener { navigateTo(MangaSettingsActivity::class.java) }
         binding.settingsMangaRow.setOnClickListener(openManga)
         binding.btnMangaChevron.setOnClickListener(openManga)
 
-        // 5. Notifications Row & Chevron(fix notifications then enable this)
-//        val openNotifications = View.OnClickListener { navigateTo(NotificationSettingsActivity::class.java) }
-//        binding.settingsNotificationsRow.setOnClickListener(openNotifications)
-//        binding.btnNotificationsChevron.setOnClickListener(openNotifications)
-
-        // 6. Updater Row & Chevron
         val openAppUpdater = View.OnClickListener { navigateTo(UpdateActivity::class.java) }
         binding.settingsUpdaterRow.setOnClickListener(openAppUpdater)
         binding.btnUpdaterChevron.setOnClickListener(openAppUpdater)
 
-        // 7. About Row & Chevron
         val openAbout = View.OnClickListener { navigateTo(AboutSettingsActivity::class.java) }
         binding.settingsAboutRow.setOnClickListener(openAbout)
         binding.btnAboutChevron.setOnClickListener(openAbout)
