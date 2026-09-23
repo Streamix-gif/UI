@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.google.android.material.chip.Chip
 import ani.dantotsu.R
 import ani.dantotsu.databinding.FragmentSocialBinding
 import ani.dantotsu.profile.activity.ActivityFragment
@@ -22,10 +23,29 @@ class SocialFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupFilters()
         showFeed(ActivityType.USER)
-        binding.socialMyActivity.setOnClickListener { showFeed(ActivityType.USER) }
-        binding.socialGlobal.setOnClickListener { showFeed(ActivityType.GLOBAL) }
         binding.socialRefresh.setOnRefreshListener { showFeed(ActivityType.USER) }
+        binding.socialGlobalChatCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
+        binding.socialAnimeChatCard.setOnClickListener { showFeed(ActivityType.USER) }
+        binding.socialLeaderboardCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
+    }
+
+    private fun setupFilters() {
+        binding.socialFilters.removeAllViews()
+        val filters = listOf(
+            "My Activity" to ActivityType.USER,
+            "Global" to ActivityType.GLOBAL
+        )
+        filters.forEachIndexed { index, (label, type) ->
+            val chip = Chip(requireContext()).apply {
+                text = label
+                isCheckable = true
+                isChecked = index == 0
+                setOnClickListener { showFeed(type) }
+            }
+            binding.socialFilters.addView(chip)
+        }
     }
 
     private fun showFeed(type: ActivityType) {
