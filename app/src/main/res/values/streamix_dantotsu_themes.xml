@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="ThemeOverlay.Streamix.SystemFont" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+    <style name="AppTheme_Streamix_Amoled" parent="Theme.Streamix">
+        <item name="android:windowBackground">@color/bg_black</item>
+        <item name="android:colorBackground">@color/bg_black</item>
+        <item name="colorSurface">@color/bg_black</item>
+    </style>
+    <style name="Theme.Streamix.Blue" parent="Theme.Streamix"><item name="colorPrimary">#00658E</item><item name="colorSecondary">#4F616E</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.BlueOLED" parent="Theme.Streamix.Blue"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Green" parent="Theme.Streamix"><item name="colorPrimary">#426916</item><item name="colorSecondary">#57624A</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.GreenOLED" parent="Theme.Streamix.Green"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Purple" parent="Theme.Streamix"><item name="colorPrimary">#7C4997</item><item name="colorSecondary">#68596D</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.PurpleOLED" parent="Theme.Streamix.Purple"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Pink" parent="Theme.Streamix"><item name="colorPrimary">#FF92E2</item><item name="colorSecondary">#715764</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.PinkOLED" parent="Theme.Streamix.Pink"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Saikou" parent="Theme.Streamix"><item name="colorPrimary">#BC0064</item><item name="colorSecondary">#555D7E</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.SaikouOLED" parent="Theme.Streamix.Saikou"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Red" parent="Theme.Streamix"><item name="colorPrimary">#C0000A</item><item name="colorSecondary">#775652</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.RedOLED" parent="Theme.Streamix.Red"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Lavender" parent="Theme.Streamix"><item name="colorPrimary">#6750A4</item><item name="colorSecondary">#625B71</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.LavenderOLED" parent="Theme.Streamix.Lavender"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Ocean" parent="Theme.Streamix"><item name="colorPrimary">#006A65</item><item name="colorSecondary">#4A6361</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.OceanOLED" parent="Theme.Streamix.Ocean"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Oriax" parent="Theme.Streamix"><item name="colorPrimary">#FF9800</item><item name="colorSecondary">#FF5722</item><item name="colorOnPrimary">@color/bg_black</item><item name="colorOnSecondary">@color/bg_black</item></style>
+    <style name="Theme.Streamix.OriaxOLED" parent="Theme.Streamix.Oriax"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.Monochrome" parent="Theme.Streamix"><item name="colorPrimary">@color/bg_black</item><item name="colorSecondary">@color/bg_black</item><item name="colorOnPrimary">@color/bg_white</item><item name="colorOnSecondary">@color/bg_white</item></style>
+    <style name="Theme.Streamix.MonochromeOLED" parent="Theme.Streamix.Monochrome"><item name="android:windowBackground">@color/bg_black</item><item name="android:colorBackground">@color/bg_black</item><item name="colorSurface">@color/bg_black</item></style>
+    <style name="Theme.Streamix.ALLBLACK" parent="Theme.Streamix.MonochromeOLED"><item name="colorPrimary">@color/bg_black</item><item name="colorSecondary">@color/bg_black</item><item name="colorOnPrimary">@color/bg_black</item><item name="colorOnSecondary">@color/bg_black</item></style>
+</resources>
