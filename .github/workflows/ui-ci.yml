@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - Main
       - versi-1
   pull_request:
     branches:
       - main
+      - Main
       - versi-1
 
 concurrency:
@@ -46,6 +48,9 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Test Saikou-style server core
+        run: ./gradlew :streamix-server:test --stacktrace
 
       - name: Assemble debug APK
         run: ./gradlew assembleDebug --stacktrace
