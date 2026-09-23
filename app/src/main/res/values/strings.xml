@@ -29,6 +29,7 @@
     <string name="slogan">The NEW Best Anime &amp; Manga app for Android.</string>
 
     <string name="login">Login</string>
+    <string name="guest">Guest</string>
     <string name="logout">Logout</string>
 
     <string name="dantotsu" translatable="false">https://dantotsu.app/</string>
