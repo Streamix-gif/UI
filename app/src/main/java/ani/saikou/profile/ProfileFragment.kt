@@ -78,7 +78,7 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), ani.saikou.settings.notifications.NotificationSettingsActivity::class.java))
         }
         binding.profileMenuSettings.setOnClickListener {
-            startActivity(Intent(requireContext(), ani.saikou.settings.SettingActivity::class.java))
+            startActivity(Intent(requireContext(), ani.saikou.settings.DantotsuSettingsActivity::class.java))
         }
         binding.profileMenuAbout.setOnClickListener {
             startActivity(Intent(requireContext(), ani.saikou.settings.about.AboutSettingsActivity::class.java))
