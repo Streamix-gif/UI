@@ -14,10 +14,11 @@ import ani.dantotsu.databinding.FragmentProfileBinding
 import ani.dantotsu.loadImage
 import ani.dantotsu.media.Media
 import ani.dantotsu.media.MediaAdaptor
-import ani.dantotsu.settings.DantotsuAppearanceActivity
-import ani.dantotsu.settings.DantotsuSettingsActivity
-import ani.dantotsu.settings.about.AboutSettingsActivity
-import ani.dantotsu.settings.notifications.NotificationSettingsActivity
+import ani.dantotsu.settings.SettingsAboutActivity
+import ani.dantotsu.settings.SettingsAccountActivity
+import ani.dantotsu.settings.SettingsActivity
+import ani.dantotsu.settings.SettingsNotificationActivity
+import ani.dantotsu.settings.SettingsThemeActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,14 +34,14 @@ class MainProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.profileSettingsButton.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
-        binding.editProfileButton.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
-        binding.profileMenuEdit.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
-        binding.profileMenuPremium.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
-        binding.profileMenuAppearance.setOnClickListener { startActivity(Intent(requireContext(), DantotsuAppearanceActivity::class.java)) }
-        binding.profileMenuNotifications.setOnClickListener { startActivity(Intent(requireContext(), NotificationSettingsActivity::class.java)) }
-        binding.profileMenuSettings.setOnClickListener { startActivity(Intent(requireContext(), DantotsuSettingsActivity::class.java)) }
-        binding.profileMenuAbout.setOnClickListener { startActivity(Intent(requireContext(), AboutSettingsActivity::class.java)) }
+        binding.profileSettingsButton.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
+        binding.editProfileButton.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
+        binding.profileMenuEdit.setOnClickListener { startActivity(Intent(requireContext(), SettingsAccountActivity::class.java)) }
+        binding.profileMenuPremium.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
+        binding.profileMenuAppearance.setOnClickListener { startActivity(Intent(requireContext(), SettingsThemeActivity::class.java)) }
+        binding.profileMenuNotifications.setOnClickListener { startActivity(Intent(requireContext(), SettingsNotificationActivity::class.java)) }
+        binding.profileMenuSettings.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
+        binding.profileMenuAbout.setOnClickListener { startActivity(Intent(requireContext(), SettingsAboutActivity::class.java)) }
         binding.profileRefresh.setOnRefreshListener { loadProfile() }
         loadProfile()
     }
@@ -75,7 +76,16 @@ class MainProfileFragment : Fragment() {
             binding.profileEpisodes.text = user.statistics.anime.episodesWatched.toString()
             binding.profileFavoritesCount.text =
                 ((user.favourites?.anime?.nodes?.size ?: 0) + (user.favourites?.manga?.nodes?.size ?: 0)).toString()
-            val favorites = user.favourites?.anime?.nodes?.map { Media(it) } ?: emptyList()
+            val favorites = user.favourites?.anime?.nodes?.map {
+                Media(
+                    id = it.id,
+                    name = null,
+                    nameRomaji = "",
+                    userPreferredName = "",
+                    cover = it.coverImage?.large ?: it.coverImage?.medium,
+                    isAdult = false
+                )
+            } ?: emptyList()
             binding.profileFavorites.visibility = if (favorites.isEmpty()) View.GONE else View.VISIBLE
             binding.profileEmpty.visibility = if (favorites.isEmpty()) View.VISIBLE else View.GONE
             binding.profileFavorites.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
