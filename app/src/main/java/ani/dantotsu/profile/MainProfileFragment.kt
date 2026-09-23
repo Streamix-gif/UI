@@ -10,12 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
-import ani.dantotsu.databinding.FragmentProfileBinding
 import ani.dantotsu.loadImage
 import ani.dantotsu.media.Media
 import ani.dantotsu.media.MediaAdaptor
 import ani.dantotsu.settings.SettingsAboutActivity
-import ani.dantotsu.settings.SettingsAccountActivity
 import ani.dantotsu.settings.SettingsActivity
 import ani.dantotsu.settings.SettingsNotificationActivity
 import ani.dantotsu.settings.SettingsThemeActivity
@@ -35,8 +33,8 @@ class MainProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileSettingsButton.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
-        binding.editProfileButton.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
-        binding.profileMenuEdit.setOnClickListener { startActivity(Intent(requireContext(), SettingsAccountActivity::class.java)) }
+        binding.editProfileButton.setOnClickListener { startActivity(Intent(requireContext(), EditProfileActivity::class.java)) }
+        binding.profileMenuEdit.setOnClickListener { startActivity(Intent(requireContext(), EditProfileActivity::class.java)) }
         binding.profileMenuPremium.setOnClickListener { startActivity(Intent(requireContext(), SettingsActivity::class.java)) }
         binding.profileMenuAppearance.setOnClickListener { startActivity(Intent(requireContext(), SettingsThemeActivity::class.java)) }
         binding.profileMenuNotifications.setOnClickListener { startActivity(Intent(requireContext(), SettingsNotificationActivity::class.java)) }
