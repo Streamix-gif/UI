@@ -21,7 +21,7 @@ import com.google.android.material.card.MaterialCardView
 
 class DantotsuSettingsActivity : AppCompatActivity() {
 
-    private val accent get() = ThemeManager(this).getThemeColor(com.google.android.material.R.attr.colorPrimary)
+    private val accent get() = resolveColor(com.google.android.material.R.attr.colorPrimary)
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
