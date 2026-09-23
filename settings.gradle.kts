@@ -21,3 +21,4 @@ rootProject.name = "Dantotsu"
 include(":app")
 include(":streamix-backend")
 project(":streamix-backend").projectDir = file("backend")
+include(":streamix-server")
