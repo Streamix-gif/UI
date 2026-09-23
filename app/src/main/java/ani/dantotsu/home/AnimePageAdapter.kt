@@ -50,7 +50,7 @@ import ani.dantotsu.statusBarHeight
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputLayout
 
-class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHolder>() {
+class AnimePageAdapter(private val activity: FragmentActivity) : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHolder>() {
     val ready = MutableLiveData(false)
     lateinit var binding: ItemAnimePageBinding
     private lateinit var trendingBinding: LayoutTrendingBinding
@@ -264,7 +264,7 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     fun updateRecent(adaptor: MediaAdaptor, media: MutableList<Media>) {
         binding.apply {
             init(
-                MediaAdaptor(0, media.take(3).toMutableList(), binding.root.context as FragmentActivity),
+                MediaAdaptor(0, media.take(3).toMutableList(), activity),
                 animeUpdatedRecyclerView,
                 animeUpdatedProgressBar,
                 animeRecently,
