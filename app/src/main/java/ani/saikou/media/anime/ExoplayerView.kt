@@ -178,6 +178,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     private lateinit var customCastButton: CustomCastButton
     private lateinit var castScreenView: CastScreenView
     private lateinit var prePlaybackView: SaikouPrePlaybackView
+    private lateinit var playerResolutionButton: TextView
 
     private var orientationListener: OrientationEventListener? = null
     private var hasExtSubtitles = false
@@ -321,6 +322,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
 
         playerView = binding.playerView
         prePlaybackView = binding.prePlaybackView
+        playerResolutionButton = binding.playerResolutionButton
         hideSystemBarsExtendView()
 
         // Bind Views
@@ -352,6 +354,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
         customCastButton = playerView.findViewById(R.id.exo_cast)
         playerView.controllerShowTimeoutMs = 5000
         exoSource.setOnClickListener { sourceClick() }
+        playerResolutionButton.setOnClickListener { showResolutionSelector() }
 
         // Initialize Managers
         subtitleManager = PlayerSubtitleManager(this, playerView, customSubtitleView, model) {
@@ -466,41 +469,23 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             }
         }
 
-        // Sensor & Orientation
-        if (System.getInt(contentResolver, System.ACCELEROMETER_ROTATION, 0) != 1) {
-            if (PrefManager.getVal(PrefName.RotationPlayer)) {
-                orientationListener = object : OrientationEventListener(this, SensorManager.SENSOR_DELAY_UI) {
-                    override fun onOrientationChanged(orientation: Int) {
-                        when (orientation) {
-                            in 45..135 -> {
-                                if (rotation != ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                                    exoRotate.visibility = View.VISIBLE
-                                }
-                                rotation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
-                            }
-                            in 225..315 -> {
-                                if (rotation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                                    exoRotate.visibility = View.VISIBLE
-                                }
-                                rotation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                            }
-                            in 315..360, in 0..45 -> {
-                                if (rotation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                                    exoRotate.visibility = View.VISIBLE
-                                }
-                                rotation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            }
-                        }
-                    }
-                }
-                orientationListener?.enable()
-            }
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        // Orientation
+        // Portrait is the default playback surface. Resize (exo_screen) stays
+        // independent; exo_rotate is dedicated to portrait/landscape rotation.
+        if (PrefManager.getVal(PrefName.RotationPlayer)) {
+            exoRotate.visibility = View.VISIBLE
             exoRotate.setOnClickListener {
-                requestedOrientation = rotation
-                it.visibility = View.GONE
+                requestedOrientation =
+                    if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    } else {
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    }
             }
+        } else {
+            exoRotate.visibility = View.GONE
         }
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         if (savedInstanceState != null) {
             currentWindow = savedInstanceState.getInt(resumeWindow)
@@ -984,7 +969,7 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
             }
         }
 
-        exoSource.setOnClickListener { sourceClick() }
+        updateResolutionButton()
 
         if (isOnline(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -1166,25 +1151,74 @@ class ExoplayerView : AppCompatActivity(), Player.Listener {
     }
 
     private fun sourceClick() {
-        if (isFinishing || isDestroyed || supportFragmentManager.isStateSaved) return
-        changingServer = true
+        showResolutionSelector()
+    }
 
-        media.selected?.server = null
-        playerManager.exoPlayer?.let { p ->
-            PrefManager.setCustomVal(
-                "${media.id}_${media.anime?.selectedEpisode}",
-                p.currentPosition,
-            )
-            p.pause()
+    private fun updateResolutionButton() {
+        if (!this::playerResolutionButton.isInitialized) return
+        val quality = video?.quality?.takeIf { it > 0 }?.let { "${it}p" } ?: "Auto"
+        playerResolutionButton.text = "${quality} ▾"
+    }
+
+    private fun showResolutionSelector() {
+        if (isFinishing || isDestroyed || supportFragmentManager.isStateSaved) return
+
+        val currentExtractor = extractor
+        val currentVideo = video
+        val candidates = episode.extractors.orEmpty().flatMapIndexed { extractorIndex, ext ->
+            ext.videos.mapIndexed { videoIndex, item ->
+                Triple(extractorIndex, videoIndex, item)
+            }
         }
-        media.selected?.let { model.saveSelected(media.id, it) }
-        val epNum = if (this::episode.isInitialized) episode.number else (media.anime?.selectedEpisode ?: "1")
-        model.onEpisodeClick(
-            media,
-            epNum,
-            this.supportFragmentManager,
-            launch = false,
-        )
+
+        if (candidates.isEmpty()) {
+            toast("No video sources available", this)
+            return
+        }
+
+        val labels = candidates.map { (extractorIndex, _, item) ->
+            val quality = item.quality?.takeIf { it > 0 }?.let { "${it}p" } ?: "Auto"
+            val server = episode.extractors?.getOrNull(extractorIndex)?.server?.name
+            val serverLabel = server?.takeIf { it.isNotBlank() }?.let { " • $it" } ?: ""
+            val note = item.extraNote?.takeIf { it.isNotBlank() }?.let { " • $it" } ?: ""
+            "$quality$serverLabel$note"
+        }.toTypedArray()
+
+        val selected = candidates.indexOfFirst { (_, _, item) ->
+            item === currentVideo
+        }.takeIf { it >= 0 } ?: candidates.indexOfFirst { (ei, _, _) ->
+            episode.extractors?.getOrNull(ei) === currentExtractor
+        }.takeIf { it >= 0 } ?: 0
+
+        customAlertDialog().apply {
+            setTitle("Quality / Server")
+            singleChoiceItems(labels, selected) { index ->
+                val (extractorIndex, videoIndex, selectedItem) = candidates[index]
+                val selectedExtractor = episode.extractors?.getOrNull(extractorIndex) ?: return@singleChoiceItems
+
+                changingServer = true
+                playerManager.exoPlayer?.let { p ->
+                    PrefManager.setCustomVal(
+                        "${media.id}_${media.anime?.selectedEpisode}",
+                        p.currentPosition,
+                    )
+                    p.pause()
+                }
+
+                episode.selectedExtractor = selectedExtractor.server.name
+                episode.selectedVideo = videoIndex
+                media.selected?.server = selectedExtractor.server.name
+                media.selected?.let { model.saveSelected(media.id, it) }
+
+                extractor = selectedExtractor
+                video = selectedItem
+                updateResolutionButton()
+                initPlayer()
+                changingServer = false
+            }
+            setOnCancelListener { hideSystemBarsExtendView() }
+            show()
+        }
     }
 
     private fun subClick() {
