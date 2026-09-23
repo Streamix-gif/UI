@@ -45,6 +45,11 @@ import ani.dantotsu.home.LoginFragment
 import ani.dantotsu.home.MangaFragment
 import ani.dantotsu.home.NoInternet
 import ani.dantotsu.media.MediaDetailsActivity
+import ani.dantotsu.media.CalendarFragment
+import ani.dantotsu.media.user.LibraryFragment
+import ani.dantotsu.profile.MainProfileFragment
+import ani.dantotsu.profile.activity.ActivityFragment
+import ani.dantotsu.profile.activity.ActivityFragment.Companion.ActivityType
 import ani.dantotsu.notifications.TaskScheduler
 import ani.dantotsu.others.CustomBottomDialog
 import ani.dantotsu.others.calc.CalcActivity
@@ -306,16 +311,18 @@ class MainActivity : AppCompatActivity() {
             }
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
             selectedOption = if (intent.getBooleanExtra("goToHome", false)) {
-                1
+                0
             } else if (fragment != null) {
                 when (fragment) {
                     AnimeFragment::class.java.name -> 0
-                    HomeFragment::class.java.name -> 1
-                    MangaFragment::class.java.name -> 2
-                    else -> 1
+                    CalendarFragment::class.java.name -> 1
+                    ActivityFragment::class.java.name -> 2
+                    LibraryFragment::class.java.name -> 3
+                    MainProfileFragment::class.java.name -> 4
+                    else -> 0
                 }
             } else {
-                PrefManager.getVal(PrefName.DefaultStartUpTab)
+                PrefManager.getVal(PrefName.DefaultStartUpTab).coerceIn(0, 4)
             }
             val navbar = binding.includedNavbar.navbar
             bottomBar = navbar
@@ -644,9 +651,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         if (intent.getBooleanExtra("goToHome", false)) {
-            selectedOption = 1
-            binding.includedNavbar.navbar.selectTabAt(1)
-            binding.viewpager.setCurrentItem(1, false)
+            selectedOption = 0
+            binding.includedNavbar.navbar.selectTabAt(0)
+            binding.viewpager.setCurrentItem(0, false)
         }
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewIntent(intent)
