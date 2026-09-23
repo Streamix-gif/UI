@@ -17,11 +17,8 @@ class ThemeManager(private val context: Activity) {
 
     fun applyTheme(fromImage: Bitmap? = null) {
         val useOLED = PrefManager.getVal(PrefName.UseOLED) && isDarkThemeActive(context)
-        val useCustom = PrefManager.getVal(PrefName.UseCustomTheme)
-        val customColor = PrefManager.getVal(PrefName.CustomThemeInt)
-        val useMaterial = PrefManager.getVal(PrefName.UseMaterialYou)
 
-        if (useMaterial || fromImage != null) {
+        if (fromImage != null) {
             val options = DynamicColorsOptions.Builder().apply {
                 if (fromImage != null) setContentBasedSource(fromImage)
                 if (useOLED) setThemeOverlay(R.style.AppTheme_Streamix_Amoled)
