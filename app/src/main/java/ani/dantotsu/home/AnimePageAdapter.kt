@@ -130,6 +130,15 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
             trendingBinding.searchBar.performClick()
         }
 
+        trendingBinding.filterButton.setOnClickListener {
+            SettingsDialogFragment.newInstance(
+                SettingsDialogFragment.Companion.PageType.ANIME
+            ).show(
+                (it.context as AppCompatActivity).supportFragmentManager,
+                "dialog"
+            )
+        }
+
         trendingBinding.notificationButton.setOnClickListener {
             ContextCompat.startActivity(
                 it.context,
