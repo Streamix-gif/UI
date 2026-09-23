@@ -3,6 +3,7 @@ package ani.dantotsu.profile
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -251,7 +252,7 @@ class SocialBlueprintActivity : AppCompatActivity() {
     }
 
     private fun chatDetail(parent: LinearLayout) {
-        parent.addView(memberRow(parent = parent, name = "Kael", status = "Online", dotColor = green, initial = "K"))
+        memberRow(parent = parent, name = "Kael", status = "Online", dotColor = green, initial = "K")
         chatBubble(parent, "Kael", "Bro, episode terbaru udah rilis?", "12:20")
         chatBubble(parent, "Shin", "Iya, gila sih keren banget.", "12:21", mine = true)
         chatBubble(parent, "Kael", "Nanti malam nonton bareng?", "12:22")
@@ -771,7 +772,10 @@ class SocialBlueprintActivity : AppCompatActivity() {
             textSize = 9f
             gravity = Gravity.CENTER
             setTextColor(Color.WHITE)
-            setBackgroundColor(color)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(color)
+            }
         }.also { it.layoutParams = ViewGroup.LayoutParams(dp(24), dp(24)) }
     }
 
