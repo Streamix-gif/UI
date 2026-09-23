@@ -146,13 +146,11 @@
                         android:orientation="vertical"
                         android:padding="9dp">
 
-                        <TextView
-                            android:layout_width="34dp"
-                            android:layout_height="30dp"
-                            android:gravity="center"
-                            android:text="●"
-                            android:textColor="#6FA8FF"
-                            android:textSize="24sp" />
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_social_chat_blue"
+                            android:contentDescription="Global Chat" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -191,13 +189,11 @@
                         android:orientation="vertical"
                         android:padding="9dp">
 
-                        <TextView
-                            android:layout_width="34dp"
-                            android:layout_height="30dp"
-                            android:gravity="center"
-                            android:text="♟"
-                            android:textColor="#B6B7FF"
-                            android:textSize="22sp" />
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_social_people_lavender"
+                            android:contentDescription="Anime Chat" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -235,13 +231,11 @@
                         android:orientation="vertical"
                         android:padding="9dp">
 
-                        <TextView
-                            android:layout_width="34dp"
-                            android:layout_height="30dp"
-                            android:gravity="center"
-                            android:text="★"
-                            android:textColor="#FFD35A"
-                            android:textSize="24sp" />
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_social_trophy_gold"
+                            android:contentDescription="Leaderboard" />
 
                         <TextView
                             android:layout_width="match_parent"
