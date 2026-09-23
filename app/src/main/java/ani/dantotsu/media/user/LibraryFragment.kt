@@ -1,134 +1,134 @@
 package ani.dantotsu.media.user
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Menu
 import android.view.inputmethod.InputMethodManager
-import android.content.Context
-import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import ani.dantotsu.R
-import ani.dantotsu.Refresh
-import ani.dantotsu.databinding.ActivityListBinding
-import ani.dantotsu.settings.saving.PrefManager
-import ani.dantotsu.settings.saving.PrefName
-import com.google.android.material.tabs.TabLayout
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
+import ani.dantotsu.connections.anilist.Anilist
+import ani.dantotsu.media.MediaDetailsActivity
+import ani.dantotsu.databinding.FragmentLibraryBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.Serializable
 
 class LibraryFragment : Fragment() {
-    private var _binding: ActivityListBinding? = null
+    private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
     private val model: ListViewModel by viewModels()
-    private var selectedTabIdx = 0
+    private var pendingStatus = "All"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = ActivityListBinding.inflate(inflater, container, false)
+        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.listed.visibility = View.GONE
-        binding.listTitle.text = getString(R.string.library)
-        binding.listTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) { selectedTabIdx = tab?.position ?: 0 }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
 
-        model.getLists().observe(viewLifecycleOwner) {
-            val defaultKeys = listOf("Reading","Watching","Completed","Paused","Dropped","Planning","Favourites","Rewatching","Rereading","All")
-            val userKeys = resources.getStringArray(R.array.keys)
-            if (it != null) {
-                binding.listProgressBar.visibility = View.GONE
-                binding.listViewPager.adapter = ListViewPagerAdapter(it.size, false, requireActivity())
-                val keys = it.keys.toList().map { key -> userKeys.getOrNull(defaultKeys.indexOf(key)) ?: key }
-                val values = it.values.toList()
-                TabLayoutMediator(binding.listTabLayout, binding.listViewPager) { tab, position ->
-                    tab.text = "${keys[position]} (${values[position].size})"
-                }.attach()
-                if (it.isNotEmpty()) binding.listViewPager.setCurrentItem(selectedTabIdx.coerceIn(0, it.size - 1), false)
-            }
+        if (Anilist.userid == null) {
+            binding.listProgressBar.visibility = View.GONE
+            return
         }
 
-        val live = Refresh.activity.getOrPut(hashCode()) { androidx.lifecycle.MutableLiveData(true) }
-        live.observe(viewLifecycleOwner) {
-            if (it) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val userId = ani.dantotsu.connections.anilist.Anilist.userid ?: 0
-                        model.loadLists(true, userId)
-                    }
-                    live.postValue(false)
-                }
-            }
-        }
-
-        if (PrefManager.getVal<Boolean>(PrefName.RescueMode)) binding.listSort.visibility = View.GONE
-        binding.listSort.setOnClickListener {
-            val popup = PopupMenu(requireContext(), it)
-            popup.setOnMenuItemClickListener { item ->
-                val sort = when (item.itemId) {
-                    R.id.score -> "score"
-                    R.id.title -> "title"
-                    R.id.updated -> "updatedAt"
-                    R.id.release -> "release"
-                    else -> null
-                }
-                PrefManager.setVal(PrefName.AnimeListSortOrder, sort ?: "")
-                binding.listProgressBar.visibility = View.VISIBLE
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    model.loadLists(true, ani.dantotsu.connections.anilist.Anilist.userid ?: 0, sort)
-                }
-                true
-            }
-            popup.inflate(R.menu.list_sort_menu)
-            popup.show()
-        }
-        binding.filter.setOnClickListener {
-            val popup = PopupMenu(requireContext(), it)
-            popup.menu.add(Menu.NONE, 0, Menu.NONE, "All")
-            model.getAllGenres().forEachIndexed { index, genre -> popup.menu.add(1, index + 1, Menu.NONE, genre) }
-            model.getAllTags().forEachIndexed { index, tag -> popup.menu.add(2, index + 10000, Menu.NONE, tag) }
-            popup.setOnMenuItemClickListener { item ->
-                when (item.groupId) {
-                    0 -> model.unfilterLists()
-                    1 -> model.filterLists(item.title.toString())
-                    2 -> model.filterListsByTag(item.title.toString())
-                }
-                true
-            }
-            popup.show()
-        }
-        binding.random.setOnClickListener {
-            val current = binding.listTabLayout.selectedTabPosition
-            (requireActivity().supportFragmentManager.findFragmentByTag("f$current") as? ListFragment)?.randomOptionClick()
-        }
         binding.search.setOnClickListener {
-            val visible = binding.searchView.isVisible
+            val visible = binding.searchView.visibility == View.VISIBLE
             binding.searchView.visibility = if (visible) View.GONE else View.VISIBLE
             if (!visible) {
                 binding.searchViewText.requestFocus()
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(binding.searchViewText, InputMethodManager.SHOW_IMPLICIT)
             } else {
-                binding.searchViewText.text.clear()
+                binding.searchViewText.text?.clear()
                 model.unfilterLists()
             }
         }
-        binding.searchViewText.addTextChangedListener { model.searchLists(binding.searchViewText.text.toString()) }
+
+        binding.searchViewText.setOnEditorActionListener { _, _, _ ->
+            model.searchLists(binding.searchViewText.text?.toString().orEmpty())
+            false
+        }
+
+        val openLibraryFilters = View.OnClickListener {
+            LibraryFilterDialogFragment
+                .newInstance(model.getAllGenres())
+                .show(parentFragmentManager, "library_filters")
+        }
+
+        binding.filter.setOnClickListener(openLibraryFilters)
+        binding.listSort.setOnClickListener(openLibraryFilters)
+
+        parentFragmentManager.setFragmentResultListener(
+            LibraryFilterDialogFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, result ->
+            val sort = result.getString(LibraryFilterDialogFragment.KEY_SORT)
+            val status = result.getString(LibraryFilterDialogFragment.KEY_STATUS, "All")
+            val genre = result.getString(LibraryFilterDialogFragment.KEY_GENRE, "All")
+            val score = result.getString(LibraryFilterDialogFragment.KEY_SCORE, "All")
+                .removeSuffix("+")
+                .toIntOrNull() ?: 0
+
+            pendingStatus = status
+            binding.listProgressBar.visibility = View.VISIBLE
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    model.loadLists(
+                        true,
+                        Anilist.userid ?: return@withContext,
+                        sort
+                    )
+                    if (genre != "All") model.filterLists(genre)
+                }
+            }
+        }
+
+        binding.random.setOnClickListener {
+            val media = model.getLists().value?.values?.flatten()?.randomOrNull() ?: return@setOnClickListener
+            startActivity(
+                Intent(requireContext(), MediaDetailsActivity::class.java)
+                    .putExtra("media", media as Serializable)
+            )
+        }
+
+        model.getLists().observe(viewLifecycleOwner) { lists ->
+            if (lists == null) return@observe
+            binding.listProgressBar.visibility = View.GONE
+            binding.listViewPager.adapter = ListViewPagerAdapter(lists.size, false, requireActivity())
+            val keys = lists.keys.toList()
+            val values = lists.values.toList()
+            TabLayoutMediator(binding.listTabLayout, binding.listViewPager) { tab, position ->
+                tab.text = keys[position] + " (" + values[position].size + ")"
+            }.attach()
+            binding.listViewPager.post {
+                if (pendingStatus == "All") {
+                    binding.listViewPager.setCurrentItem(0, true)
+                } else {
+                    val index = keys.indexOfFirst { key ->
+                        key.replace("-", "").replace(" ", "")
+                            .equals(pendingStatus.replace("-", "").replace(" ", ""), ignoreCase = true)
+                    }
+                    if (index >= 0) binding.listViewPager.setCurrentItem(index, true)
+                }
+                binding.listProgressBar.visibility = View.GONE
+            }
+        }
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                model.loadLists(true, Anilist.userid ?: return@withContext)
+            }
+        }
     }
 
     override fun onDestroyView() {
-        Refresh.activity.remove(hashCode())
         binding.listViewPager.adapter = null
         _binding = null
         super.onDestroyView()
