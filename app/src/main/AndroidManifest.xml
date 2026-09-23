@@ -237,6 +237,9 @@
         </activity>
 
         <activity
+            android:name=".profile.SocialBlueprintActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".profile.EditProfileActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
