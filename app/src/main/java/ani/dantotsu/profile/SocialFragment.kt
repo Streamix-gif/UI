@@ -21,8 +21,8 @@ class SocialFragment : Fragment() {
     private val carouselRunnable = object : Runnable {
         override fun run() {
             if (!isAdded || _binding == null) return
-            carouselIndex = (carouselIndex + 1) % 3
             rotateFeatureCards()
+            carouselIndex = 0
             updateFeatureCarousel()
             carouselHandler.postDelayed(this, 4_000L)
         }
