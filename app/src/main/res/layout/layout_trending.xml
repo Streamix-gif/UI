@@ -105,23 +105,43 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/notificationButton"
+                <FrameLayout
                     android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:backgroundTint="@android:color/transparent"
-                    app:cardCornerRadius="27dp"
-                    app:strokeColor="@color/text_input_layout_stroke_color"
-                    app:strokeWidth="1dp">
+                    android:layout_height="54dp">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="15dp"
-                        android:src="@drawable/ic_round_notifications_none_24"
-                        app:tint="@color/bg_white"
-                        tools:ignore="ContentDescription" />
-                </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/notificationButton"
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:backgroundTint="@android:color/transparent"
+                        app:cardCornerRadius="27dp"
+                        app:strokeColor="@color/text_input_layout_stroke_color"
+                        app:strokeWidth="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="15dp"
+                            android:src="@drawable/ic_round_notifications_none_24"
+                            app:tint="@color/bg_white"
+                            tools:ignore="ContentDescription" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/notificationCount"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:background="@drawable/notification_circle"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:gravity="center"
+                        android:textColor="#F3F3F3"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:ignore="SmallSp"
+                        tools:text="1"
+                        tools:visibility="visible" />
+                </FrameLayout>
 
             </LinearLayout>
 
