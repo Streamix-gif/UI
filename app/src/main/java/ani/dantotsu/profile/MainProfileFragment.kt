@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +28,27 @@ import kotlinx.coroutines.withContext
 class MainProfileFragment : Fragment() {
     private var _binding: FragmentMainProfileBinding? = null
     private val binding get() = _binding!!
+
+    // Resolve profile views directly from the inflated root so the fragment remains
+    // resilient to view-binding resource regeneration across the visual variants.
+    private val profileSettingsButton get() = binding.root.findViewById<View>(R.id.profileSettingsButton)
+    private val editProfileButton get() = binding.root.findViewById<View>(R.id.editProfileButton)
+    private val profileMenuEdit get() = binding.root.findViewById<View>(R.id.profileMenuEdit)
+    private val profileMenuPremium get() = binding.root.findViewById<View>(R.id.profileMenuPremium)
+    private val profileMenuAppearance get() = binding.root.findViewById<View>(R.id.profileMenuAppearance)
+    private val profileMenuNotifications get() = binding.root.findViewById<View>(R.id.profileMenuNotifications)
+    private val profileMenuSettings get() = binding.root.findViewById<View>(R.id.profileMenuSettings)
+    private val profileMenuAbout get() = binding.root.findViewById<View>(R.id.profileMenuAbout)
+    private val profileRefresh get() = binding.root.findViewById<SwipeRefreshLayout>(R.id.profileRefresh)
+    private val profileName get() = binding.root.findViewById<TextView>(R.id.profileName)
+    private val profileBio get() = binding.root.findViewById<TextView>(R.id.profileBio)
+    private val profileAnimeWatched get() = binding.root.findViewById<TextView>(R.id.profileAnimeWatched)
+    private val profileEpisodes get() = binding.root.findViewById<TextView>(R.id.profileEpisodes)
+    private val profileFavoritesCount get() = binding.root.findViewById<TextView>(R.id.profileFavoritesCount)
+    private val profileFavorites get() = binding.root.findViewById<RecyclerView>(R.id.profileFavorites)
+    private val profileEmpty get() = binding.root.findViewById<TextView>(R.id.profileEmpty)
+    private val profileAvatar get() = binding.root.findViewById<ImageView>(R.id.profileAvatar)
+    private val profileBanner get() = binding.root.findViewById<ImageView>(R.id.profileBanner)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMainProfileBinding.inflate(inflater, container, false)
