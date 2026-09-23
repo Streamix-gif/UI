@@ -222,7 +222,7 @@ class PlayerPortraitDetailsView @JvmOverloads constructor(
             gravity = Gravity.CENTER_VERTICAL
         }
         val avatar = ImageView(context).apply {
-            setImageResource(R.drawable.ic_round_account_circle_24)
+            setImageResource(android.R.drawable.ic_menu_myplaces)
             setColorFilter(accentSoft)
             layoutParams = LayoutParams(42.dp, 42.dp)
         }
