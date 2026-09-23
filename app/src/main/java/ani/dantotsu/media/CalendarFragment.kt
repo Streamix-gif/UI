@@ -15,9 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import ani.dantotsu.R
 import ani.dantotsu.Refresh
 import ani.dantotsu.databinding.ActivityListBinding
-import ani.dantotsu.loadData
 import ani.dantotsu.media.user.ListViewPagerAdapter
-import ani.dantotsu.settings.UserInterfaceSettings
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
@@ -45,14 +43,7 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val uiSettings = loadData<UserInterfaceSettings>("ui_settings") ?: UserInterfaceSettings()
-        if (!uiSettings.immersiveMode) {
-            requireActivity().window.statusBarColor =
-                ContextCompat.getColor(requireContext(), R.color.nav_bg_inv)
-            binding.root.fitsSystemWindows = true
-        } else {
-            binding.root.fitsSystemWindows = false
-        }
+        binding.root.fitsSystemWindows = true
         binding.listTitle.text = "Schedule"
         binding.listSubtitle.text = "Track upcoming anime episodes"
         binding.listSubtitle.visibility = View.VISIBLE
@@ -81,7 +72,7 @@ class CalendarFragment : Fragment() {
                 view.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        if (selected) R.color.bg_white else R.color.chip_text_unselected
+                        if (selected) R.color.bg_white else R.color.grey_60
                     )
                 )
                 val bg = GradientDrawable().apply {
@@ -89,12 +80,12 @@ class CalendarFragment : Fragment() {
                     setColor(
                         ContextCompat.getColor(
                             requireContext(),
-                            if (selected) R.color.streamix_primary_variant else android.R.color.transparent
+                            if (selected) R.color.theme else android.R.color.transparent
                         )
                     )
                     setStroke(
                         1.dp(requireContext()).toInt(),
-                        ContextCompat.getColor(requireContext(), R.color.streamix_primary)
+                        ContextCompat.getColor(requireContext(), R.color.violet_400)
                     )
                 }
                 view.background = bg
