@@ -98,7 +98,7 @@ class AnimeFragment : Fragment() {
 
         binding.animePageRecyclerView.updatePaddingRelative(bottom = navBarHeight + 160f.px)
 
-        animePageAdapter = AnimePageAdapter()
+        animePageAdapter = AnimePageAdapter(requireActivity())
 
         var loading = true
         if (model.notSet) {
