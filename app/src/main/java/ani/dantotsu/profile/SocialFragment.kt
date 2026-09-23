@@ -22,6 +22,7 @@ class SocialFragment : Fragment() {
         override fun run() {
             if (!isAdded || _binding == null) return
             carouselIndex = (carouselIndex + 1) % 3
+            rotateFeatureCards()
             updateFeatureCarousel()
             carouselHandler.postDelayed(this, 4_000L)
         }
@@ -60,6 +61,15 @@ class SocialFragment : Fragment() {
                 setOnClickListener { showFeed(type) }
             }
             binding.socialFilters.addView(chip)
+        }
+    }
+
+    private fun rotateFeatureCards() {
+        val container = binding.socialFeatureCarousel
+        if (container.childCount > 1) {
+            val first = container.getChildAt(0)
+            container.removeViewAt(0)
+            container.addView(first)
         }
     }
 
