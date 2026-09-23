@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import ani.dantotsu.databinding.FragmentListBinding
 import ani.dantotsu.media.Media
 import ani.dantotsu.media.MediaAdaptor
@@ -27,11 +28,7 @@ class ListFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,13 +39,15 @@ class ListFragment : Fragment() {
 
         fun update() {
             if (grid != null && list != null) {
-                val adapter = MediaAdaptor(if (grid!!) 0 else 1, list!!, requireActivity(), true)
-                binding.listRecyclerView.layoutManager =
-                    GridLayoutManager(
-                        requireContext(),
-                        if (grid!!) (screenWidth / 120f).toInt() else 1
-                    )
-                binding.listRecyclerView.adapter = adapter
+                if (calendar) {
+                    binding.listRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    binding.listRecyclerView.adapter = CalendarScheduleAdapter(list!!, requireActivity())
+                } else {
+                    val adapter = MediaAdaptor(if (grid!!) 0 else 1, list!!, requireActivity(), true)
+                    binding.listRecyclerView.layoutManager =
+                        GridLayoutManager(requireContext(), if (grid!!) (screenWidth / 124f).toInt() else 1)
+                    binding.listRecyclerView.adapter = adapter
+                }
             }
         }
 
@@ -74,11 +73,6 @@ class ListFragment : Fragment() {
                 update()
             }
         }
-    }
-
-    fun randomOptionClick() {
-        val adapter = binding.listRecyclerView.adapter as MediaAdaptor
-        adapter.randomOptionClick()
     }
 
     companion object {
