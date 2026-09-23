@@ -113,8 +113,8 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_round_settings_24"
-                         />
+                        android:src="@drawable/ic_round_person_profile"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -165,11 +165,15 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileMenuPremium"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:strokeWidth="1dp">
 
@@ -179,24 +183,23 @@
                     android:gravity="center_vertical"
                     android:padding="14dp">
 
-                    <TextView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:gravity="center"
-                        android:text="◆"
-                        android:textSize="27sp" />
+                    <ImageView
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_round_diamond_24" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Upgrade to Premium"
+                            android:text="Premium &amp; Diamonds"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -205,16 +208,16 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:alpha=".62"
-                            android:text="Unlock more features for a better anime experience"
+                            android:text="Manage your subscription and account benefits"
                             android:textSize="11sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="›"
-                        android:textSize="30sp"
-                        android:alpha=".6" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_round_chevron_right_24"
+                        android:tint="?attr/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -232,9 +235,35 @@
                     android:layout_weight="1"
                     app:cardCornerRadius="14dp"
                     app:strokeWidth="1dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
-                        <TextView android:id="@+id/profileAnimeWatched" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Anime Watched" android:textSize="10sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_round_play_circle_24"
+                            android:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/profileAnimeWatched"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".6"
+                            android:text="Anime Watched"
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -245,9 +274,35 @@
                     android:layout_weight="1"
                     app:cardCornerRadius="14dp"
                     app:strokeWidth="1dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
-                        <TextView android:id="@+id/profileEpisodes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Episodes Watched" android:textSize="10sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_round_list_24"
+                            android:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/profileEpisodes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".6"
+                            android:text="Episodes Watched"
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -258,9 +313,35 @@
                     android:layout_weight="1"
                     app:cardCornerRadius="14dp"
                     app:strokeWidth="1dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
-                        <TextView android:id="@+id/profileFavoritesCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Favorites" android:textSize="10sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_round_favorite_24"
+                            android:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/profileFavoritesCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".6"
+                            android:text="Favorites"
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -273,18 +354,109 @@
                 android:layout_marginEnd="16dp"
                 android:orientation="vertical">
 
-                <TextView android:id="@+id/profileMenuEdit" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="◉   Profile
-     View and edit your profile" android:textSize="14sp"/>
-                <TextView android:id="@+id/profileMenuPremium" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="◆   Premium &amp; Diamonds
-     Manage your subscription and diamonds" android:textSize="14sp"/>
-                <TextView android:id="@+id/profileMenuAppearance" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="●   Appearance
-     Theme, colors, and display settings" android:textSize="14sp"/>
-                <TextView android:id="@+id/profileMenuNotifications" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="●   Notifications
-     Episode updates and system notifications" android:textSize="14sp"/>
-                <TextView android:id="@+id/profileMenuSettings" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="⚙   Settings
-     App preferences and data" android:textSize="14sp"/>
-                <TextView android:id="@+id/profileMenuAbout" android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="16dp" android:text="ⓘ   About
-     Version, credits, and more" android:textSize="14sp"/>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileMenuEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="12dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_person_profile" android:contentDescription="@null"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textSize="14sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="View and edit your profile" android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileMenuAppearance"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_palette_24" android:contentDescription="@null"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Appearance" android:textSize="14sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Theme, colors, and display settings" android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileMenuNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_notifications_24" android:contentDescription="@null"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notifications" android:textSize="14sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Episode updates and system notifications" android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileMenuSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_settings_24" android:contentDescription="@null"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" android:textSize="14sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="App preferences and data" android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileMenuAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_round_info_24" android:contentDescription="@null"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="About AniLab" android:textSize="14sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha=".6" android:text="Version, credits, and more" android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_round_chevron_right_24" android:tint="?attr/colorOnSurface" android:contentDescription="@null"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
             <TextView
