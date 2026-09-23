@@ -48,28 +48,19 @@ class PostgresUserRepository(
             }
         }
 
-    override suspend fun createOrUpdateIdentity(
-        uid: String,
-        email: String?,
-        defaultNickname: String
-    ): AniLabUser {
+    override suspend fun createOrUpdateIdentity(uid: String, email: String?, defaultNickname: String): AniLabUser {
         val now = System.currentTimeMillis()
         val existing = find(uid)
         if (existing != null) {
             dataSource.connection.use { c ->
-                c.prepareStatement(
-                    "UPDATE anilab_users SET email=?, updated_at=? WHERE uid=?"
-                ).use { s ->
+                c.prepareStatement("UPDATE anilab_users SET email=?, updated_at=? WHERE uid=?").use { s ->
                     s.setString(1, email ?: existing.email)
                     s.setLong(2, now)
                     s.setString(3, uid)
                     s.executeUpdate()
                 }
             }
-            return existing.copy(
-                email = email ?: existing.email,
-                updatedAtEpochMillis = now
-            )
+            return existing.copy(email = email ?: existing.email, updatedAtEpochMillis = now)
         }
 
         val user = AniLabUser(
@@ -99,15 +90,9 @@ class PostgresUserRepository(
         return user
     }
 
-    override suspend fun updateProfile(
-        uid: String,
-        nickname: String,
-        avatarUrl: String?,
-        bio: String?
-    ): AniLabUser {
+    override suspend fun updateProfile(uid: String, nickname: String, avatarUrl: String?, bio: String?): AniLabUser {
         require(nickname.isNotBlank())
         val now = System.currentTimeMillis()
-
         dataSource.connection.use { c ->
             c.prepareStatement(
                 "UPDATE anilab_users SET nickname=?,avatar_url=?,bio=?,updated_at=? WHERE uid=?"
@@ -117,9 +102,7 @@ class PostgresUserRepository(
                 s.setString(3, bio)
                 s.setLong(4, now)
                 s.setString(5, uid)
-                if (s.executeUpdate() == 0) {
-                    error("User does not exist: $uid")
-                }
+                if (s.executeUpdate() == 0) error("User does not exist: $uid")
             }
         }
         return find(uid) ?: error("User disappeared after update: $uid")
@@ -127,25 +110,20 @@ class PostgresUserRepository(
 }
 
 fun postgresDataSource(): DataSource {
-    val url = System.getenv("ANILAB_DATABASE_URL")
-        ?: error("ANILAB_DATABASE_URL is required")
-    val user = System.getenv("ANILAB_DATABASE_USER")
-        ?: error("ANILAB_DATABASE_USER is required")
-    val password = System.getenv("ANILAB_DATABASE_PASSWORD")
-        ?: error("ANILAB_DATABASE_PASSWORD is required")
+    val url = System.getenv("ANILAB_DATABASE_URL") ?: error("ANILAB_DATABASE_URL is required")
+    val user = System.getenv("ANILAB_DATABASE_USER") ?: error("ANILAB_DATABASE_USER is required")
+    val password = System.getenv("ANILAB_DATABASE_PASSWORD") ?: error("ANILAB_DATABASE_PASSWORD is required")
 
     return object : DataSource {
-        override fun getConnection(): Connection =
-            DriverManager.getConnection(url, user, password)
+        override fun getConnection(): Connection = DriverManager.getConnection(url, user, password)
         override fun getConnection(username: String?, password: String?): Connection =
             DriverManager.getConnection(url, username, password)
-        override fun unwrap(iface: Class<*>?): Any = throw java.sql.SQLException("Unsupported")
+        override fun <T : Any?> unwrap(iface: Class<T>?): T = throw java.sql.SQLException("Unsupported")
         override fun isWrapperFor(iface: Class<*>?): Boolean = false
         override fun setLogWriter(out: java.io.PrintWriter?) {}
         override fun getLogWriter(): java.io.PrintWriter? = null
         override fun setLoginTimeout(seconds: Int) {}
         override fun getLoginTimeout(): Int = 0
-        override fun getParentLogger(): java.util.logging.Logger =
-            java.util.logging.Logger.getLogger("AniLab")
+        override fun getParentLogger(): java.util.logging.Logger = java.util.logging.Logger.getLogger("AniLab")
     }
 }
