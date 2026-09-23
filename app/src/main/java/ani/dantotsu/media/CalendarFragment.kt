@@ -53,7 +53,7 @@ class CalendarFragment : Fragment() {
             binding.root.fitsSystemWindows = true
         } else {
             binding.root.fitsSystemWindows = false
-            hideSystemBarsExtendView(requireActivity())
+            requireActivity().hideSystemBarsExtendView()
             binding.settingsContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 topMargin = statusBarHeight
             }
