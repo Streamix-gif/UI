@@ -24,7 +24,7 @@
                 android:layout_height="44dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
-                android:src="@drawable/ic_round_arrow_back_24"
+                android:src="@drawable/ic_round_arrow_back_ios_new_24"
                 android:tint="?attr/colorOnBackground" />
 
             <LinearLayout
@@ -85,7 +85,7 @@
                 android:layout_marginBottom="-26dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_round_person_24"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Dantotsu.CircleImage" />
+                />
 
             <ImageButton
                 android:id="@+id/editProfileAvatarButton"
@@ -96,7 +96,7 @@
                 android:layout_marginBottom="-22dp"
                 android:background="@drawable/control_background_40dp"
                 android:contentDescription="Change avatar"
-                android:src="@drawable/ic_round_photo_camera_24"
+                android:src="@drawable/ic_camera_roll_24"
                 android:tint="@android:color/white" />
 
             <ImageButton
@@ -108,7 +108,7 @@
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/control_background_40dp"
                 android:contentDescription="Change banner"
-                android:src="@drawable/ic_round_image_24"
+                android:src="@drawable/format_image_24"
                 android:tint="@android:color/white" />
         </FrameLayout>
 
@@ -219,7 +219,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="22dp"
-                        android:src="@drawable/ic_round_add_24"
+                        android:src="@drawable/ic_round_add_circle_24"
                         android:contentDescription="Add custom avatar" />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -262,7 +262,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                android:layoutMarginEnd="4dp"
+                android:layout_marginEnd="4dp"
                 app:cardCornerRadius="12dp">
                 <ImageView
                     android:layout_width="match_parent"
