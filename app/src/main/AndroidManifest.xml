@@ -91,6 +91,8 @@
         <activity android:name=".media.CharacterDetailsActivity" />
         <activity android:name=".home.NoInternet" />
         <activity android:name="ani.saikou.profile.EditProfileActivity" android:parentActivityName=".MainActivity" />
+        <activity android:name=".settings.DantotsuSettingsActivity" />
+        <activity android:name=".settings.DantotsuAppearanceActivity" />
         <activity android:name="ani.saikou.profile.WatchTogetherActivity" />
         <activity android:name="ani.saikou.profile.RoomLobbyActivity" />
         <activity android:name="ani.saikou.profile.WatchRoomActivity" />
