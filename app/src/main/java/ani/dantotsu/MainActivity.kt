@@ -332,7 +332,7 @@ class MainActivity : AppCompatActivity() {
             val mainViewPager = binding.viewpager
             mainViewPager.isUserInputEnabled = false
             mainViewPager.adapter =
-                ViewPagerAdapter(supportFragmentManager, lifecycle)
+                ViewPagerAdapter(supportFragmentManager, this.lifecycle)
             mainViewPager.setPageTransformer(ZoomOutPageTransformer())
             navbar.selectTabAt(selectedOption)
             navbar.setOnTabSelectListener(object :
