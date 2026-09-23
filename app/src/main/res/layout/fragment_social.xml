@@ -119,11 +119,10 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Existing 3-card carousel: auto-rotates in SocialFragment every 4 seconds. -->
             <LinearLayout
                 android:id="@+id/socialFeatureCarousel"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="92dp"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
@@ -135,30 +134,38 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
+                    app:cardBackgroundColor="#141A2A"
                     app:cardCornerRadius="16dp"
-                    app:strokeColor="#403F61"
+                    app:strokeColor="#405A86"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:padding="7dp">
+                        android:padding="9dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="34dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="●"
+                            android:textColor="#6FA8FF"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="●  Global Chat"
-                            android:textSize="13sp"
+                            android:text="Global Chat"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="Chat with everyone"
-                            android:textSize="10sp"
+                            android:text="Chat with anime fans"
+                            android:textSize="9sp"
                             android:alpha=".62" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -172,30 +179,38 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
+                    app:cardBackgroundColor="#141A2A"
                     app:cardCornerRadius="16dp"
-                    app:strokeColor="#403F61"
+                    app:strokeColor="#5C5C87"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:padding="7dp">
+                        android:padding="9dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="34dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="♟"
+                            android:textColor="#B6B7FF"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="●  Anime Chat"
-                            android:textSize="13sp"
+                            android:text="Anime Chat"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
                             android:text="Discuss anime"
-                            android:textSize="10sp"
+                            android:textSize="9sp"
                             android:alpha=".62" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -208,30 +223,38 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
+                    app:cardBackgroundColor="#141A2A"
                     app:cardCornerRadius="16dp"
-                    app:strokeColor="#403F61"
+                    app:strokeColor="#9A7130"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:padding="7dp">
+                        android:padding="9dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="34dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="★"
+                            android:textColor="#FFD35A"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="★  Leaderboard"
-                            android:textSize="13sp"
+                            android:text="Leaderboard"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
                             android:text="Top fans &amp; ranks"
-                            android:textSize="10sp"
+                            android:textSize="9sp"
                             android:alpha=".62" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -247,7 +270,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Community Leaderboard"
+                    android:text="Leaderboard"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
@@ -260,178 +283,11 @@
                     android:alpha=".7" />
             </LinearLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/socialLeaderboardPanel"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/socialLeaderboardPager"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
-                android:layout_marginTop="8dp"
-                app:cardBackgroundColor="#12182A"
-                app:cardCornerRadius="18dp"
-                app:strokeColor="#2D3350"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="bottom|center_horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="145dp"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:gravity="center"
-                                android:text="K"
-                                android:textColor="#FFFFFF"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:background="@drawable/social_avatar_bg" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="Kael"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="12,450 pts"
-                                android:textSize="10sp"
-                                android:alpha=".7" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:text="②"
-                                android:textSize="26sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="170dp"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:gravity="center"
-                                android:text="R"
-                                android:textColor="#FFFFFF"
-                                android:textSize="19sp"
-                                android:textStyle="bold"
-                                android:background="@drawable/social_gold_avatar_bg" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="Rynn"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="15,230 pts"
-                                android:textSize="10sp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="58dp"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:text="①"
-                                android:textSize="34sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="145dp"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:gravity="center"
-                                android:text="H"
-                                android:textColor="#FFFFFF"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:background="@drawable/social_avatar_bg" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="Hana"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="10,980 pts"
-                                android:textSize="10sp"
-                                android:alpha=".7" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:text="③"
-                                android:textSize="26sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="#4  Mizu     8,420 pts"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="#5  Shin      7,890 pts"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
