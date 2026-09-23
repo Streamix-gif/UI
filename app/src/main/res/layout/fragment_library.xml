@@ -135,14 +135,13 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             app:tabContentStart="12dp"
-            app:tabIndicatorColor="@color/streamix_primary"
+            app:tabIndicatorColor="@color/theme"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="scrollable"
             app:tabPaddingEnd="12dp"
             app:tabPaddingStart="12dp"
             app:tabMinWidth="88dp"
-            app:tabTextAppearance="@style/StreamixStatusTabText"
             app:tabTextColor="@color/streamix_status_tab_text" />
     </com.google.android.material.appbar.AppBarLayout>
 
