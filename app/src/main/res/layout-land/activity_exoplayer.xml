@@ -26,6 +26,18 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/player_anime_title"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/player_episode_title"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/player_resolution_button"
         android:layout_width="1dp"
         android:layout_height="1dp"
