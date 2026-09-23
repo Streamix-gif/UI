@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
+import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -20,6 +21,7 @@ import ani.dantotsu.profile.activity.ActivityFragment
 import ani.dantotsu.profile.activity.ActivityFragment.Companion.ActivityType
 
 class SocialFragment : Fragment() {
+    private var carouselIndex = 0
     private var _binding: FragmentSocialBinding? = null
     private val binding get() = _binding!!
 
@@ -54,9 +56,10 @@ class SocialFragment : Fragment() {
                 }
             }
         }
-        binding.socialGlobalChatCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
-        binding.socialAnimeChatCard.setOnClickListener { showFeed(ActivityType.USER) }
-        binding.socialLeaderboardCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
+        binding.watchTogetherCard.setOnClickListener { openBlueprint(2) }
+        binding.socialGlobalChatCard.setOnClickListener { openBlueprint(6) }
+        binding.socialAnimeChatCard.setOnClickListener { openBlueprint(7) }
+        binding.socialLeaderboardCard.setOnClickListener { openBlueprint(5) }
     }
 
     private fun setupFilters() {
@@ -82,15 +85,28 @@ class SocialFragment : Fragment() {
             val first = container.getChildAt(0)
             container.removeViewAt(0)
             container.addView(first)
+            carouselIndex = (carouselIndex + 1) % 3
         }
     }
 
     private fun updateFeatureCarousel() {
-        val cards = listOf(binding.socialGlobalChatCard, binding.socialAnimeChatCard, binding.socialLeaderboardCard)
-        cards.forEachIndexed { index, card ->
-            card.strokeColor = if (index == carouselIndex) Color.parseColor("#8C6CFF") else Color.parseColor("#403F61")
-            card.strokeWidth = if (index == carouselIndex) 2 else 1
+        val active = binding.socialFeatureCarousel.getChildAt(0)
+        listOf(
+            binding.socialGlobalChatCard,
+            binding.socialAnimeChatCard,
+            binding.socialLeaderboardCard
+        ).forEach { card ->
+            val selected = card === active
+            card.strokeColor = if (selected) Color.parseColor("#8C6CFF") else Color.parseColor("#403F61")
+            card.strokeWidth = if (selected) 2 else 1
         }
+    }
+
+    private fun openBlueprint(target: Int) {
+        startActivity(
+            Intent(requireContext(), SocialBlueprintActivity::class.java)
+                .putExtra(SocialBlueprintActivity.EXTRA_SCREEN, target)
+        )
     }
 
     private fun showFeed(type: ActivityType) {
