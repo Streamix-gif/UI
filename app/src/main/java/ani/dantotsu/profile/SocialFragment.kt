@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.os.Handler
-import android.os.Looper
 import android.graphics.Color
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.chip.Chip
@@ -16,17 +18,6 @@ import ani.dantotsu.profile.activity.ActivityFragment
 import ani.dantotsu.profile.activity.ActivityFragment.Companion.ActivityType
 
 class SocialFragment : Fragment() {
-    private val carouselHandler = Handler(Looper.getMainLooper())
-    private var carouselIndex = 0
-    private val carouselRunnable = object : Runnable {
-        override fun run() {
-            if (!isAdded || _binding == null) return
-            rotateFeatureCards()
-            carouselIndex = 0
-            updateFeatureCarousel()
-            carouselHandler.postDelayed(this, 4_000L)
-        }
-    }
     private var _binding: FragmentSocialBinding? = null
     private val binding get() = _binding!!
 
@@ -41,7 +32,13 @@ class SocialFragment : Fragment() {
         showFeed(ActivityType.USER)
         binding.socialRefresh.setOnRefreshListener { showFeed(ActivityType.USER) }
         updateFeatureCarousel()
-        carouselHandler.postDelayed(carouselRunnable, 4_000L)
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (isActive) {
+                delay(4_000L)
+                rotateFeatureCards()
+                updateFeatureCarousel()
+            }
+        }
         binding.socialGlobalChatCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
         binding.socialAnimeChatCard.setOnClickListener { showFeed(ActivityType.USER) }
         binding.socialLeaderboardCard.setOnClickListener { showFeed(ActivityType.GLOBAL) }
@@ -89,7 +86,6 @@ class SocialFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        carouselHandler.removeCallbacks(carouselRunnable)
         _binding = null
         super.onDestroyView()
     }
