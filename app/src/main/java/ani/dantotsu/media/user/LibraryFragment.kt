@@ -110,7 +110,7 @@ class LibraryFragment : Fragment() {
         }
         binding.random.setOnClickListener {
             val current = binding.listTabLayout.selectedTabPosition
-            (childFragmentManager.findFragmentByTag("f$current") as? ListFragment)?.randomOptionClick()
+            (requireActivity().supportFragmentManager.findFragmentByTag("f$current") as? ListFragment)?.randomOptionClick()
         }
         binding.search.setOnClickListener {
             val visible = binding.searchView.isVisible
