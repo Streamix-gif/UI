@@ -60,7 +60,7 @@ class ProfileFragment : Fragment() {
 
     private fun setupActions() {
         binding.profileSettingsButton.setOnClickListener {
-            startActivity(Intent(requireContext(), ani.saikou.settings.SettingActivity::class.java))
+            startActivity(Intent(requireContext(), ani.saikou.settings.DantotsuSettingsActivity::class.java))
         }
         binding.editProfileButton.setOnClickListener {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
@@ -72,7 +72,7 @@ class ProfileFragment : Fragment() {
             requireActivity().startSubscription()
         }
         binding.profileMenuAppearance.setOnClickListener {
-            startActivity(Intent(requireContext(), ani.saikou.settings.UserInterfaceSettingsActivity::class.java))
+            startActivity(Intent(requireContext(), ani.saikou.settings.DantotsuAppearanceActivity::class.java))
         }
         binding.profileMenuNotifications.setOnClickListener {
             startActivity(Intent(requireContext(), ani.saikou.settings.notifications.NotificationSettingsActivity::class.java))
