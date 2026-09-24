@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="streamix_primary">@color/violet_700</color>
+    <color name="streamix_status_tab_text">@color/grey_60</color>
+</resources>
