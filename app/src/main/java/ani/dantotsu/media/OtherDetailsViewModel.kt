@@ -358,8 +358,6 @@ class OtherDetailsViewModel : ViewModel() {
                 }
             }
             calendarDays.forEach { day -> allMap[df.format(day.time)] = mutableListOf() }
-            val allDateKeys = allMap.keys.toSet()
- = mutableMapOf<String, MutableList<Int>>()
 
             val userId = Anilist.userid ?: 0
             val userLibrary = Anilist.query.getMediaLists(true, userId)
