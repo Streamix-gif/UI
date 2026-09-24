@@ -55,13 +55,16 @@
             android:tint="?attr/colorOnBackground" />
 
         <ImageView
+            android:id="@+id/socialNotifications"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:contentDescription="Notifications"
             android:padding="8dp"
             android:src="@drawable/ic_round_notifications_none_24"
             android:tint="?attr/colorOnBackground" />
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/socialProfile"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
