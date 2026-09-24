@@ -30,9 +30,7 @@ fun Application.configureServer() {
     install(CallLogging)
     install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true; encodeDefaults = true }) }
     install(StatusPages) {
-        exception<IllegalArgumentException> { call, cause ->
-            call.respond(HttpStatusCode.BadRequest, ErrorDto(cause.message ?: "Bad request"))
-        }
+        exception<IllegalArgumentException> { call, cause -> call.respond(HttpStatusCode.BadRequest, ErrorDto(cause.message ?: "Bad request")) }
         exception<Throwable> { call, cause ->
             application.log.error("Unhandled backend error", cause)
             call.respond(HttpStatusCode.InternalServerError, ErrorDto("Internal server error"))
@@ -41,7 +39,7 @@ fun Application.configureServer() {
     install(WebSockets) {
         pingPeriod = 20.seconds
         timeout = 30.seconds
-        maxFrameSize = 64 * 1024
+        maxFrameSize = 64 * 1024L
     }
 
     db.migrate()
