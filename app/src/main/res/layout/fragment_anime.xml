@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:paddingTop="20dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             tools:itemCount="1"
