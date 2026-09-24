@@ -38,8 +38,9 @@
             android:id="@+id/selectedDateTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             android:fontFamily="@font/poppins_bold"
             android:textColor="?attr/colorOnBackground"
             android:textSize="18sp" />
