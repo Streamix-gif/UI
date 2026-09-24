@@ -100,6 +100,31 @@ jobs:
       if: ${{ github.repository == 'rebelonion/Dantotsu' }}
       run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
 
+    - name: Fetch CloudStream runtime
+      if: ${{ env.SKIP_BUILD != 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        CLOUDSTREAM3_JAR="$RUNNER_TEMP/cs3-classes.jar"
+        curl -fL --retry 5 --retry-all-errors --retry-delay 3 \
+          "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
+          -o "$CLOUDSTREAM3_JAR"
+        test -s "$CLOUDSTREAM3_JAR"
+        python3 - "$CLOUDSTREAM3_JAR" <<'PY'
+import sys, zipfile, os
+jar = sys.argv[1]
+tmp = jar + ".filtered"
+with zipfile.ZipFile(jar, "r") as src, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as dst:
+    for info in src.infolist():
+        if info.filename.startswith("androidx/"):
+            continue
+        dst.writestr(info, src.read(info.filename))
+os.replace(tmp, jar)
+PY
+        echo "CLOUDSTREAM3_JAR=$CLOUDSTREAM3_JAR" >> "$GITHUB_ENV"
+        echo "Using CloudStream runtime: $CLOUDSTREAM3_JAR"
+        ls -lh "$CLOUDSTREAM3_JAR"
+
     - name: Make gradlew executable
       if: ${{ env.SKIP_BUILD != 'true' }}
       run: chmod +x ./gradlew

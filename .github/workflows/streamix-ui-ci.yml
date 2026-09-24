@@ -1,0 +1,82 @@
+name: Streamix UI CI
+
+on:
+  push:
+    branches:
+      - Streamix
+  workflow_dispatch:
+
+concurrency:
+  group: streamix-ui-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Fetch CloudStream runtime
+        shell: bash
+        env:
+          CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
+        run: |
+          set -euo pipefail
+          curl -fL --retry 5 --retry-all-errors --retry-delay 3 \
+            "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
+            -o "$CLOUDSTREAM3_JAR"
+          test -s "$CLOUDSTREAM3_JAR"
+          python3 - "$CLOUDSTREAM3_JAR" <<'PY'
+          import os
+          import sys
+          import zipfile
+
+          jar = sys.argv[1]
+          tmp = jar + ".filtered"
+
+          with zipfile.ZipFile(jar, "r") as src, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as dst:
+              for info in src.infolist():
+                  name = info.filename
+                  if name.endswith("/") or name.startswith("META-INF/") or name.startswith("com/lagradost/"):
+                      dst.writestr(info, src.read(name))
+
+          os.replace(tmp, jar)
+          PY
+          echo "Using filtered CloudStream runtime: $CLOUDSTREAM3_JAR"
+          ls -lh "$CLOUDSTREAM3_JAR"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Assemble debug APK
+        shell: bash
+        env:
+          CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
+        run: |
+          set -euo pipefail
+          test -s "$CLOUDSTREAM3_JAR"
+          echo "Using CloudStream runtime: $CLOUDSTREAM3_JAR"
+          ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamix-ui-debug
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 5

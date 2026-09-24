@@ -53,7 +53,6 @@ android {
 
         versionName = if (gitCommitHash.isNotEmpty()) "$baseVersion+$gitCommitHash" else baseVersion
         versionCode = baseVersion.split(".")
-            //noinspection WrongGradleMethod
             .map { it.toInt() * 100 }
             .joinToString("")
             .toInt()
@@ -165,11 +164,7 @@ dependencies {
     implementation(libs.bundles.media3)
     implementation(libs.bundles.subtitles)
     implementation(libs.mediarouter)
-    // HTTP/3 (QUIC) — media3-datasource-cronet:1.11.1 API surface:
-    // Tier 1 (GMS devices): CronetDataSource via Play Services CronetProvider — HTTP/3 + HTTP/2.
-    // Tier 2 (fallback / F-Droid): OkHttp — HTTP/2. CronetProvider absent → caught → falls through.
     implementation(libs.media3.cronet)
-    // GMS Cronet provider — google flavor only; absent from F-Droid APK
     add("googleImplementation", libs.play.services.cronet)
 
     // Firebase
@@ -212,7 +207,6 @@ dependencies {
     implementation(libs.mlkit.text.japanese)
     implementation(libs.mlkit.text)
     implementation(libs.play.services.base)
-    // Readium Kotlin Toolkit
     implementation(libs.readium.shared)
     implementation(libs.readium.streamer)
     implementation(libs.readium.navigator)
@@ -228,19 +222,16 @@ dependencies {
     implementation(libs.bundles.okhttp)
     implementation(libs.okio)
 
-    // Archive support (local source)
     implementation(libs.libarchive)
     implementation(libs.xmlutil.core)
     implementation(libs.xmlutil.serialization)
 
-    // libtorrent
     implementation(libs.libtorrent4j)
     implementation(libs.libtorrent4j.android.arm)
     implementation(libs.libtorrent4j.android.arm64)
     implementation(libs.libtorrent4j.android.x86)
     implementation(libs.libtorrent4j.android.x86.x64)
 
-    // LeakCanary & Plumber (Active in Debug, Alpha, and Release builds for memory leak diagnosis)
     implementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
 }
