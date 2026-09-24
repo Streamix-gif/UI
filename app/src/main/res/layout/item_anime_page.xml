@@ -17,13 +17,14 @@
         <include
             layout="@layout/layout_trending"
             android:layout_width="match_parent"
-            android:layout_height="460dp" />
+            android:layout_height="520dp" />
 
         <HorizontalScrollView
             android:id="@+id/animeSeasons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="60dp"
             android:clipToPadding="false"
             android:fillViewport="true"
             android:paddingStart="2dp"
