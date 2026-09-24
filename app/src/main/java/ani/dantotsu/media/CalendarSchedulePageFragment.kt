@@ -34,9 +34,13 @@ class CalendarSchedulePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         model.getCalendar().observe(viewLifecycleOwner) { data ->
-            val list = data?.values?.toList()?.getOrNull(position).orEmpty()
+            val entries = data?.entries?.toList().orEmpty()
+            val entry = entries.getOrNull(position)
+            val list = entry?.value.orEmpty()
+            val dateKey = entry?.key.orEmpty()
+
             binding.scheduleRecyclerView.adapter =
-                CalendarScheduleAdapter(list, requireActivity())
+                CalendarScheduleAdapter(list, requireActivity(), dateKey)
             binding.emptyText.visibility =
                 if (list.isEmpty()) View.VISIBLE else View.GONE
         }
