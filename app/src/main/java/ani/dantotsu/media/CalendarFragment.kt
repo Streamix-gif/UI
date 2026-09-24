@@ -80,9 +80,8 @@ class CalendarFragment : Fragment() {
 
             val dateFormat = DateFormat.getDateInstance(DateFormat.FULL)
             dateItems = data.keys.mapNotNull { key ->
-                runCatching {
-                    CalendarDateItem(dateFormat.parse(key) ?: return@runCatching null, key)
-                }.getOrNull()
+                val parsed = runCatching { dateFormat.parse(key) }.getOrNull()
+                parsed?.let { CalendarDateItem(it, key) }
             }
 
             if (dateItems.isEmpty()) return@observe
@@ -90,11 +89,12 @@ class CalendarFragment : Fragment() {
             selectedTabIdx = selectedTabIdx.coerceIn(0, dateItems.lastIndex)
 
             dateAdapter = CalendarDateAdapter(dateItems) { position ->
-                if (position !in dateItems.indices) return@CalendarDateAdapter
-                selectedTabIdx = position
-                dateAdapter?.setSelectedPosition(position)
-                binding.listViewPager.setCurrentItem(position, true)
-                updateSelectedDateTitle(position)
+                if (position in dateItems.indices) {
+                    selectedTabIdx = position
+                    dateAdapter?.setSelectedPosition(position)
+                    binding.listViewPager.setCurrentItem(position, true)
+                    updateSelectedDateTitle(position)
+                }
             }.also {
                 it.setSelectedPosition(selectedTabIdx)
             }
