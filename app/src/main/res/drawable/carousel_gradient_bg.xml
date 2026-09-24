@@ -1,10 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient
-        android:angle="270"
-        android:startColor="#00000000"
-        android:centerColor="#55000000"
-        android:endColor="#E61B181B"
-        android:centerY="0.62"
-        android:type="linear" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Top edge: fade the banner into the page background. -->
+    <item android:bottom="96dp">
+        <shape>
+            <gradient
+                android:angle="270"
+                android:startColor="?attr/colorBackground"
+                android:endColor="@android:color/transparent"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Bottom edge: fade the banner into the page background. -->
+    <item android:top="360dp">
+        <shape>
+            <gradient
+                android:angle="270"
+                android:startColor="@android:color/transparent"
+                android:endColor="?attr/colorBackground"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Left edge: remove the hard vertical banner boundary. -->
+    <item android:right="72dp">
+        <shape>
+            <gradient
+                android:angle="0"
+                android:startColor="?attr/colorBackground"
+                android:endColor="@android:color/transparent"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Right edge: remove the hard vertical banner boundary. -->
+    <item android:left="72dp">
+        <shape>
+            <gradient
+                android:angle="0"
+                android:startColor="@android:color/transparent"
+                android:endColor="?attr/colorBackground"
+                android:type="linear" />
+        </shape>
+    </item>
+
+</layer-list>
