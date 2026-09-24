@@ -24,7 +24,7 @@ object AnimeSources : WatchSources() {
 
         val initialExtensions = fromExtensions.value
         list = sortPinnedAnimeSources(
-            createParsersFromExtensions(initialExtensions),
+            listOf(Lazier({ StreamixAnimeParser() }, "Streamix")) + createParsersFromExtensions(initialExtensions),
             pinnedAnimeSources
         ) + listOf(
             Lazier({ TorrentAnimeParser() }, "Torrent"),
