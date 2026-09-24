@@ -158,6 +158,9 @@ configurations.all {
 }
 
 dependencies {
+    // Streamix provider/extractor backend — vendored directly into the UI repo.
+    implementation(project(":backend"))
+
     // ffmpeg-kit (must precede media3 so complete native binaries with av_log_default_callback are chosen by pickFirsts)
     implementation(libs.ffmpeg.kit)
 
