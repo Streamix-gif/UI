@@ -40,12 +40,12 @@ jobs:
       - name: Build Google debug APK
         env:
           COMMIT_HASH: ${{ github.sha }}
-        run: ./gradlew :app:assembleGoogleDebug --no-daemon --stacktrace
+        run: ./gradlew :app:assembleGoogleDebug -PsingleAbi=arm64-v8a --no-daemon --stacktrace
 
-      - name: Upload APKs
+      - name: Upload single ARM64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: anilab-main-debug-apks
-          path: app/build/outputs/apk/**/*.apk
+          name: anilab-main-debug-arm64
+          path: app/build/outputs/apk/*arm64-v8a*.apk
           if-no-files-found: error
           retention-days: 7
