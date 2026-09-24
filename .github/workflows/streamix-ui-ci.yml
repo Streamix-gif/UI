@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
 
     steps:
       - name: Checkout
@@ -31,10 +30,16 @@ jobs:
 
       - name: Fetch CloudStream runtime
         shell: bash
+        env:
+          CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
         run: |
           set -euo pipefail
-          curl -fL --retry 5 --retry-all-errors --retry-delay 3             "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar"             -o "$CLOUDSTREAM3_JAR"
+          curl -fL --retry 5 --retry-all-errors --retry-delay 3 \
+            "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
+            -o "$CLOUDSTREAM3_JAR"
           test -s "$CLOUDSTREAM3_JAR"
+          echo "CloudStream runtime: $CLOUDSTREAM3_JAR"
+          ls -lh "$CLOUDSTREAM3_JAR"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -43,7 +48,14 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Assemble debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+        shell: bash
+        env:
+          CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
+        run: |
+          set -euo pipefail
+          test -s "$CLOUDSTREAM3_JAR"
+          echo "Using CloudStream runtime: $CLOUDSTREAM3_JAR"
+          ./gradlew :app:assembleDebug --stacktrace
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
