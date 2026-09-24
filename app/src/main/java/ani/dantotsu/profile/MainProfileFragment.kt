@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
+import ani.dantotsu.connections.anilist.ProfileViewModel
 import ani.dantotsu.databinding.FragmentProfileBinding
 import ani.dantotsu.media.Author
 import ani.dantotsu.media.AuthorAdapter
@@ -30,6 +31,7 @@ import kotlinx.coroutines.withContext
 class MainProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private val model: ProfileViewModel by androidx.fragment.app.activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -62,30 +64,26 @@ class MainProfileFragment : Fragment() {
             binding.profileUserBio.loadDataWithBaseURL(null, styledHtml, "text/html; charset=utf-8", "UTF-8", null)
             binding.profileUserBio.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
             binding.profileUserBio.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                    openOrCopyAnilistLink(request?.url.toString())
-                    return true
-                }
+                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?):            model.setData(userId)
+            model.getAnimeFav().observe(viewLifecycleOwner) { anime ->
+                if (anime.isNotEmpty()) {
+                    binding.profileFavAnimeContainer.visibility = View.VISIBLE
+                    binding.profileFavAnimeProgressBar.visibility = View.GONE
+                    binding.profileFavAnimeRecyclerView.adapter = MediaAdaptor(0, anime, requireActivity(), fav = true, isOtherUser = false)
+                    binding.profileFavAnimeRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                } else binding.profileFavAnimeContainer.visibility = View.GONE
             }
 
-            val anime = user.favourites?.anime?.nodes?.map {
-                Media(it)
-            } ?: emptyList()
-            if (anime.isNotEmpty()) {
-                binding.profileFavAnimeContainer.visibility = View.VISIBLE
-                binding.profileFavAnimeProgressBar.visibility = View.GONE
-                binding.profileFavAnimeRecyclerView.adapter = MediaAdaptor(0, ArrayList(anime), requireActivity(), fav = true, isOtherUser = false)
-                binding.profileFavAnimeRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            } else binding.profileFavAnimeContainer.visibility = View.GONE
+            model.getMangaFav().observe(viewLifecycleOwner) { manga ->
+                if (manga.isNotEmpty()) {
+                    binding.profileFavMangaContainer.visibility = View.VISIBLE
+                    binding.profileFavMangaProgressBar.visibility = View.GONE
+                    binding.profileFavMangaRecyclerView.adapter = MediaAdaptor(0, manga, requireActivity(), fav = true, isOtherUser = false)
+                    binding.profileFavMangaRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                } else binding.profileFavMangaContainer.visibility = View.GONE
+            }
 
-            val manga = user.favourites?.manga?.nodes?.map {
-                Media(it)
-            } ?: emptyList()
-            if (manga.isNotEmpty()) {
-                binding.profileFavMangaContainer.visibility = View.VISIBLE
-                binding.profileFavMangaProgressBar.visibility = View.GONE
-                binding.profileFavMangaRecyclerView.adapter = MediaAdaptor(0, ArrayList(manga), requireActivity(), fav = true, isOtherUser = false)
-                binding.profileFavMangaRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+utManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             } else binding.profileFavMangaContainer.visibility = View.GONE
 
             val characters = user.favourites?.characters?.nodes?.map {
