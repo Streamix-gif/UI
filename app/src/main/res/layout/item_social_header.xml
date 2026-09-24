@@ -133,12 +133,14 @@
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
+        android:id="@+id/socialShortcutStrip"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/socialShortcutGlobal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="5dp"
@@ -172,6 +174,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/socialShortcutAnime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
@@ -206,6 +209,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/socialShortcutLeaderboard"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
@@ -266,6 +270,7 @@
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/socialLeaderboardCard"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginTop="8dp"
@@ -278,6 +283,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:id="@+id/socialLeaderboardPages"
             android:orientation="horizontal"
             android:padding="12dp">
 
