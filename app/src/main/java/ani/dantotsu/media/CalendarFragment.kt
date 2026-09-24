@@ -34,6 +34,7 @@ class CalendarFragment : Fragment() {
     private var dateAdapter: CalendarDateAdapter? = null
     private var showOnlyLibrary = false
     private var showOnlyDubbed = false
+    private var selectedDateKey: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,11 +94,17 @@ class CalendarFragment : Fragment() {
 
             if (dateItems.isEmpty()) return@observe
 
-            selectedTabIdx = selectedTabIdx.coerceIn(0, dateItems.lastIndex)
+            val todayKey = DateFormat.getDateInstance(DateFormat.FULL).format(Date())
+            val targetIndex = selectedDateKey?.let { key -> dateItems.indexOfFirst { it.key == key } }?.takeIf { it >= 0 }
+                ?: dateItems.indexOfFirst { it.key == todayKey }.takeIf { it >= 0 }
+                ?: 0
+            selectedTabIdx = targetIndex.coerceIn(0, dateItems.lastIndex)
+            selectedDateKey = dateItems[selectedTabIdx].key
 
             dateAdapter = CalendarDateAdapter(dateItems) { position ->
                 if (position in dateItems.indices) {
                     selectedTabIdx = position
+                    selectedDateKey = dateItems.getOrNull(position)?.key
                     dateAdapter?.setSelectedPosition(position)
                     binding.listViewPager.setCurrentItem(position, true)
                     updateSelectedDateTitle(position)
