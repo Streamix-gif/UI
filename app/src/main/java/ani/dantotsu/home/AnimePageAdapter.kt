@@ -69,7 +69,7 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
         val semiTransparentColor = (currentColor and 0x00FFFFFF) or 0xA8000000.toInt()
         textInputLayout.boxBackgroundColor = semiTransparentColor
         val materialCardView =
-            holder.itemView.findViewById<MaterialCardView>(R.id.userAvatarContainer)
+            holder.itemView.findViewById<MaterialCardView>(R.id.profileAction)
         materialCardView.setCardBackgroundColor(semiTransparentColor)
         val color = binding.root.context.getThemeColor(android.R.attr.windowBackground)
         textInputLayout.boxBackgroundColor = (color and 0x00FFFFFF) or 0x28000000
@@ -100,12 +100,12 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
             }
         }
 
-        trendingBinding.userAvatar.setSafeOnClickListener {
+        trendingBinding.profileAction.setSafeOnClickListener {
             val dialogFragment =
                 SettingsDialogFragment.newInstance(SettingsDialogFragment.Companion.PageType.ANIME)
             dialogFragment.show((it.context as AppCompatActivity).supportFragmentManager, "dialog")
         }
-        trendingBinding.userAvatar.setOnLongClickListener { view ->
+        trendingBinding.profileAvatar.setOnLongClickListener { view ->
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             val rescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
             if (!rescueMode) {
@@ -129,11 +129,24 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
             trendingBinding.searchBar.performClick()
         }
 
-        val isRescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
-        trendingBinding.notificationCount.isVisible = !isRescueMode && Anilist.unreadNotificationCount > 0
-                && PrefManager.getVal<Boolean>(PrefName.ShowNotificationRedDot) == true
-        trendingBinding.notificationCount.text = Anilist.unreadNotificationCount.toString()
+        trendingBinding.filterButton.setOnClickListener {
+            SearchBottomSheet.newInstance().show(
+                (it.context as AppCompatActivity).supportFragmentManager,
+                "search"
+            )
+        }
 
+        trendingBinding.profileCard.setOnClickListener {
+            if (!PrefManager.getVal<Boolean>(PrefName.RescueMode) && Anilist.userid != null) {
+                ContextCompat.startActivity(
+                    it.context,
+                    Intent(it.context, ProfileActivity::class.java).putExtra("userId", Anilist.userid),
+                    null
+                )
+            }
+        }
+
+        val isRescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
         listOf(
             binding.animePreviousSeason,
             binding.animeThisSeason,
@@ -325,19 +338,15 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
     fun updateAvatar() {
         val rescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
         val avatarUrl = if (rescueMode) MAL.avatar else Anilist.avatar
-        if (avatarUrl != null && ready.value == true) {
-            trendingBinding.userAvatar.loadImage(avatarUrl)
-            trendingBinding.userAvatar.imageTintList = null
+        if (avatarUrl != null) {
+            trendingBinding.profileAvatar.loadImage(avatarUrl)
+            trendingBinding.profileAvatar.imageTintList = null
         }
+        trendingBinding.profileName.text = if (rescueMode) MAL.username ?: Anilist.username else Anilist.username
     }
 
     fun updateNotificationCount() {
-        if (this::binding.isInitialized) {
-            val isRescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
-            trendingBinding.notificationCount.isVisible = !isRescueMode && Anilist.unreadNotificationCount > 0
-                    && PrefManager.getVal<Boolean>(PrefName.ShowNotificationRedDot) == true
-            trendingBinding.notificationCount.text = Anilist.unreadNotificationCount.toString()
-        }
+
     }
 
     inner class AnimePageViewHolder(val binding: ItemAnimePageBinding) :
