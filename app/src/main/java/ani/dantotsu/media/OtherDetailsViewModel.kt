@@ -357,7 +357,11 @@ class OtherDetailsViewModel : ViewModel() {
                     (base.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, offset) }
                 }
             }
-            calendarDays.forEach { day -> allMap[df.format(day.time)] = mutableListOf() }
+            calendarDays.forEach { day ->
+                val key = df.format(day.time)
+                allMap[key] = mutableListOf()
+                libraryMap[key] = mutableListOf()
+            }
 
             val userId = Anilist.userid ?: 0
             val userLibrary = Anilist.query.getMediaLists(true, userId)
@@ -570,9 +574,7 @@ class OtherDetailsViewModel : ViewModel() {
                     dubAnilistIds.contains(media.id) || (media.idMAL != null && dubMalIds.contains(media.idMAL))
                 }
             }.toMutableList()
-            if (filteredList.isNotEmpty()) {
-                filteredMap[date] = filteredList
-            }
+            filteredMap[date] = filteredList
         }
         return filteredMap
     }
