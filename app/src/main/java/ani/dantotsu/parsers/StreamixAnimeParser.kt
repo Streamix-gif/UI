@@ -17,8 +17,7 @@ class StreamixAnimeParser : AnimeParser() {
     private val service: StreamixService
         get() = StreamixProviderBridge.service(currContext() ?: error("Context unavailable"))
 
-    override suspend fun search(query: String): List<ShowResponse> =
-        service.search(query).map { it.toShowResponse() }
+    override suspend fun search(query: String): List<ShowResponse> = service.search(query).map { it.toShowResponse() }
 
     override suspend fun loadEpisodes(animeLink: String, extra: Map<String, String>?, sAnime: eu.kanade.tachiyomi.animesource.model.SAnime): List<Episode> {
         val ref = decodeAnime(animeLink)
@@ -39,14 +38,14 @@ class StreamixAnimeParser : AnimeParser() {
     })
 
     private fun EpisodeRef.toEpisode() = Episode(number = number.toString(), link = encodeEpisode(providerId, providerEpisodeId, url), title = title, sEpisode = eu.kanade.tachiyomi.animesource.model.SEpisode.create().apply {
-        name = title ?: "Episode $number"
+        name = title ?: "Episode " + number
         episode_number = number.toFloat()
         url = encodeEpisode(providerId, providerEpisodeId, url)
     })
 
-    private fun encodeAnime(providerId: String, id: String) = pack("A|$providerId|$id")
-    private fun encodeEpisode(providerId: String, episodeId: String, url: String) = pack("E|$providerId|$episodeId|$url")
-    private fun encodeStream(stream: StreamRef) = pack("S|${stream.providerId}|${stream.url}|${stream.quality ?: -1}|${stream.type ?: ""}")
+    private fun encodeAnime(providerId: String, id: String) = pack("A|" + providerId + "|" + id)
+    private fun encodeEpisode(providerId: String, episodeId: String, url: String) = pack("E|" + providerId + "|" + episodeId + "|" + url)
+    private fun encodeStream(stream: StreamRef) = pack("S|" + stream.providerId + "|" + stream.url + "|" + (stream.quality ?: -1) + "|" + (stream.type ?: ""))
     private fun pack(value: String) = Base64.encodeToString(value.toByteArray(Charsets.UTF_8), Base64.NO_WRAP)
     private fun unpack(value: String) = String(Base64.decode(value, Base64.NO_WRAP), Charsets.UTF_8)
 
@@ -65,16 +64,14 @@ class StreamixAnimeParser : AnimeParser() {
         require(parts.size == 5 && parts[0] == "S")
         return StreamRef(providerId = parts[1], url = parts[2], quality = parts[3].toIntOrNull()?.takeUnless { it < 0 }, type = parts[4].ifBlank { null })
     }
-    private fun streamName(stream: StreamRef, index: Int) = stream.quality?.takeIf { it > 0 }?.let { "\${it}p" } ?: "Stream \${index + 1}"
+    private fun streamName(stream: StreamRef, index: Int) = stream.quality?.takeIf { it > 0 }?.let { it.toString() + "p" } ?: ("Stream " + (index + 1))
 }
 
 private data class ProviderRef(val providerId: String, val id: String)
 
 private object StreamixProviderBridge {
     @Volatile private var instance: StreamixService? = null
-    fun service(context: Context): StreamixService = instance ?: synchronized(this) {
-        instance ?: DefaultRuntime.create(context.applicationContext).also { instance = it }
-    }
+    fun service(context: Context): StreamixService = instance ?: synchronized(this) { instance ?: DefaultRuntime.create(context.applicationContext).also { instance = it } }
 }
 
 private class StreamixVideoExtractor(override val server: VideoServer, private val stream: StreamRef) : VideoExtractor() {
