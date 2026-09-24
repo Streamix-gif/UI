@@ -345,9 +345,6 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
         trendingBinding.profileName.text = if (rescueMode) MAL.username ?: Anilist.username else Anilist.username
     }
 
-    fun updateNotificationCount() {
-
-    }
 
     inner class AnimePageViewHolder(val binding: ItemAnimePageBinding) :
         RecyclerView.ViewHolder(binding.root)
