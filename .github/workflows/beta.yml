@@ -139,7 +139,7 @@ jobs:
           name: Streamix-APK-arm64-v8a
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/**/*arm64-v8a.apk"
+          path: "app/build/outputs/apk/**/*arm64-v8a*.apk"
           if-no-files-found: error
 
     - name: Upload armeabi-v7a APK
@@ -149,7 +149,7 @@ jobs:
           name: Streamix-APK-armeabi-v7a
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/**/*armeabi-v7a.apk"
+          path: "app/build/outputs/apk/**/*armeabi-v7a*.apk"
           if-no-files-found: error
 
     - name: Upload x86 APK
@@ -159,7 +159,7 @@ jobs:
           name: Streamix-APK-x86
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/**/*x86.apk"
+          path: "app/build/outputs/apk/**/*x86*.apk"
           if-no-files-found: error
 
     - name: Upload x86_64 APK
@@ -169,7 +169,7 @@ jobs:
           name: Streamix-APK-x86_64
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/**/*x86_64.apk"
+          path: "app/build/outputs/apk/**/*x86_64*.apk"
           if-no-files-found: error
 
     - name: Upload APK to Discord and Telegram
