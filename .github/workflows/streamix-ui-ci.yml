@@ -38,7 +38,7 @@ jobs:
             "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
             -o "$CLOUDSTREAM3_JAR"
           test -s "$CLOUDSTREAM3_JAR"
-          python3 -c 'import sys,zipfile,os; jar=sys.argv[1]; tmp=jar+".filtered"; src=zipfile.ZipFile(jar,"r"); dst=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED); [dst.writestr(i,src.read(i.filename)) for i in src.infolist() if not i.filename.startswith("androidx/")]; src.close(); dst.close(); os.replace(tmp,jar)' "$CLOUDSTREAM3_JAR"
+          python3 -c 'import sys,zipfile,os; jar=sys.argv[1]; tmp=jar+".filtered"; src=zipfile.ZipFile(jar,"r"); dst=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED); [dst.writestr(i,src.read(i.filename)) for i in src.infolist() if not i.filename.startswith("androidx/") and not i.filename.startswith("com/google/android/datatransport/")]; src.close(); dst.close(); os.replace(tmp,jar)' "$CLOUDSTREAM3_JAR"
           echo "CloudStream runtime filtered for app-provided AndroidX: $CLOUDSTREAM3_JAR"
           ls -lh "$CLOUDSTREAM3_JAR"
 
