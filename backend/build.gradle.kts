@@ -7,7 +7,7 @@ version = "1.0.0"
 
 android {
     namespace = "streamix.backend"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
