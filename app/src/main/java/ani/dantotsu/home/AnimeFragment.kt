@@ -330,7 +330,6 @@ class AnimeFragment : Fragment() {
             binding.root.requestLayout()
         }
         if (this::animePageAdapter.isInitialized && _binding != null) {
-            animePageAdapter.updateNotificationCount()
         }
         super.onResume()
     }
