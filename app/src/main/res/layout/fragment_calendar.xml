@@ -44,30 +44,6 @@
             android:textColor="?attr/colorOnBackground"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/airedLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
-            android:gravity="center"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="Aired"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="11sp" />
-
-        <TextView
-            android:id="@+id/airedSoonLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginEnd="4dp"
-            android:gravity="center"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="Aired Soon"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="11sp" />
-
         <ImageButton
             android:id="@+id/listed"
             android:layout_width="40dp"
