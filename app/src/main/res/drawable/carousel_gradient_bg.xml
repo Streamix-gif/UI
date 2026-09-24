@@ -12,13 +12,15 @@
         </shape>
     </item>
 
-    <!-- Bottom: fade the banner into the page background. -->
-    <item android:top="250dp">
+    <!-- Bottom: reach the page background earlier so the banner does not end as a hard image block. -->
+    <item android:top="160dp">
         <shape>
             <gradient
                 android:angle="270"
                 android:startColor="@android:color/transparent"
+                android:centerColor="?android:colorBackground"
                 android:endColor="?android:colorBackground"
+                android:centerY="0.55"
                 android:type="linear" />
         </shape>
     </item>
