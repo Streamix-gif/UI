@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ani.dantotsu.databinding.ItemSocialHeaderBinding
 
-class SocialHeaderAdapter : RecyclerView.Adapter<SocialHeaderAdapter.ViewHolder>() {
+class SocialHeaderAdapter(
+    private val onNotificationsClick: () -> Unit,
+    private val onProfileClick: () -> Unit
+) : RecyclerView.Adapter<SocialHeaderAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -16,11 +19,14 @@ class SocialHeaderAdapter : RecyclerView.Adapter<SocialHeaderAdapter.ViewHolder>
             )
         )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = Unit
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding.socialNotifications.setOnClickListener { onNotificationsClick() }
+        holder.binding.socialProfile.setOnClickListener { onProfileClick() }
+    }
 
     override fun getItemCount(): Int = 1
 
     class ViewHolder(
-        binding: ItemSocialHeaderBinding
+        val binding: ItemSocialHeaderBinding
     ) : RecyclerView.ViewHolder(binding.root)
 }
