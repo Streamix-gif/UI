@@ -7,14 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:paddingTop="12dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/profileCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
             app:cardBackgroundColor="@color/nav_bg_inv"
             app:cardCornerRadius="22dp"
@@ -264,6 +264,8 @@
         <LinearLayout
             android:id="@+id/searchRow"
             android:layout_width="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_height="56dp"
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
@@ -325,9 +327,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/trendingViewPager"
             android:layout_width="match_parent"
-            android:layout_height="460dp"
-            android:layout_marginStart="-16dp"
-            android:layout_marginEnd="-16dp"
+            android:layout_height="520dp"
             android:clipChildren="false"
             android:clipToPadding="false" />
 
