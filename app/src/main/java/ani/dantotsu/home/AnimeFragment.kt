@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -97,6 +98,9 @@ class AnimeFragment : Fragment() {
         }
 
         binding.animePageRecyclerView.updatePaddingRelative(bottom = navBarHeight + 160f.px)
+        binding.animePageRecyclerView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = statusBarHeight + 12f.px
+        }
 
         animePageAdapter = AnimePageAdapter()
 
