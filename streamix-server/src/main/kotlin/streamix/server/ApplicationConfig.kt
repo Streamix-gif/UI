@@ -49,120 +49,84 @@ fun Application.configureServer() {
     environment.monitor.subscribe(ApplicationStopped) { db.close() }
 
     routing {
-        get("/health") {
-            call.respond(mapOf("status" to "ok", "service" to "anilab-backend"))
-        }
-
+        get("/health") { call.respond(mapOf("status" to "ok", "service" to "anilab-backend")) }
         post("/auth/google") {
             val request = call.receive<GoogleAuthRequest>()
             val identity = auth.verify(request.idToken)
             val user = repository.upsertUser(identity)
             call.respond(AuthResponse(sessions.issue(user.uid, user.email, user.nickname), user))
         }
-
         get("/users/me") {
             val p = call.sessionPrincipal()
             repository.touch(p.uid)
             call.respond(repository.profile(p.uid) ?: ErrorDto("User not found"))
         }
-
         put("/users/me/profile") {
             val p = call.sessionPrincipal()
             call.respond(repository.updateProfile(p.uid, call.receive()))
         }
-
         get("/social/dashboard") {
             val p = call.sessionPrincipal()
             repository.touch(p.uid)
-            val friends = repository.friends(p.uid)
-            call.respond(
-                SocialDashboardDto(
-                    friends = friends,
-                    leaderboard = repository.leaderboard(),
-                    recentMessages = repository.recentMessages("global", null),
-                    friendActivity = repository.activity(p.uid),
-                    activeFriends = repository.activeFriends(p.uid)
-                )
-            )
+            call.respond(SocialDashboardDto(repository.friends(p.uid),repository.leaderboard(),repository.recentMessages("global",null),repository.activity(p.uid),repository.activeFriends(p.uid)))
         }
-
-        get("/social/friends") {
-            call.respond(repository.friends(call.sessionPrincipal().uid))
-        }
-
+        get("/social/friends") { call.respond(repository.friends(call.sessionPrincipal().uid)) }
         post("/social/friends/{uid}") {
-            val p = call.sessionPrincipal()
-            repository.requestFriend(p.uid, call.parameters["uid"]!!)
+            val p=call.sessionPrincipal()
+            repository.requestFriend(p.uid,call.parameters["uid"]!!)
             call.respond(HttpStatusCode.Accepted)
         }
-
         post("/social/friends/{uid}/accept") {
-            val p = call.sessionPrincipal()
-            repository.acceptFriend(p.uid, call.parameters["uid"]!!)
+            val p=call.sessionPrincipal()
+            repository.acceptFriend(p.uid,call.parameters["uid"]!!)
             call.respond(HttpStatusCode.NoContent)
         }
-
         get("/social/chat") {
-            val type = call.request.queryParameters["roomType"] ?: "global"
-            val room = call.request.queryParameters["roomId"]
-            call.respond(repository.recentMessages(type, room))
+            val type=call.request.queryParameters["roomType"]?:"global"
+            call.respond(repository.recentMessages(type,call.request.queryParameters["roomId"]))
         }
-
         post("/social/chat") {
-            val message = repository.addMessage(call.sessionPrincipal().uid, call.receive())
-            call.respond(HttpStatusCode.Created, message)
+            val message=repository.addMessage(call.sessionPrincipal().uid,call.receive())
+            call.respond(HttpStatusCode.Created,message)
         }
-
-        get("/social/leaderboard") {
-            call.respond(repository.leaderboard())
-        }
-
-        get("/social/activity") {
-            call.respond(repository.activity(call.sessionPrincipal().uid))
-        }
-
-        get("/social/friends/active") {
-            call.respond(repository.activeFriends(call.sessionPrincipal().uid))
-        }
-
+        get("/social/leaderboard") { call.respond(repository.leaderboard()) }
+        get("/social/activity") { call.respond(repository.activity(call.sessionPrincipal().uid)) }
+        get("/social/friends/active") { call.respond(repository.activeFriends(call.sessionPrincipal().uid)) }
         post("/social/watch-together") {
-            call.respond(HttpStatusCode.Created, repository.createWatchRoom(call.sessionPrincipal().uid, call.receive()))
+            call.respond(HttpStatusCode.Created,repository.createWatchRoom(call.sessionPrincipal().uid,call.receive()))
         }
-
         post("/social/watch-together/{id}/join") {
-            repository.joinWatchRoom(call.sessionPrincipal().uid, call.parameters["id"]!!)
+            repository.joinWatchRoom(call.sessionPrincipal().uid,call.parameters["id"]!!)
             call.respond(HttpStatusCode.NoContent)
         }
-
         put("/social/watch-together/{id}") {
-            call.respond(repository.updateWatchRoom(call.sessionPrincipal().uid, call.parameters["id"]!!, call.receive()))
+            call.respond(repository.updateWatchRoom(call.sessionPrincipal().uid,call.parameters["id"]!!,call.receive()))
         }
-
         webSocket("/ws/social") {
-            val principal = call.attributes.getOrNull(SessionPrincipalKey) ?: run {
-                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Unauthorized"))
+            val principal=call.attributes.getOrNull(SessionPrincipalKey)?:run{
+                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY,"Unauthorized"))
                 return@webSocket
             }
-            val room = call.request.queryParameters["room"]?.takeIf(String::isNotBlank) ?: "global"
-            hub.join(room, this)
+            val room=call.request.queryParameters["room"]?.takeIf(String::isNotBlank)?:"global"
+            hub.join(room,this)
             try {
-                for (frame in incoming) {
-                    if (frame !is Frame.Text) continue
-                    val request = runCatching {
-                        Json.decodeFromString<SocketMessage>(frame.readText())
-                    }.getOrNull() ?: continue
-                    val type = when {
-                        room.startsWith("anime:") -> "anime"
-                        room.startsWith("watch:") -> "watch"
-                        else -> "global"
+                for(frame in incoming) {
+                    if(frame !is Frame.Text) continue
+                    val request=runCatching{Json.decodeFromString<SocketMessage>(frame.readText())}.getOrNull()?:continue
+                    if(room.startsWith("watch:")&&request.type=="sync"){
+                        hub.broadcast(room,Json.encodeToString(SocketEvent("sync",principal.uid,positionMs=request.positionMs,state=request.state)))
+                        continue
                     }
-                    val roomId = room.substringAfter(':', "").ifBlank { null }
-                    val message = repository.addMessage(principal.uid, SendMessageRequest(type, roomId, request.body))
-                    hub.broadcast(room, Json.encodeToString(message))
+                    val type=when{
+                        room.startsWith("anime:")->"anime"
+                        room.startsWith("watch:")->"watch"
+                        else->"global"
+                    }
+                    val roomId=room.substringAfter(':',"").ifBlank{null}
+                    val message=repository.addMessage(principal.uid,SendMessageRequest(type,roomId,request.body))
+                    hub.broadcast(room,Json.encodeToString(SocketEvent("chat",principal.uid,body=message.body)))
                 }
-            } finally {
-                hub.leave(room, this)
-            }
+            } finally { hub.leave(room,this) }
         }
     }
 }
