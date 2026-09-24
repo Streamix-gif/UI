@@ -29,6 +29,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
+        submodules: recursive
 
     - name: Download last SHA artifact
       uses: dawidd6/action-download-artifact@d63b86af1b34672e53c440b1b83979861906bad7 # v24
@@ -99,6 +100,17 @@ jobs:
     - name: Decode Keystore File
       if: ${{ github.repository == 'rebelonion/Dantotsu' }}
       run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
+
+    - name: Fetch CloudStream runtime
+      if: ${{ env.SKIP_BUILD != 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        curl -fL --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 \
+          "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
+          -o "$RUNNER_TEMP/cs3-classes.jar"
+        test -s "$RUNNER_TEMP/cs3-classes.jar"
+        echo "CLOUDSTREAM3_JAR=$RUNNER_TEMP/cs3-classes.jar" >> "$GITHUB_ENV"
 
     - name: Make gradlew executable
       if: ${{ env.SKIP_BUILD != 'true' }}
