@@ -60,13 +60,14 @@ class CalendarDateAdapter(
             binding.monthText.text = monthFormat.format(item.date)
 
             val primary = context.getThemeColor(androidx.appcompat.R.attr.colorPrimary)
+            val onPrimary = context.getThemeColor(com.google.android.material.R.attr.colorOnPrimary)
             val onBackground = context.getThemeColor(com.google.android.material.R.attr.colorOnSurface)
             val outline = context.getThemeColor(com.google.android.material.R.attr.colorOutline)
 
             if (selected) {
-                binding.dayText.setTextColor(primary)
-                binding.dateText.setTextColor(primary)
-                binding.monthText.setTextColor(primary)
+                binding.dayText.setTextColor(onPrimary)
+                binding.dateText.setTextColor(onPrimary)
+                binding.monthText.setTextColor(onPrimary)
             } else {
                 binding.dayText.setTextColor(outline)
                 binding.dateText.setTextColor(onBackground)
