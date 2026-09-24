@@ -71,7 +71,7 @@ class MainProfileFragment : Fragment() {
     private fun loadProfile() {
         val userId = Anilist.userid
         if (userId == null) {
-            binding.profileName.text = getString(R.string.guest)
+            binding.profileName.text = "Guest"
             binding.profileBio.text = "Sign in to sync your AniList profile."
             binding.profileAnimeWatched.text = "0"
             binding.profileEpisodes.text = "0"
