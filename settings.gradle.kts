@@ -18,5 +18,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Dantotsu"
-include(":app", ":backend")
-project(":backend").projectDir = file("backend")
+include(":app")

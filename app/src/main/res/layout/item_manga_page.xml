@@ -9,7 +9,7 @@
     android:layout_marginEnd="-16dp"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_trending_manga" />
+    <include layout="@layout/layout_trending" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mangaListContainer"

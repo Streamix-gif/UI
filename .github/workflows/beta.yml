@@ -29,7 +29,6 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
-        submodules: recursive
 
     - name: Download last SHA artifact
       uses: dawidd6/action-download-artifact@d63b86af1b34672e53c440b1b83979861906bad7 # v24
@@ -101,17 +100,6 @@ jobs:
       if: ${{ github.repository == 'rebelonion/Dantotsu' }}
       run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
 
-    - name: Fetch CloudStream runtime
-      if: ${{ env.SKIP_BUILD != 'true' }}
-      shell: bash
-      run: |
-        set -euo pipefail
-        curl -fL --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 \
-          "https://github.com/recloudstream/cloudstream/releases/download/pre-release/classes.jar" \
-          -o "$RUNNER_TEMP/cs3-classes.jar"
-        test -s "$RUNNER_TEMP/cs3-classes.jar"
-        echo "CLOUDSTREAM3_JAR=$RUNNER_TEMP/cs3-classes.jar" >> "$GITHUB_ENV"
-
     - name: Make gradlew executable
       if: ${{ env.SKIP_BUILD != 'true' }}
       run: chmod +x ./gradlew
@@ -132,57 +120,21 @@ jobs:
     - name: Generate APK checksum
       if: ${{ env.SKIP_BUILD != 'true' }}
       run: |
-        APK_PATH=$(find app/build/outputs/apk -type f -name '*.apk' | head -n 1)
-        if [ -n "$APK_PATH" ]; then
+        APK_PATH="app/build/outputs/apk/google/alpha/app-google-alpha.apk"
+        if [ -f "$APK_PATH" ]; then
           CHECKSUM=$(sha256sum "$APK_PATH" | awk '{print $1}')
           echo "CHECKSUM=$CHECKSUM" >> $GITHUB_ENV
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
           echo "SHA256: $CHECKSUM"
-          echo "APK: $APK_PATH"
-        else
-          echo "::error::No APK was produced under app/build/outputs/apk"
-          exit 1
         fi
 
-    - name: Upload arm64-v8a APK
+    - name: Upload a Build Artifact
       if: ${{ env.SKIP_BUILD != 'true' }}
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-          name: Streamix-APK-arm64-v8a
+          name: Dantotsu
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/**/*arm64-v8a*.apk"
-          if-no-files-found: error
-
-    - name: Upload armeabi-v7a APK
-      if: ${{ env.SKIP_BUILD != 'true' }}
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      with:
-          name: Streamix-APK-armeabi-v7a
-          retention-days: 5
-          compression-level: 9
-          path: "app/build/outputs/apk/**/*armeabi-v7a*.apk"
-          if-no-files-found: error
-
-    - name: Upload x86 APK
-      if: ${{ env.SKIP_BUILD != 'true' }}
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      with:
-          name: Streamix-APK-x86
-          retention-days: 5
-          compression-level: 9
-          path: "app/build/outputs/apk/**/*x86*.apk"
-          if-no-files-found: error
-
-    - name: Upload x86_64 APK
-      if: ${{ env.SKIP_BUILD != 'true' }}
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      with:
-          name: Streamix-APK-x86_64
-          retention-days: 5
-          compression-level: 9
-          path: "app/build/outputs/apk/**/*x86_64*.apk"
-          if-no-files-found: error
+          path: "app/build/outputs/apk/google/alpha/app-google-alpha.apk"
 
     - name: Upload APK to Discord and Telegram
       if: ${{ github.repository == 'rebelonion/Dantotsu' }}

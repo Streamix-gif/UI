@@ -27,14 +27,14 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:visibility="visible"
-        app:srcCompat="@drawable/carousel_gradient_bg"
+        app:srcCompat="@drawable/linear_gradient_bg"
         tools:ignore="ContentDescription,ImageContrastCheck" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="240dp"
+        android:layout_marginBottom="110dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="vertical"

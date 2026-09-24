@@ -9,27 +9,18 @@
     android:layout_marginEnd="-16dp"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
+    <include layout="@layout/layout_trending" />
+
+    <HorizontalScrollView
+        android:id="@+id/animeSeasons"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clipChildren="false">
-
-        <include
-            layout="@layout/layout_trending"
-            android:layout_width="match_parent"
-            android:layout_height="520dp" />
-
-        <HorizontalScrollView
-            android:id="@+id/animeSeasons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="60dp"
-            android:clipToPadding="false"
-            android:fillViewport="true"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:scrollbarSize="0dp">
+        android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        android:scrollbarSize="0dp">
 
         <LinearLayout
             android:id="@+id/animeSeasonsCont"
@@ -70,14 +61,11 @@
                 app:chipStrokeColor="?attr/colorPrimaryContainer" />
         </LinearLayout>
 
-        </HorizontalScrollView>
-
-    </FrameLayout>
+    </HorizontalScrollView>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/animeListContainer"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"

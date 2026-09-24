@@ -66,7 +66,7 @@ android {
             isEnable = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = false
+            isUniversalApk = true
         }
     }
 
@@ -158,9 +158,6 @@ configurations.all {
 }
 
 dependencies {
-    // Temporary Android-runtime bridge: consume Backend submodule directly for First Frame testing.
-    implementation(project(":backend"))
-
     // ffmpeg-kit (must precede media3 so complete native binaries with av_log_default_callback are chosen by pickFirsts)
     implementation(libs.ffmpeg.kit)
 

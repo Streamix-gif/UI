@@ -43,9 +43,6 @@
 
     <string name="home">Home</string>
     <string name="anime">Anime</string>
-    <string name="calendar">Calendar</string>
-    <string name="library">Library</string>
-    <string name="profile">Profile</string>
     <string name="browse_anime">Browse Anime</string>
     <string name="manga">Manga</string>
     <string name="browse_manga">Browse Manga</string>

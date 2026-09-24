@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ani.dantotsu.R
@@ -62,7 +61,7 @@ class ActivityFragment : Fragment() {
         }
         val isUserActivity = type == ActivityType.USER || type == ActivityType.GLOBAL || userId == null || userId == Anilist.userid
         binding.titleBar.visibility =
-            if (type != ActivityType.ONE && type != ActivityType.GLOBAL) View.VISIBLE else View.GONE
+            if (type != ActivityType.ONE) View.VISIBLE else View.GONE
         binding.titleText.text = when (type) {
             ActivityType.OTHER_USER -> if (userId == null || userId == Anilist.userid) getString(R.string.create_new_activity) else getString(R.string.write_a_message)
             ActivityType.USER, ActivityType.GLOBAL -> getString(R.string.create_new_activity)
@@ -81,26 +80,7 @@ class ActivityFragment : Fragment() {
         }
         
         binding.titleImage.setOnClickListener { handleTitleImageClick() }
-        binding.listRecyclerView.adapter = if (type == ActivityType.GLOBAL) {
-            ConcatAdapter(
-                SocialHeaderAdapter(
-                    onNotificationsClick = {
-                        startActivity(Intent(requireContext(), ani.dantotsu.profile.notification.NotificationActivity::class.java))
-                    },
-                    onProfileClick = {
-                        if (Anilist.userid != 0) {
-                            startActivity(
-                                Intent(requireContext(), ProfileActivity::class.java)
-                                    .putExtra("userId", Anilist.userid)
-                            )
-                        }
-                    }
-                ),
-                adapter
-            )
-        } else {
-            adapter
-        }
+        binding.listRecyclerView.adapter = adapter
         binding.listRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.listProgressBar.isVisible = true
 
