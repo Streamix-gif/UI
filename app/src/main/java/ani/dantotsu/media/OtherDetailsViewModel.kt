@@ -345,12 +345,21 @@ class OtherDetailsViewModel : ViewModel() {
     private suspend fun loadCalendarFromAnilist(showOnlyLibrary: Boolean, showOnlyDubbed: Boolean) {
         if (cachedAllCalendarData == null || cachedLibraryCalendarData == null) {
             val curr = System.currentTimeMillis() / 1000
-            val res = Anilist.query.recentlyUpdated(curr - 86400, curr + (86400 * 6))
+            val res = Anilist.query.recentlyUpdated(curr - 86400, curr + (86400 * 14))
             val df = DateFormat.getDateInstance(DateFormat.FULL)
             val tf = DateFormat.getTimeInstance(DateFormat.SHORT)
-            val allMap = mutableMapOf<String, MutableList<Media>>()
-            val libraryMap = mutableMapOf<String, MutableList<Media>>()
+            val allMap = linkedMapOf<String, MutableList<Media>>()
+            val libraryMap = linkedMapOf<String, MutableList<Media>>()
             val idMap = mutableMapOf<String, MutableList<Int>>()
+
+            val calendarDays = Calendar.getInstance().let { base ->
+                (0..14).map { offset ->
+                    (base.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, offset) }
+                }
+            }
+            calendarDays.forEach { day -> allMap[df.format(day.time)] = mutableListOf() }
+            val allDateKeys = allMap.keys.toSet()
+ = mutableMapOf<String, MutableList<Int>>()
 
             val userId = Anilist.userid ?: 0
             val userLibrary = Anilist.query.getMediaLists(true, userId)
@@ -401,8 +410,14 @@ class OtherDetailsViewModel : ViewModel() {
                 "thursday", "friday", "saturday"
             )
 
-            val allMap = mutableMapOf<String, MutableList<Media>>()
-            val libraryMap = mutableMapOf<String, MutableList<Media>>()
+            val allMap = linkedMapOf<String, MutableList<Media>>()
+            val libraryMap = linkedMapOf<String, MutableList<Media>>()
+
+            val baseCalendar = Calendar.getInstance()
+            (0..14).forEach { offset ->
+                val day = (baseCalendar.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, offset) }
+                allMap[df.format(day.time)] = mutableListOf()
+            }
 
             val watchingMalIds = mutableSetOf<Int>()
             val watchedEpisodesMap = mutableMapOf<Int, Int>()
@@ -423,7 +438,7 @@ class OtherDetailsViewModel : ViewModel() {
                 }
             }
 
-            for (offsetDay in -1..6) {
+            for (offsetDay in 0..14) {
                 val cal = Calendar.getInstance()
                 cal.add(Calendar.DAY_OF_YEAR, offsetDay)
                 val dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK) - 1]
@@ -522,9 +537,7 @@ class OtherDetailsViewModel : ViewModel() {
 
                 allMap[dateStr] = allMedia
                 val libList = allMedia.filter { watchingMalIds.contains(it.id) }.toMutableList()
-                if (libList.isNotEmpty()) {
-                    libraryMap[dateStr] = libList
-                }
+                libraryMap[dateStr] = libList
             }
 
             cachedAllCalendarData = allMap
