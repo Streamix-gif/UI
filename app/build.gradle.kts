@@ -14,29 +14,17 @@ val baseVersion = "3.2.2"
 
 fun computeGitCommitHash(): String {
     val envHash = System.getenv("COMMIT_HASH")
-    if (!envHash.isNullOrBlank()) {
-        return envHash.take(7)
-    }
+    if (!envHash.isNullOrBlank()) return envHash.take(7)
     val gitHash = try {
-        providers.exec {
-            commandLine("git", "rev-parse", "HEAD")
-        }.standardOutput.asText.get().trim().take(7)
+        providers.exec { commandLine("git", "rev-parse", "HEAD") }.standardOutput.asText.get().trim().take(7)
     } catch (e: Exception) {
         try {
-            providers.exec {
-                commandLine("git", "rev-parse", "--verify", "--short=7", "HEAD")
-            }.standardOutput.asText.get().trim()
-        } catch (e2: Exception) {
-            ""
-        }
+            providers.exec { commandLine("git", "rev-parse", "--verify", "--short=7", "HEAD") }.standardOutput.asText.get().trim()
+        } catch (e2: Exception) { "" }
     }
-    if (gitHash.isNotEmpty()) {
-        return gitHash
-    }
+    if (gitHash.isNotEmpty()) return gitHash
     val fallbackHash = System.getenv("GITHUB_SHA")
-    if (!fallbackHash.isNullOrBlank()) {
-        return fallbackHash.take(7)
-    }
+    if (!fallbackHash.isNullOrBlank()) return fallbackHash.take(7)
     return ""
 }
 
@@ -50,14 +38,8 @@ android {
         applicationId = "ani.dantotsu"
         minSdk = 26
         targetSdk = 36
-
         versionName = if (gitCommitHash.isNotEmpty()) "$baseVersion+$gitCommitHash" else baseVersion
-        versionCode = baseVersion.split(".")
-            //noinspection WrongGradleMethod
-            .map { it.toInt() * 100 }
-            .joinToString("")
-            .toInt()
-
+        versionCode = baseVersion.split(".").map { it.toInt() * 100 }.joinToString("").toInt()
         signingConfig = signingConfigs.getByName("debug")
     }
 
@@ -66,12 +48,11 @@ android {
             isEnable = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
+            isUniversalApk = false
         }
     }
 
     flavorDimensions += "store"
-
     productFlavors {
         create("fdroid") {
             dimension = "store"
@@ -95,7 +76,6 @@ android {
             isShrinkResources = false
             isDefault = true
         }
-
         getByName("debug") {
             applicationIdSuffix = ".beta"
             versionNameSuffix = "-beta01"
@@ -103,17 +83,13 @@ android {
             manifestPlaceholders["icon_placeholder_round"] = "@mipmap/ic_launcher_beta_round"
             isDebuggable = false
         }
-
         getByName("release") {
             manifestPlaceholders["icon_placeholder"] = "@mipmap/ic_launcher"
             manifestPlaceholders["icon_placeholder_round"] = "@mipmap/ic_launcher_round"
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -146,10 +122,7 @@ android {
 kotlin {
     jvmToolchain(21)
     compilerOptions {
-        freeCompilerArgs.addAll(
-            "-XXLanguage:+ContextParameters",
-            "-Xmulti-platform"
-        )
+        freeCompilerArgs.addAll("-XXLanguage:+ContextParameters", "-Xmulti-platform")
     }
 }
 
@@ -158,51 +131,31 @@ configurations.all {
 }
 
 dependencies {
-    // Streamix provider/extractor backend — vendored directly into the UI repo.
-    implementation(project(":backend"))
-
-    // ffmpeg-kit (must precede media3 so complete native binaries with av_log_default_callback are chosen by pickFirsts)
+    // ffmpeg-kit
     implementation(libs.ffmpeg.kit)
-
-    // Media3 & decoders
     implementation(libs.bundles.media3)
     implementation(libs.bundles.subtitles)
     implementation(libs.mediarouter)
-    // HTTP/3 (QUIC) — media3-datasource-cronet:1.11.1 API surface:
-    // Tier 1 (GMS devices): CronetDataSource via Play Services CronetProvider — HTTP/3 + HTTP/2.
-    // Tier 2 (fallback / F-Droid): OkHttp — HTTP/2. CronetProvider absent → caught → falls through.
     implementation(libs.media3.cronet)
-    // GMS Cronet provider — google flavor only; absent from F-Droid APK
     add("googleImplementation", libs.play.services.cronet)
 
-    // Firebase
     add("googleImplementation", platform(libs.firebase.bom))
     add("googleImplementation", libs.bundles.firebase)
 
-    // AndroidX
     implementation(libs.bundles.androidx)
     implementation(libs.androidx.webkit)
-
-    // Kotlin
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-
-    // Core libs
     implementation(libs.bundles.misc)
     implementation(libs.metro.runtime)
     implementation(libs.bundles.sqldelight)
     implementation(libs.androidx.profileInstaller)
 
-    // Shizuku
     implementation(libs.bundles.shizuku)
-
-    // Glide
     implementation(libs.bundles.glide)
     ksp(libs.glide.ksp)
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // UI
     implementation(libs.material)
     implementation(libs.materialKolor)
     implementation(files("libs/AnimatedBottomBar-7fcb9af.aar"))
@@ -215,7 +168,7 @@ dependencies {
     implementation(libs.mlkit.text.japanese)
     implementation(libs.mlkit.text)
     implementation(libs.play.services.base)
-    // Readium Kotlin Toolkit
+
     implementation(libs.readium.shared)
     implementation(libs.readium.streamer)
     implementation(libs.readium.navigator)
@@ -231,19 +184,16 @@ dependencies {
     implementation(libs.bundles.okhttp)
     implementation(libs.okio)
 
-    // Archive support (local source)
     implementation(libs.libarchive)
     implementation(libs.xmlutil.core)
     implementation(libs.xmlutil.serialization)
 
-    // libtorrent
     implementation(libs.libtorrent4j)
     implementation(libs.libtorrent4j.android.arm)
     implementation(libs.libtorrent4j.android.arm64)
     implementation(libs.libtorrent4j.android.x86)
     implementation(libs.libtorrent4j.android.x86.x64)
 
-    // LeakCanary & Plumber (Active in Debug, Alpha, and Release builds for memory leak diagnosis)
     implementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
 }
