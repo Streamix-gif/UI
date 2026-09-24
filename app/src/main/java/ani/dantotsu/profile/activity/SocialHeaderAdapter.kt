@@ -1,11 +1,12 @@
 package ani.dantotsu.profile.activity
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.View
-import android.widget.LinearLayout
+import com.google.android.material.chip.Chip
 import androidx.recyclerview.widget.RecyclerView
 import ani.dantotsu.databinding.ItemSocialHeaderBinding
 
@@ -39,40 +40,23 @@ class SocialHeaderAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val handler = Handler(Looper.getMainLooper())
-        private val leaderboardPages = listOf(
-            LeaderboardPage(
-                "Daily XP",
-                "🥈\nKael\n1,420 pts",
-                "🥇\nRynn\n1,830 pts",
-                "🥉\nHana\n1,190 pts"
-            ),
-            LeaderboardPage(
-                "Weekly Watch",
-                "🥈\nMizu\n8,420 min",
-                "🥇\nShin\n12,680 min",
-                "🥉\nSora\n7,940 min"
-            ),
-            LeaderboardPage(
-                "Monthly Social",
-                "🥈\nKael\n3,980 pts",
-                "🥇\nHana\n5,240 pts",
-                "🥉\nRynn\n3,760 pts"
-            ),
-            LeaderboardPage(
-                "All-Time",
-                "🥈\nSora\n42,180 pts",
-                "🥇\nRynn\n58,430 pts",
-                "🥉\nKael\n39,920 pts"
-            )
-        )
-
+        private var featureIndex = 0
         private var leaderboardIndex = 0
-        private var shortcuts: MutableList<View> = mutableListOf()
+
+        private val leaderboardPages = listOf(
+            LeaderboardPage("Community Leaderboard", "Kael", "12,450 pts", "Rynn", "15,230 pts", "Hana", "10,980 pts", "#4  Mizu     8,420 pts", "#5  Shin      7,890 pts"),
+            LeaderboardPage("Weekly Watch", "Mizu", "8,420 min", "Shin", "12,680 min", "Sora", "7,940 min", "#4  Kael     7,120 min", "#5  Yuki      6,840 min"),
+            LeaderboardPage("Monthly Social", "Rynn", "3,980 pts", "Hana", "5,240 pts", "Kael", "3,760 pts", "#4  Mizu     3,420 pts", "#5  Sora      3,180 pts"),
+            LeaderboardPage("All-Time", "Sora", "42,180 pts", "Rynn", "58,430 pts", "Kael", "39,920 pts", "#4  Mizu    38,410 pts", "#5  Yuki     35,770 pts")
+        )
 
         private val rotateRunnable = object : Runnable {
             override fun run() {
-                rotateShortcuts()
-                rotateLeaderboard()
+                if (binding.root.windowToken == null) return
+                featureIndex = (featureIndex + 1) % 3
+                leaderboardIndex = (leaderboardIndex + 1) % leaderboardPages.size
+                applyFeatureState()
+                applyLeaderboard(leaderboardPages[leaderboardIndex])
                 handler.postDelayed(this, ROTATION_MS)
             }
         }
@@ -84,59 +68,103 @@ class SocialHeaderAdapter(
             binding.socialNotifications.setOnClickListener { onNotificationsClick() }
             binding.socialProfile.setOnClickListener { onProfileClick() }
 
-            if (shortcuts.isEmpty()) {
-                shortcuts = mutableListOf(
-                    binding.socialShortcutGlobal,
-                    binding.socialShortcutAnime,
-                    binding.socialShortcutLeaderboard
-                )
-            }
-
+            setupFilters()
+            applyFeatureState()
             applyLeaderboard(leaderboardPages[leaderboardIndex])
+
             handler.removeCallbacks(rotateRunnable)
             handler.postDelayed(rotateRunnable, ROTATION_MS)
         }
 
-        private fun rotateShortcuts() {
-            if (shortcuts.size < 2) return
-
-            val first = shortcuts.removeAt(0)
-            shortcuts.add(first)
-
-            binding.socialShortcutStrip.removeAllViews()
-            shortcuts.forEachIndexed { index, view ->
-                val params = view.layoutParams as LinearLayout.LayoutParams
-                params.width = 0
-                params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                params.weight = 1f
-                params.marginStart = if (index == 0) 0 else 5
-                params.marginEnd = if (index == shortcuts.lastIndex) 0 else 5
-                view.layoutParams = params
-                binding.socialShortcutStrip.addView(view)
-            }
-
-            shortcuts.forEach { view ->
-                view.animate()
-                    .alpha(0.7f)
-                    .setDuration(120)
-                    .withEndAction {
-                        view.animate().alpha(1f).setDuration(180).start()
-                    }
-                    .start()
+        private fun setupFilters() {
+            binding.socialFilters.removeAllViews()
+            listOf("My Activity", "Following", "All").forEachIndexed { index, label ->
+                val chip = Chip(binding.root.context).apply {
+                    text = label
+                    isCheckable = true
+                    isChecked = index == 0
+                    setEnsureMinTouchTargetSize(false)
+                    chipMinHeight = dp(38)
+                    chipCornerRadius = dp(19).toFloat()
+                    chipStrokeWidth = dp(1).toFloat()
+                    chipStrokeColor = ColorStateList(
+                        arrayOf(
+                            intArrayOf(android.R.attr.state_checked),
+                            intArrayOf()
+                        ),
+                        intArrayOf(Color.rgb(105, 126, 255), Color.rgb(55, 62, 91))
+                    )
+                    chipBackgroundColor = ColorStateList(
+                        arrayOf(
+                            intArrayOf(android.R.attr.state_checked),
+                            intArrayOf()
+                        ),
+                        intArrayOf(Color.rgb(37, 45, 82), Color.rgb(18, 24, 42))
+                    )
+                    setTextColor(
+                        ColorStateList(
+                            arrayOf(
+                                intArrayOf(android.R.attr.state_checked),
+                                intArrayOf()
+                            ),
+                            intArrayOf(Color.WHITE, Color.rgb(190, 194, 211))
+                        )
+                    )
+                }
+                binding.socialFilters.addView(chip)
             }
         }
 
-        private fun rotateLeaderboard() {
-            leaderboardIndex = (leaderboardIndex + 1) % leaderboardPages.size
-            applyLeaderboard(leaderboardPages[leaderboardIndex])
+        private fun applyFeatureState() {
+            val cards = listOf(
+                binding.socialGlobalChatCard,
+                binding.socialAnimeChatCard,
+                binding.socialLeaderboardCard
+            )
+            val accents = listOf(
+                Color.rgb(90, 150, 255),
+                Color.rgb(170, 110, 255),
+                Color.rgb(255, 193, 7)
+            )
+
+            cards.forEachIndexed { index, card ->
+                val active = index == featureIndex
+                val color = accents[index]
+                val alphaColor = Color.argb(
+                    70,
+                    Color.red(color),
+                    Color.green(color),
+                    Color.blue(color)
+                )
+                val activeBackground = Color.argb(
+                    35,
+                    Color.red(color),
+                    Color.green(color),
+                    Color.blue(color)
+                )
+                card.setStrokeColor(ColorStateList.valueOf(if (active) color else alphaColor))
+                card.strokeWidth = if (active) dp(3) else dp(1)
+                card.setCardBackgroundColor(
+                    ColorStateList.valueOf(if (active) activeBackground else Color.TRANSPARENT)
+                )
+            }
         }
 
         private fun applyLeaderboard(page: LeaderboardPage) {
-            binding.socialLeaderboardTitle.text = page.title
-            binding.socialLeaderboardSecond.text = page.second
-            binding.socialLeaderboardFirst.text = page.first
-            binding.socialLeaderboardThird.text = page.third
+            binding.socialLeaderboardSeeAll.text = "See all  ›"
+            binding.socialLeaderboardPanel.contentDescription = page.title
+            binding.socialLeaderboardSecondName.text = page.secondName
+            binding.socialLeaderboardSecondScore.text = page.secondScore
+            binding.socialLeaderboardFirstName.text = page.firstName
+            binding.socialLeaderboardFirstScore.text = page.firstScore
+            binding.socialLeaderboardThirdName.text = page.thirdName
+            binding.socialLeaderboardThirdScore.text = page.thirdScore
+            binding.socialLeaderboardFourth.text = page.fourth
+            binding.socialLeaderboardFifth.text = page.fifth
         }
+
+        private fun dp(value: Int): Int =
+            (value * binding.root.resources.displayMetrics.density).toInt()
 
         fun stopRotation() {
             handler.removeCallbacks(rotateRunnable)
@@ -144,13 +172,18 @@ class SocialHeaderAdapter(
 
         private data class LeaderboardPage(
             val title: String,
-            val second: String,
-            val first: String,
-            val third: String
+            val secondName: String,
+            val secondScore: String,
+            val firstName: String,
+            val firstScore: String,
+            val thirdName: String,
+            val thirdScore: String,
+            val fourth: String,
+            val fifth: String
         )
 
         companion object {
-            private const val ROTATION_MS = 3500L
+            private const val ROTATION_MS = 4000L
         }
     }
 }
