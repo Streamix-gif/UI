@@ -255,6 +255,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/poppins_bold"
+            android:id="@+id/socialLeaderboardTitle"
             android:text="Community Leaderboard"
             android:textColor="?attr/colorOnBackground"
             android:textSize="17sp" />
@@ -292,6 +293,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:id="@+id/socialLeaderboardSecond"
                 android:text="🥈&#10;Kael&#10;12,450 pts"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp" />
@@ -301,6 +303,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:id="@+id/socialLeaderboardFirst"
                 android:text="🥇&#10;Rynn&#10;15,230 pts"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="13sp" />
@@ -310,6 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:id="@+id/socialLeaderboardThird"
                 android:text="🥉&#10;Hana&#10;10,980 pts"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp" />
