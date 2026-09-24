@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StreamixStatusTabText">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+</resources>
