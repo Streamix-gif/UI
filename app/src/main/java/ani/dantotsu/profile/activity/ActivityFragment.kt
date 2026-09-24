@@ -82,7 +82,22 @@ class ActivityFragment : Fragment() {
         
         binding.titleImage.setOnClickListener { handleTitleImageClick() }
         binding.listRecyclerView.adapter = if (type == ActivityType.GLOBAL) {
-            ConcatAdapter(SocialHeaderAdapter(), adapter)
+            ConcatAdapter(
+                SocialHeaderAdapter(
+                    onNotificationsClick = {
+                        startActivity(Intent(requireContext(), ani.dantotsu.profile.notification.NotificationActivity::class.java))
+                    },
+                    onProfileClick = {
+                        if (Anilist.userid != 0) {
+                            startActivity(
+                                Intent(requireContext(), ProfileActivity::class.java)
+                                    .putExtra("userId", Anilist.userid)
+                            )
+                        }
+                    }
+                ),
+                adapter
+            )
         } else {
             adapter
         }
