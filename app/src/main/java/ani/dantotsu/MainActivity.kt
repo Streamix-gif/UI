@@ -322,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                     else -> 0
                 }
             } else {
-                PrefManager.getVal(PrefName.DefaultStartUpTab).coerceIn(0, 4)
+                PrefManager.getVal<Int>(PrefName.DefaultStartUpTab).coerceIn(0, 4)
             }
             val navbar = binding.includedNavbar.navbar
             bottomBar = navbar
