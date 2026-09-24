@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="ShapeAppearanceOverlay.AniLab.Circle" parent="ShapeAppearance.Material3.Corner.Full" />
-</resources>
