@@ -45,6 +45,10 @@ import ani.dantotsu.home.LoginFragment
 import ani.dantotsu.home.MangaFragment
 import ani.dantotsu.home.NoInternet
 import ani.dantotsu.media.MediaDetailsActivity
+import ani.dantotsu.media.CalendarFragment
+import ani.dantotsu.media.user.LibraryFragment
+import ani.dantotsu.profile.MainProfileFragment
+import ani.dantotsu.profile.social.SocialFragment
 import ani.dantotsu.notifications.TaskScheduler
 import ani.dantotsu.others.CustomBottomDialog
 import ani.dantotsu.others.calc.CalcActivity
@@ -306,16 +310,18 @@ class MainActivity : AppCompatActivity() {
             }
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
             selectedOption = if (intent.getBooleanExtra("goToHome", false)) {
-                1
+                0
             } else if (fragment != null) {
                 when (fragment) {
                     AnimeFragment::class.java.name -> 0
-                    HomeFragment::class.java.name -> 1
-                    MangaFragment::class.java.name -> 2
-                    else -> 1
+                    CalendarFragment::class.java.name -> 1
+                    SocialFragment::class.java.name -> 2
+                    LibraryFragment::class.java.name -> 3
+                    MainProfileFragment::class.java.name -> 4
+                    else -> 0
                 }
             } else {
-                PrefManager.getVal(PrefName.DefaultStartUpTab)
+                PrefManager.getVal(PrefName.DefaultStartUpTab).coerceIn(0, 4)
             }
             val navbar = binding.includedNavbar.navbar
             bottomBar = navbar
@@ -622,21 +628,17 @@ class MainActivity : AppCompatActivity() {
     private class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         FragmentStateAdapter(fragmentManager, lifecycle) {
 
-        override fun getItemCount(): Int = 3
+        override fun getItemCount(): Int = 5
 
         override fun createFragment(position: Int): Fragment {
-            val rescueMode = PrefManager.getVal<Boolean>(PrefName.RescueMode)
             when (position) {
                 0 -> return AnimeFragment()
-                1 -> return if (rescueMode) {
-                    val hasMalLogin = PrefManager.getVal(PrefName.MALUserName, null as String?).let { !it.isNullOrBlank() }
-                    if (hasMalLogin) HomeFragment() else LoginFragment()
-                } else {
-                    if (Anilist.token != null) HomeFragment() else LoginFragment()
-                }
-                2 -> return MangaFragment()
+                1 -> return CalendarFragment()
+                2 -> return SocialFragment()
+                3 -> return LibraryFragment()
+                4 -> return MainProfileFragment()
             }
-            return LoginFragment()
+            return AnimeFragment()
         }
     }
 
@@ -644,9 +646,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         if (intent.getBooleanExtra("goToHome", false)) {
-            selectedOption = 1
-            binding.includedNavbar.navbar.selectTabAt(1)
-            binding.viewpager.setCurrentItem(1, false)
+            selectedOption = 0
+            binding.includedNavbar.navbar.selectTabAt(0)
+            binding.viewpager.setCurrentItem(0, false)
         }
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewIntent(intent)
