@@ -208,7 +208,7 @@
                         android:layout_marginStart="6dp"
                         android:layout_weight="1.65"
                         app:cardCornerRadius="14dp"
-                        app:strokeColor="@color/colorPrimary"
+                        app:strokeColor="?attr/colorPrimary"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
