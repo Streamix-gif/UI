@@ -16,16 +16,35 @@ class ListViewModel : ViewModel() {
     private val lists = MutableLiveData<MutableMap<String, ArrayList<Media>>>()
     private val unfilteredLists = MutableLiveData<MutableMap<String, ArrayList<Media>>>()
     fun getLists(): LiveData<MutableMap<String, ArrayList<Media>>> = lists
-    suspend fun loadLists(anime: Boolean, userId: Int, sortOrder: String? = null) {
+    suspend fun loadLists(
+        anime: Boolean,
+        userId: Int,
+        sortOrder: String? = null,
+        genre: String = "All",
+        minScore: Int = 0
+    ) {
         val rescueMode: Boolean = PrefManager.getVal(PrefName.RescueMode)
         if (rescueMode) {
             loadListsFromMAL(anime)
             return
         }
         tryWithSuspend {
-            val res = Anilist.query.getMediaLists(anime, userId, sortOrder)
-            lists.postValue(res)
-            unfilteredLists.postValue(res)
+            val result = Anilist.query.getMediaLists(anime, userId, sortOrder)
+            unfilteredLists.postValue(result)
+
+            val filtered = if (genre == "All" && minScore <= 0) {
+                result
+            } else {
+                result.mapValues { (_, media) ->
+                    ArrayList(media.filter { item ->
+                        val score = if (item.userScore != 0) item.userScore else (item.meanScore ?: 0)
+                        (genre == "All" || genre in item.genres) &&
+                            (minScore <= 0 || score >= minScore * 10)
+                    })
+                }.toMutableMap()
+            }
+
+            lists.postValue(filtered)
         }
     }
     private suspend fun loadListsFromMAL(anime: Boolean) {
