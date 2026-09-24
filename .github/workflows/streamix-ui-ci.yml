@@ -64,4 +64,47 @@ jobs:
           name: streamix-ui-debug
           path: app/build/outputs/apk/**/*.apk
           if-no-files-found: error
+          retention-days: 5          python3 - "$CLOUDSTREAM3_JAR" <<'PY'
+import os
+import sys
+import zipfile
+
+jar = sys.argv[1]
+tmp = jar + ".filtered"
+
+with zipfile.ZipFile(jar, "r") as src, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as dst:
+    for info in src.infolist():
+        name = info.filename
+        if name.endswith("/") or name.startswith("META-INF/"):
+            dst.writestr(info, src.read(name))
+        elif name.startswith("com/lagradost/"):
+            dst.writestr(info, src.read(name))
+
+os.replace(tmp, jar)
+PY
+          echo "CloudStream runtime filtered for app-provided AndroidX: $CLOUDSTREAM3_JAR"
+          ls -lh "$CLOUDSTREAM3_JAR"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Assemble debug APK
+        shell: bash
+        env:
+          CLOUDSTREAM3_JAR: ${{ runner.temp }}/cs3-classes.jar
+        run: |
+          set -euo pipefail
+          test -s "$CLOUDSTREAM3_JAR"
+          echo "Using CloudStream runtime: $CLOUDSTREAM3_JAR"
+          ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamix-ui-debug
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
           retention-days: 5
