@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -75,7 +74,9 @@ class AnimePageAdapter : RecyclerView.Adapter<AnimePageAdapter.AnimePageViewHold
         textInputLayout.boxBackgroundColor = (color and 0x00FFFFFF) or 0x28000000
         materialCardView.setCardBackgroundColor((color and 0x00FFFFFF) or 0x28000000)
 
-        trendingBinding.titleContainer.updatePadding(top = statusBarHeight)
+        trendingBinding.titleContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = statusBarHeight + 12f.px
+        }
 
         if (PrefManager.getVal(PrefName.SmallView)) trendingBinding.trendingContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = (-108f).px
