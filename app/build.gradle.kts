@@ -62,10 +62,15 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            val singleAbi = providers.gradleProperty("singleAbi").orNull
+            isEnable = singleAbi != null
             reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
+            if (singleAbi != null) {
+                include(singleAbi)
+            } else {
+                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            }
+            isUniversalApk = false
         }
     }
 
