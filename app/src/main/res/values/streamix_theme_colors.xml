@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="streamix_primary">#FF007F</color>
+    <color name="streamix_primary_variant">#C50053</color>
+    <color name="streamix_on_primary">#EEEEEE</color>
+    <color name="streamix_secondary">#91A6FF</color>
+    <color name="streamix_secondary_variant">#3358FF</color>
+    <color name="streamix_on_secondary">#000000</color>
+    <color name="streamix_status_tab_text">#FFFFFFFF</color>
+    <color name="chip">#FF007F</color>
+    <color name="chip_text">#EEEEEE</color>
+    <color name="chip_text_unselected">#858585</color>
+</resources>
