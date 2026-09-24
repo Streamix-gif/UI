@@ -120,21 +120,26 @@ jobs:
     - name: Generate APK checksum
       if: ${{ env.SKIP_BUILD != 'true' }}
       run: |
-        APK_PATH="app/build/outputs/apk/google/alpha/app-google-alpha.apk"
-        if [ -f "$APK_PATH" ]; then
+        APK_PATH=$(find app/build/outputs/apk -type f -name '*.apk' | head -n 1)
+        if [ -n "$APK_PATH" ]; then
           CHECKSUM=$(sha256sum "$APK_PATH" | awk '{print $1}')
           echo "CHECKSUM=$CHECKSUM" >> $GITHUB_ENV
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
           echo "SHA256: $CHECKSUM"
+          echo "APK: $APK_PATH"
+        else
+          echo "::error::No APK was produced under app/build/outputs/apk"
+          exit 1
         fi
 
     - name: Upload a Build Artifact
       if: ${{ env.SKIP_BUILD != 'true' }}
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-          name: Dantotsu
+          name: Streamix-APK
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/google/alpha/app-google-alpha.apk"
+          path: "app/build/outputs/apk/**/*.apk"
 
     - name: Upload APK to Discord and Telegram
       if: ${{ github.repository == 'rebelonion/Dantotsu' }}
