@@ -19,4 +19,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Dantotsu"
 include(":app")
-include(":streamix-server")
