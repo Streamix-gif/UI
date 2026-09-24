@@ -345,7 +345,7 @@ class OtherDetailsViewModel : ViewModel() {
     private suspend fun loadCalendarFromAnilist(showOnlyLibrary: Boolean, showOnlyDubbed: Boolean) {
         if (cachedAllCalendarData == null || cachedLibraryCalendarData == null) {
             val curr = System.currentTimeMillis() / 1000
-            val res = Anilist.query.recentlyUpdated(curr - 86400, curr + (86400 * 14))
+            val res = Anilist.query.recentlyUpdated(curr - (86400 * 7), curr + (86400 * 14))
             val df = DateFormat.getDateInstance(DateFormat.FULL)
             val tf = DateFormat.getTimeInstance(DateFormat.SHORT)
             val allMap = linkedMapOf<String, MutableList<Media>>()
@@ -353,7 +353,7 @@ class OtherDetailsViewModel : ViewModel() {
             val idMap = mutableMapOf<String, MutableList<Int>>()
 
             val calendarDays = Calendar.getInstance().let { base ->
-                (0..14).map { offset ->
+                (-7..14).map { offset ->
                     (base.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, offset) }
                 }
             }
