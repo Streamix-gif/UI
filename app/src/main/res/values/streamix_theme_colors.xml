@@ -7,7 +7,4 @@
     <color name="streamix_secondary_variant">#3358FF</color>
     <color name="streamix_on_secondary">#000000</color>
     <color name="streamix_status_tab_text">#FFFFFFFF</color>
-    <color name="chip">#FF007F</color>
-    <color name="chip_text">#EEEEEE</color>
-    <color name="chip_text_unselected">#858585</color>
 </resources>
