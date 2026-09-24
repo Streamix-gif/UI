@@ -13,7 +13,7 @@
     </item>
 
     <!-- Bottom: fade the banner into the page background. -->
-    <item android:top="360dp">
+    <item android:top="250dp">
         <shape>
             <gradient
                 android:angle="270"
