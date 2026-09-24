@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import ani.dantotsu.databinding.ItemSocialHeaderBinding
 
@@ -104,16 +105,12 @@ class SocialHeaderAdapter(
 
             binding.socialShortcutStrip.removeAllViews()
             shortcuts.forEachIndexed { index, view ->
-                val params = view.layoutParams
+                val params = view.layoutParams as LinearLayout.LayoutParams
                 params.width = 0
                 params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                params = params.apply {
-                    val marginLayoutParams = this as? ViewGroup.MarginLayoutParams
-                    marginLayoutParams?.let {
-                        it.marginStart = if (index == 0) 0 else 5
-                        it.marginEnd = if (index == shortcuts.lastIndex) 0 else 5
-                    }
-                }
+                params.weight = 1f
+                params.marginStart = if (index == 0) 0 else 5
+                params.marginEnd = if (index == shortcuts.lastIndex) 0 else 5
                 view.layoutParams = params
                 binding.socialShortcutStrip.addView(view)
             }
