@@ -40,9 +40,9 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val primaryColor = getThemeColor(com.google.android.material.R.attr.colorSurface)
-        val primaryTextColor = getThemeColor(androidx.appcompat.R.attr.colorPrimary)
-        val secondaryTextColor = getThemeColor(com.google.android.material.R.attr.colorOutline)
+        val primaryColor = requireContext().getThemeColor(com.google.android.material.R.attr.colorSurface)
+        val primaryTextColor = requireContext().getThemeColor(androidx.appcompat.R.attr.colorPrimary)
+        val secondaryTextColor = requireContext().getThemeColor(com.google.android.material.R.attr.colorOutline)
 
         binding.listTabLayout.setBackgroundColor(primaryColor)
         binding.listAppBar.setBackgroundColor(primaryColor)
