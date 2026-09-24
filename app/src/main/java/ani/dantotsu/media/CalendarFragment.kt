@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.viewpager2.widget.ViewPager2
 import ani.dantotsu.R
 import ani.dantotsu.Refresh
@@ -49,6 +50,12 @@ class CalendarFragment : Fragment() {
         binding.dateRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.dateRecyclerView.setHasFixedSize(true)
+        LinearSnapHelper().attachToRecyclerView(binding.dateRecyclerView)
+        binding.dateRecyclerView.post {
+            val half = binding.dateRecyclerView.width / 2
+            val itemHalf = (64 * resources.displayMetrics.density / 2).toInt()
+            binding.dateRecyclerView.setPadding(half - itemHalf, 0, half - itemHalf, 0)
+        }
 
         binding.listed.setOnClickListener {
             showOnlyLibrary = !showOnlyLibrary
@@ -70,7 +77,7 @@ class CalendarFragment : Fragment() {
                 if (position !in dateItems.indices) return
                 selectedTabIdx = position
                 dateAdapter?.setSelectedPosition(position)
-                binding.dateRecyclerView.smoothScrollToPosition(position)
+                centerDate(position)
                 updateSelectedDateTitle(position)
             }
         })
@@ -99,7 +106,7 @@ class CalendarFragment : Fragment() {
                 it.setSelectedPosition(selectedTabIdx)
             }
             binding.dateRecyclerView.adapter = dateAdapter
-            binding.dateRecyclerView.scrollToPosition(selectedTabIdx)
+            centerDate(selectedTabIdx)
 
             binding.listProgressBar.visibility = View.GONE
             binding.listViewPager.adapter = ListViewPagerAdapter(
@@ -116,6 +123,18 @@ class CalendarFragment : Fragment() {
             if (it) {
                 reloadCalendar()
                 live.postValue(false)
+            }
+        }
+    }
+
+    private fun centerDate(position: Int) {
+        binding.dateRecyclerView.post {
+            binding.dateRecyclerView.smoothScrollToPosition(position)
+            binding.dateRecyclerView.post {
+                val child = binding.dateRecyclerView.layoutManager?.findViewByPosition(position) ?: return@post
+                val parentCenter = binding.dateRecyclerView.width / 2
+                val childCenter = (child.left + child.right) / 2
+                binding.dateRecyclerView.smoothScrollBy(childCenter - parentCenter, 0)
             }
         }
     }
