@@ -17,7 +17,8 @@
             android:id="@+id/homeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="20dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
