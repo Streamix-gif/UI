@@ -22,7 +22,7 @@ import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
 import ani.dantotsu.connections.mal.MAL
 import ani.dantotsu.databinding.ItemMangaPageBinding
-import ani.dantotsu.databinding.LayoutTrendingBinding
+import ani.dantotsu.databinding.LayoutTrendingMangaBinding
 import ani.dantotsu.getAppString
 import ani.dantotsu.getThemeColor
 import ani.dantotsu.loadImage
@@ -47,7 +47,7 @@ import com.google.android.material.textfield.TextInputLayout
 class MangaPageAdapter : RecyclerView.Adapter<MangaPageAdapter.MangaPageViewHolder>() {
     val ready = MutableLiveData(false)
     lateinit var binding: ItemMangaPageBinding
-    private lateinit var trendingBinding: LayoutTrendingBinding
+    private lateinit var trendingBinding: LayoutTrendingMangaBinding
     private var trendHandler: Handler? = null
     private lateinit var trendRun: Runnable
     var trendingViewPager: ViewPager2? = null
@@ -60,7 +60,7 @@ class MangaPageAdapter : RecyclerView.Adapter<MangaPageAdapter.MangaPageViewHold
 
     override fun onBindViewHolder(holder: MangaPageViewHolder, position: Int) {
         binding = holder.binding
-        trendingBinding = LayoutTrendingBinding.bind(binding.root)
+        trendingBinding = LayoutTrendingMangaBinding.bind(binding.root)
         trendingViewPager = trendingBinding.trendingViewPager
 
         val textInputLayout = holder.itemView.findViewById<TextInputLayout>(R.id.searchBar)
